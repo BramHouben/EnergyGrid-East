@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/solarpark")
+@RequestMapping("solarpark")
 public class SolarParkController {
 
     @Autowired
