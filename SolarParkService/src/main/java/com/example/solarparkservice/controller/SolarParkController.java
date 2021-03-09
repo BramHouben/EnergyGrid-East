@@ -16,10 +16,6 @@ public class SolarParkController {
     public ISolarParkPower solarParkPower;
 
 
-    public ResponseEntity<?> GetSolarPark(){
-
-        return null;
-    }
 
 
 }
