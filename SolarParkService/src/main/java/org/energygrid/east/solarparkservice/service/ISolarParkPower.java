@@ -34,4 +34,12 @@ public interface ISolarParkPower {
      */
     void removeSolarPark(String name);
 
+    /**
+     * Update solarpark based on id
+     * @param id
+     * @param name
+     * @param solarpanels
+     */
+    void updateSolarPark(int id, String name, int solarpanels);
+
 }

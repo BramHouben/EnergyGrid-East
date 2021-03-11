@@ -67,4 +67,12 @@ public class SolarPowerService implements ISolarParkPower{
 
         solarParks.remove(solarPark);
     }
+
+    @Override
+    public void updateSolarPark(int id, String name, int solarpanels) {
+        SolarPark solarPark = solarParks.get(id);
+        solarPark.setCountSonarPanels(solarpanels);
+        solarPark.setSolarParkName(name);
+
+    }
 }

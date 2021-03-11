@@ -22,9 +22,7 @@ public class SolarPark {
         this.countSonarPanels=countSonarPanels;
     }
 
-    public int getSolarParkId() {
-        return solarParkId;
-    }
+
 
     public void setSolarParkId(int solarParkId) {
         this.solarParkId = solarParkId;

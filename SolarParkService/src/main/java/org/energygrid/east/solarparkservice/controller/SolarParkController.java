@@ -19,28 +19,37 @@ public class SolarParkController {
     public ISolarParkPower solarParkPowerService;
 
     @GetMapping("/byId")
-    public ResponseEntity<SolarPark> GetSolarParkById( @NotNull @RequestParam(name = "id") int id){
+    public ResponseEntity<SolarPark> GetSolarParkById(@NotNull @RequestParam(name = "id") int id) {
         //Todo something with spring securitt
         boolean doesIdExist = solarParkPowerService.doesIdExist(id);
-        if (!doesIdExist){
+        if (!doesIdExist) {
             return ResponseEntity.badRequest().build();
         }
-        SolarPark solarPark= solarParkPowerService.getSolarParkById(id);
+        SolarPark solarPark = solarParkPowerService.getSolarParkById(id);
 
         return ResponseEntity.ok().body(solarPark);
     }
 
     @PostMapping()
-    public ResponseEntity<?> AddSolarPark(@NotNull @RequestParam(name = "totalsonarpanels") int totalSonarPanels, @NotNull @RequestParam(name = "name") String name ){
+    public ResponseEntity<?> AddSolarPark(@NotNull @RequestParam(name = "totalsonarpanels") int totalSonarPanels, @NotNull @RequestParam(name = "name") String name) {
 
-        solarParkPowerService.addSolarPark(totalSonarPanels,name);
+        solarParkPowerService.addSolarPark(totalSonarPanels, name);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
 
     }
 
     @DeleteMapping()
-    public ResponseEntity<?> DeleteSolarPark(@NotNull @RequestParam(name = "name") String name ){
+    public ResponseEntity<?> UpdateSolarPark(@NotNull @RequestParam(name = "name") String name, @NotNull @RequestParam(name = "id") int id, @NotNull @RequestParam(name = "solarpanels") int solarpanels) {
+
+        solarParkPowerService.updateSolarPark(id,name, solarpanels);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+
+    }
+
+    @PutMapping()
+    public ResponseEntity<?> DeleteSolarPark(@NotNull @RequestParam(name = "name") String name) {
 
         solarParkPowerService.removeSolarPark(name);
 
