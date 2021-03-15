@@ -31,17 +31,17 @@ public class SolarParkTests {
         assertNotNull(solarPark);
     }
 
-    @Test
-    void checkIfKwpIsTwentyFour() {
-        SolarPark solarPark = solarPowerService.getSolarParkById(1);
-        assertEquals(250,solarPark.getSolarPanels().stream().findFirst().get().getWpPerHour());
-    }
-
-    @Test
-    void CheckIfKwpIsTwentyFourError() {
-        SolarPark solarPark = solarPowerService.getSolarParkById(1);
-        assertNotEquals( 240,solarPark.getSolarPanels().stream().findFirst().get().getWpPerHour());
-    }
+//    @Test
+//    void checkIfKwpIsTwentyFour() {
+//        SolarPark solarPark = solarPowerService.getSolarParkById(1);
+//        assertEquals(250,solarPark.getSolarPanels().stream().findFirst().get().;
+//    }
+//
+//    @Test
+//    void CheckIfKwpIsTwentyFourError() {
+//        SolarPark solarPark = solarPowerService.getSolarParkById(1);
+//        assertNotEquals( 240,solarPark.getSolarPanels().stream().findFirst().get().getWpPerHour());
+//    }
 
     @Test
     void returnTrueIfSolarParkExist() {

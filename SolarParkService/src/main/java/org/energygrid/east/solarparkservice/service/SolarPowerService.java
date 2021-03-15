@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 @Service
 public class SolarPowerService implements ISolarParkPower {
@@ -18,9 +20,14 @@ public class SolarPowerService implements ISolarParkPower {
     public SolarPowerService() {
         this.solarPanels = new ArrayList<>();
         this.solarParks = new ArrayList<>();
-        SolarPanel solarPanel = new SolarPanel(1, false);
-        solarPanels.add(solarPanel);
+
         SolarPark solarPark = new SolarPark(0, "firstSolarpark", 300, solarPanels);
+        Random random= new Random();
+        for (int i = 0; i <300 ; i++) {
+            boolean isBroken = random.nextBoolean();
+            SolarPanel solarPanel = new SolarPanel(UUID.randomUUID(), isBroken);
+            solarPanels.add(solarPanel);
+        }
         solarParks.add(solarPark);
     }
 
