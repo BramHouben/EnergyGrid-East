@@ -12,16 +12,13 @@ import java.util.List;
 @Service
 public class SolarPowerService implements ISolarParkPower {
 
-//    @Autowired
-    //public ISolarParkRepo solarParkRepo;
-
     private final List<SolarPanel> solarPanels;
     private final List<SolarPark> solarParks;
 
     public SolarPowerService() {
         this.solarPanels = new ArrayList<>();
         this.solarParks = new ArrayList<>();
-        SolarPanel solarPanel = new SolarPanel(1, false, 250);
+        SolarPanel solarPanel = new SolarPanel(1, false);
         solarPanels.add(solarPanel);
         SolarPark solarPark = new SolarPark(0, "firstSolarpark", 300, solarPanels);
         solarParks.add(solarPark);
