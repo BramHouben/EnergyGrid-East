@@ -34,7 +34,7 @@ public class SolarParkTests {
     @Test
     void checkIfKwpIsTwentyFour() {
         SolarPark solarPark = solarPowerService.getSolarParkById(1);
-        assertNull(solarPark.getSolarPanels().stream().findFirst().get().getSolarPanelId());
+        assertNotNull(solarPark.getSolarPanels().stream().findFirst().get().getSolarPanelId());
     }
 
 //    @Test
