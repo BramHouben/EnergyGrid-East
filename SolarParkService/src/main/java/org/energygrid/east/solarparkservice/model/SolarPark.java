@@ -8,7 +8,7 @@ public class SolarPark {
     private String solarParkName;
     private int countSonarPanels;
     private List<SolarPanel> solarPanels;
-
+    public SolarPark(){}
     public SolarPark(String solarParkName, int countSonarPanels, List<SolarPanel> solarPanels) {
         this.solarParkName = solarParkName;
         this.solarPanels = solarPanels;
@@ -49,5 +49,9 @@ public class SolarPark {
 
     public void setCountSonarPanels(int countSonarPanels) {
         this.countSonarPanels = countSonarPanels;
+    }
+
+    public int getSolarParkId() {
+        return solarParkId;
     }
 }

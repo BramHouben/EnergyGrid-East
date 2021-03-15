@@ -32,7 +32,6 @@ public class SolarPowerService implements ISolarParkPower {
         //todo use repo
         SolarPark solarPark = solarParks.stream().findAny().orElseThrow(() -> new SolarParkNotFoundException(id));
 
-
         return solarPark;
     }
 
