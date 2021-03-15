@@ -2,13 +2,14 @@ spring:
   application:
     name: gateway
 
-
-
 zuul:
   host:
+    # Standard timeout
     connect-timeout-millis: 20000
     socket-timeout-millis: 20000
-
+  routes:
+    solarpark:
+      url: http://localhost:8090/solarpark
 
 server:
   port: 8081
