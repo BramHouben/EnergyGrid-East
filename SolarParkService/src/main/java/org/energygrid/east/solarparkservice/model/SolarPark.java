@@ -9,19 +9,18 @@ public class SolarPark {
     private int countSonarPanels;
     private List<SolarPanel> solarPanels;
 
-    public SolarPark( String solarParkName, int countSonarPanels, List<SolarPanel> solarPanels) {
+    public SolarPark(String solarParkName, int countSonarPanels, List<SolarPanel> solarPanels) {
         this.solarParkName = solarParkName;
         this.solarPanels = solarPanels;
-        this.countSonarPanels=countSonarPanels;
+        this.countSonarPanels = countSonarPanels;
     }
 
     public SolarPark(int solarParkId, String solarParkName, int countSonarPanels, List<SolarPanel> solarPanels) {
         this.solarParkId = solarParkId;
         this.solarParkName = solarParkName;
         this.solarPanels = solarPanels;
-        this.countSonarPanels=countSonarPanels;
+        this.countSonarPanels = countSonarPanels;
     }
-
 
 
     public void setSolarParkId(int solarParkId) {

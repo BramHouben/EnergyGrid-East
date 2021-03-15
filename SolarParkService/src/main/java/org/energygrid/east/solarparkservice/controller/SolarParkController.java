@@ -20,7 +20,7 @@ public class SolarParkController {
 
     @GetMapping("/byId")
     public ResponseEntity<SolarPark> GetSolarParkById(@NotNull @RequestParam(name = "id") int id) {
-        //Todo something with spring securitt
+        //Todo something with spring security
         boolean doesIdExist = solarParkPowerService.doesIdExist(id);
         if (!doesIdExist) {
             return ResponseEntity.badRequest().build();
@@ -42,7 +42,7 @@ public class SolarParkController {
     @DeleteMapping()
     public ResponseEntity<?> UpdateSolarPark(@NotNull @RequestParam(name = "name") String name, @NotNull @RequestParam(name = "id") int id, @NotNull @RequestParam(name = "solarpanels") int solarpanels) {
 
-        solarParkPowerService.updateSolarPark(id,name, solarpanels);
+        solarParkPowerService.updateSolarPark(id, name, solarpanels);
 
         return ResponseEntity.status(HttpStatus.OK).build();
 
@@ -56,5 +56,6 @@ public class SolarParkController {
         return ResponseEntity.status(HttpStatus.OK).build();
 
     }
+
 
 }

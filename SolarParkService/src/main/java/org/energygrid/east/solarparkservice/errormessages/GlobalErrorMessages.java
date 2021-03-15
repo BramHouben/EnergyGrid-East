@@ -11,12 +11,39 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalErrorMessages extends ResponseEntityExceptionHandler {
 
 
-    @ExceptionHandler(SolarParkNotFoundExcep.class)
-       public ResponseEntity SolarParkNotFount (SolarParkNotFoundExcep e)  {
+    @ExceptionHandler(SolarParkNotFoundException.class)
+    public ResponseEntity<?> SolarParkNotFount(SolarParkNotFoundException e) {
         //Todo some logging
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body(e.getMessage());
+    }
+
+    @ExceptionHandler(CantAddSolarParkException.class)
+    public ResponseEntity<?> CantAddSolarPark(CantAddSolarParkException e) {
+        //Todo some logging
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
+    }
+
+    @ExceptionHandler(CantRemoveSolarParkException.class)
+    public ResponseEntity<?> CantRemoveSolarPark(CantRemoveSolarParkException e) {
+        //Todo some logging
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
+    }
+
+    @ExceptionHandler(CantUpdateSolarParkException.class)
+    public ResponseEntity<?> CantRemoveSolarPark(CantUpdateSolarParkException e) {
+        //Todo some logging
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(e.getMessage());
     }
 }
