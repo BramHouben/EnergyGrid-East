@@ -43,7 +43,7 @@ public class SimulationController {
         return ResponseEntity.status(200).body(simulation);
     }
 
-    @PostMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> addSimulation(@RequestParam(name = "id") String id) {
         Simulation simulation = simulationService.getSimulationById(id);
         simulation.stopTimer();
