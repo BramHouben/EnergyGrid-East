@@ -12,7 +12,7 @@ public class GlobalErrorMessages extends ResponseEntityExceptionHandler {
 
 
     @ExceptionHandler(SolarParkNotFoundException.class)
-    public ResponseEntity<?> SolarParkNotFount(SolarParkNotFoundException e) {
+    public ResponseEntity<?> SolarParkNotFound(SolarParkNotFoundException e) {
         //Todo some logging
 
         return ResponseEntity

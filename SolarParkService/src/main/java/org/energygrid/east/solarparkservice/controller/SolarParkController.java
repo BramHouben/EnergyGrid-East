@@ -18,7 +18,8 @@ public class SolarParkController {
     @Autowired
     public ISolarParkPower solarParkPowerService;
 
-    @GetMapping("/byId")
+
+    @GetMapping("/solarpark")
     public ResponseEntity<SolarPark> GetSolarParkById(@NotNull @RequestParam(name = "id") int id) {
         //Todo something with spring security
         boolean doesIdExist = solarParkPowerService.doesIdExist(id);
