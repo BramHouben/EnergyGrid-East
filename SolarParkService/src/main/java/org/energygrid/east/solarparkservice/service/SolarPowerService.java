@@ -6,6 +6,7 @@ import org.energygrid.east.solarparkservice.model.SolarPanel;
 import org.energygrid.east.solarparkservice.model.SolarPark;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -22,7 +23,7 @@ public class SolarPowerService implements ISolarParkPower {
         this.solarParks = new ArrayList<>();
 
         SolarPark solarPark = new SolarPark(0, "firstSolarpark", 300, solarPanels);
-        Random random= new Random();
+        SecureRandom random= new SecureRandom();
         for (int i = 0; i <300 ; i++) {
             boolean isBroken = random.nextBoolean();
             SolarPanel solarPanel = new SolarPanel(UUID.randomUUID(), isBroken);
