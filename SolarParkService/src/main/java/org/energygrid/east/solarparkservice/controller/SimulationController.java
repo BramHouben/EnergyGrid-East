@@ -44,7 +44,7 @@ public class SimulationController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> addSimulation(@RequestParam(name = "id") String id) {
+    public ResponseEntity<?> deleteSimulation(@RequestParam(name = "id") String id) {
         Simulation simulation = simulationService.getSimulationById(id);
         simulation.stopTimer();
 
