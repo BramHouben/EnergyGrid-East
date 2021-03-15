@@ -4,12 +4,10 @@ public class SolarPanel {
 
     private int solarPanelId;
     private boolean broken;
-    private double wpPerHour;
 
-    public SolarPanel(int solarPanelId, boolean broken, double wpPerHour) {
+    public SolarPanel(int solarPanelId, boolean broken) {
         this.solarPanelId = solarPanelId;
         this.broken = broken;
-        this.wpPerHour = wpPerHour;
     }
 
     public int getSolarPanelId() {
@@ -26,13 +24,5 @@ public class SolarPanel {
 
     public void setBroken(boolean broken) {
         this.broken = broken;
-    }
-
-    public double getWpPerHour() {
-        return wpPerHour;
-    }
-
-    public void setWpPerHour(double wpPerHour) {
-        this.wpPerHour = wpPerHour;
     }
 }
