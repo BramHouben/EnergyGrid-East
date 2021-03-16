@@ -30,7 +30,7 @@ public class RabbitListener extends RabbitConnection implements ApplicationRunne
 
         try(Connection connection = connectionFactory.newConnection();
             Channel channel = connection.createChannel()) {
-            channel.queueDeclare(queue_name, false, false, false, null);
+            channel.queueDeclare(queueName, false, false, false, null);
 
             DeliverCallback deliverCallback = (s, delivery) -> {
                 AMQP.BasicProperties properties = new AMQP.BasicProperties()
@@ -46,7 +46,7 @@ public class RabbitListener extends RabbitConnection implements ApplicationRunne
                 channel.basicPublish("", delivery.getProperties().getReplyTo(), properties, replyMessage.getBytes());
             };
 
-            channel.basicConsume(queue_name, true, deliverCallback, s -> {});
+            channel.basicConsume(queueName, true, deliverCallback, s -> {});
 
             synchronized (monitor) {
                 try {

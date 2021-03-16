@@ -7,7 +7,7 @@ public abstract class RabbitConnection {
     protected final ConnectionFactory connectionFactory = new ConnectionFactory();
     protected static final String queueName = "solarparkservice_queue";
 
-    public RabbitConnection() {
+    protected RabbitConnection() {
         connectionFactory.setHost("localhost");
     }
 }
