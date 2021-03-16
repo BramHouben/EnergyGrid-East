@@ -7,6 +7,7 @@ public class SimulationTimer extends TimerTask {
     private final Simulation simulation;
 
     public SimulationTimer(Simulation simulation) {
+
         this.simulation = simulation;
     }
 
