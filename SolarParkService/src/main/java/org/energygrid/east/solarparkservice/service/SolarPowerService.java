@@ -1,53 +1,44 @@
 package org.energygrid.east.solarparkservice.service;
 
 import org.energygrid.east.solarparkservice.errormessages.CantAddSolarParkException;
+import org.energygrid.east.solarparkservice.errormessages.CantRemoveSolarParkException;
 import org.energygrid.east.solarparkservice.errormessages.SolarParkNotFoundException;
 import org.energygrid.east.solarparkservice.model.SolarPanel;
 import org.energygrid.east.solarparkservice.model.SolarPark;
+import org.energygrid.east.solarparkservice.repo.ISolarParkRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 @Service
 public class SolarPowerService implements ISolarParkPower {
 
-    private final List<SolarPanel> solarPanels;
-    private final List<SolarPark> solarParks;
-
-    public SolarPowerService() {
-        this.solarPanels = new ArrayList<>();
-        this.solarParks = new ArrayList<>();
-
-        SolarPark solarPark = new SolarPark(0, "firstSolarpark", 300, solarPanels);
-        SecureRandom random= new SecureRandom();
-        for (int i = 0; i <300 ; i++) {
-            boolean isBroken = random.nextBoolean();
-            SolarPanel solarPanel = new SolarPanel(UUID.randomUUID(), isBroken);
-            solarPanels.add(solarPanel);
-        }
-        solarParks.add(solarPark);
-    }
+    @Autowired
+    private ISolarParkRepo solarParkRepo;
 
     @Override
-    public SolarPark getSolarParkById(int id) {
+    public SolarPark getSolarParkByName(String name) {
         //todo use repo
-        SolarPark solarPark = solarParks.stream().findAny().orElseThrow(() -> new SolarParkNotFoundException(id));
+        SolarPark solarPark = solarParkRepo.getSolarParkBySolarParkName(name);
+        if (solarPark == null) {
+            throw new SolarParkNotFoundException();
+        }
 
         return solarPark;
     }
 
     @Override
-    public boolean doesIdExist(int id) {
+    public boolean doesNameExist(String name) {
         // for now simpe implementation just return true with 1 else false.
         //todo use repo
-        if (id == 1) {
+        if (solarParkRepo.existsBySolarParkName(name)) {
             return true;
         } else {
-            throw new SolarParkNotFoundException(id);
+            throw new SolarParkNotFoundException();
         }
     }
 
@@ -55,24 +46,34 @@ public class SolarPowerService implements ISolarParkPower {
     public void addSolarPark(int totalSonarPanels, String name) {
         //todo use repo
         if (name == null || totalSonarPanels == 0) throw new CantAddSolarParkException();
-        SolarPark solarPark = new SolarPark("newSolarPark", 300, solarPanels);
-        solarParks.add(solarPark);
+        SecureRandom random = new SecureRandom();
+        List<SolarPanel> solarPanels = new ArrayList<>();
+        for (int i = 0; i < totalSonarPanels; i++) {
+            boolean isBroken = random.nextBoolean();
+            SolarPanel solarPanel = new SolarPanel(UUID.randomUUID(), isBroken);
+            solarPanels.add(solarPanel);
+        }
+
+        SolarPark solarPark = new SolarPark(UUID.randomUUID(), name, totalSonarPanels, solarPanels);
+        solarParkRepo.insert(solarPark);
     }
 
     @Override
     public void removeSolarPark(String name) {
-        //todo use repo
+        //todo check if exist
+        if (!solarParkRepo.existsBySolarParkName(name)) {
+            throw new CantRemoveSolarParkException();
+        }
 
-        SolarPark solarPark = solarParks.get(0);
+        solarParkRepo.removeBySolarParkName(name);
 
-        solarParks.remove(solarPark);
     }
 
     @Override
-    public void updateSolarPark(int id, String name, int solarpanels) {
-        SolarPark solarPark = solarParks.get(id);
-        solarPark.setCountSonarPanels(solarpanels);
+    public void updateSolarPark(UUID id, String name, int solarPanels) {
+        SolarPark solarPark = solarParkRepo.getSolarParkBySolarParkId(id);
+        solarPark.setCountSonarPanels(solarPanels);
         solarPark.setSolarParkName(name);
-
+        solarParkRepo.save(solarPark);
     }
 }

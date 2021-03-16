@@ -1,10 +1,10 @@
 package org.energygrid.east.solarparkservice.controller;
 
 import org.energygrid.east.solarparkservice.model.Simulation;
+import org.energygrid.east.solarparkservice.model.SimulationTimer;
 import org.energygrid.east.solarparkservice.model.SolarPark;
 import org.energygrid.east.solarparkservice.service.ISimulation;
 import org.energygrid.east.solarparkservice.service.ISolarParkPower;
-import org.energygrid.east.solarparkservice.timer.SimulationTimer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +33,7 @@ public class SimulationController {
     public ResponseEntity<?> addSimulation() {
         Timer timer = new Timer();
 
-        SolarPark solarPark = solarParkPowerService.getSolarParkById(1);
+        SolarPark solarPark = solarParkPowerService.getSolarParkByName("test");
         Simulation simulation = new Simulation(solarPark, timer);
         simulationService.addSimulation(simulation);
 
