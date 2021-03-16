@@ -10,6 +10,8 @@ zuul:
   routes:
     solarpark:
       url: http://localhost:8090/solarpark
+    authentication:
+      url: http://localhost:8080/auth
 
 server:
   port: 8081
