@@ -62,9 +62,11 @@ public class RabbitListener extends RabbitConnection implements ApplicationRunne
             synchronized (monitor) {
                 try {
                     monitor.wait();
+                    break;
                 } catch (InterruptedException e) {
                     logger.log(Level.ALL, e.getMessage());
                     Thread.currentThread().interrupt();
+                    break;
                 }
             }
         }
