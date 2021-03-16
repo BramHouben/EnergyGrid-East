@@ -1,6 +1,5 @@
 package org.energygrid.east.solarparkservice.errormessages;
 
-import java.util.UUID;
 
 public class SolarParkNotFoundException extends RuntimeException {
 
