@@ -13,7 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.ArgumentMatchers.any;
+import java.util.UUID;
+
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -44,20 +45,20 @@ public class SolarIntegrationTests {
         //make fake solarpark
         final SolarPark solarPark = new SolarPark();
         solarPark.setSolarParkName("test");
-        solarPark.setSolarParkId(1);
+        solarPark.setSolarParkId(UUID.randomUUID());
 
         // Give data back if method gets called
-        when(solarParkPower.doesIdExist(1)).thenReturn(true);
-        when(solarParkPower.getSolarParkById(solarPark.getSolarParkId())).thenReturn(solarPark);
+        when(solarParkPower.doesNameExist(solarPark.getSolarParkName())).thenReturn(true);
+        when(solarParkPower.getSolarParkByName(solarPark.getSolarParkName())).thenReturn(solarPark);
 
-        mockMvc.perform(get("/solarpark").param("id", "1"))
+        mockMvc.perform(get("/solarpark").param("name", "test"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void returnBadRequestGetSolarPark() throws Exception {
 
-        when(solarParkPower.doesIdExist(999)).thenReturn(false);
+        when(solarParkPower.doesNameExist("false")).thenReturn(false);
 
         mockMvc.perform(get("/solarpark").param("id", "999"))
                 .andExpect(status().isBadRequest());

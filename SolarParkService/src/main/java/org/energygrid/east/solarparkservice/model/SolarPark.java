@@ -1,31 +1,35 @@
 package org.energygrid.east.solarparkservice.model;
 
-import java.util.List;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
+import java.util.UUID;
+
+@Document(collection = "solarparkdetails")
 public class SolarPark {
 
-    private int solarParkId;
+    @Id
+    private UUID solarParkId;
+
+    @Indexed(unique = true)
     private String solarParkName;
+
     private int countSonarPanels;
+
     private List<SolarPanel> solarPanels;
 
-    public SolarPark(){}
-    public SolarPark(String solarParkName, int countSonarPanels, List<SolarPanel> solarPanels) {
-        this.solarParkName = solarParkName;
-        this.solarPanels = solarPanels;
-        this.countSonarPanels = countSonarPanels;
+    public SolarPark() {
     }
 
-    public SolarPark(int solarParkId, String solarParkName, int countSonarPanels, List<SolarPanel> solarPanels) {
+
+    public SolarPark(UUID solarParkId, String solarParkName, int countSonarPanels, List<SolarPanel> solarPanels) {
         this.solarParkId = solarParkId;
         this.solarParkName = solarParkName;
         this.solarPanels = solarPanels;
         this.countSonarPanels = countSonarPanels;
-    }
-
-
-    public void setSolarParkId(int solarParkId) {
-        this.solarParkId = solarParkId;
     }
 
     public String getSolarParkName() {
@@ -52,7 +56,21 @@ public class SolarPark {
         this.countSonarPanels = countSonarPanels;
     }
 
-    public int getSolarParkId() {
+    public UUID getSolarParkId() {
         return solarParkId;
+    }
+
+    public void setSolarParkId(UUID solarParkId) {
+        this.solarParkId = solarParkId;
+    }
+
+    @Override
+    public String toString() {
+        return "SolarPark{" +
+                "solarParkId=" + solarParkId +
+                ", solarParkName='" + solarParkName + '\'' +
+                ", countSonarPanels=" + countSonarPanels +
+                ", solarPanels=" + solarPanels +
+                '}';
     }
 }

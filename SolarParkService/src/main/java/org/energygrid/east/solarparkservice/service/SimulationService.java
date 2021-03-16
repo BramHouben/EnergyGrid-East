@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SimulationService implements ISimulation{
+public class SimulationService implements ISimulation {
 
-    private List<Simulation> simulations;
+    private final List<Simulation> simulations;
 
     public SimulationService() {
         simulations = new ArrayList<>();
