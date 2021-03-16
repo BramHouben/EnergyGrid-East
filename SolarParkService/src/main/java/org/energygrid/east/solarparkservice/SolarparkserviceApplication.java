@@ -9,5 +9,4 @@ public class SolarparkserviceApplication {
     public static void main(String[] args) {
         SpringApplication.run(SolarparkserviceApplication.class, args);
     }
-
 }

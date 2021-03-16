@@ -1,7 +1,5 @@
 package org.energygrid.east.solarparkservice.model;
 
-import org.energygrid.east.solarparkservice.timer.SimulationTimer;
-
 import java.util.Timer;
 import java.util.UUID;
 
