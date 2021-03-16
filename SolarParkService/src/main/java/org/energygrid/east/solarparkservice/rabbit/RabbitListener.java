@@ -10,9 +10,13 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Component
 public class RabbitListener extends RabbitConnection implements ApplicationRunner {
+
+    private Logger logger = Logger.getLogger(RabbitListener.class.getName());
 
     private Object monitor;
 
@@ -48,14 +52,15 @@ public class RabbitListener extends RabbitConnection implements ApplicationRunne
                 try {
                     monitor.wait();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    logger.log(Level.ALL, e.getMessage());
+                    Thread.currentThread().interrupt();
                 }
             }
 
         } catch (TimeoutException e) {
-            e.printStackTrace();
+            logger.log(Level.ALL, e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.ALL, e.getMessage());
         }
     }
 }

@@ -8,8 +8,12 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RabbitProducer extends RabbitConnection {
+
+    private final static Logger logger = Logger.getLogger(RabbitProducer.class.getName());
 
     private final String corrId;
     private String requestQueueName;
@@ -40,7 +44,9 @@ public class RabbitProducer extends RabbitConnection {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                     if(properties.getCorrelationId().equals(corrId)){
-                        blockingQueue.offer(new String(body, "UTF-8"));
+                        if(blockingQueue.offer(new String(body, "UTF-8"))){
+                            System.out.println("Error blockingQueue message");
+                        }
                     }
                 }
             };
@@ -52,11 +58,12 @@ public class RabbitProducer extends RabbitConnection {
             return blockingQueue.poll(3000, TimeUnit.MILLISECONDS);
 
         } catch (TimeoutException e) {
-            e.printStackTrace();
+            logger.log(Level.ALL, e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.ALL, e.getMessage());
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.log(Level.ALL, e.getMessage());
+            Thread.currentThread().interrupt();
         }
 
         return null;
