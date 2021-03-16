@@ -1,4 +1,4 @@
-package org.energygrid.east.solarparkservice.timer;
+package org.energygrid.east.solarparkservice.model;
 
 import org.energygrid.east.solarparkservice.model.Simulation;
 

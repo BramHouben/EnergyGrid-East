@@ -4,7 +4,7 @@ import org.energygrid.east.solarparkservice.model.Simulation;
 import org.energygrid.east.solarparkservice.model.SolarPark;
 import org.energygrid.east.solarparkservice.service.ISimulation;
 import org.energygrid.east.solarparkservice.service.ISolarParkPower;
-import org.energygrid.east.solarparkservice.timer.SimulationTimer;
+import org.energygrid.east.solarparkservice.model.SimulationTimer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
