@@ -43,8 +43,7 @@ public class RabbitProducer extends RabbitConnection {
             Consumer consumer = new DefaultConsumer(channel) {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-                    if(properties.getCorrelationId().equals(corrId)){
-                        if(blockingQueue.offer(new String(body, "UTF-8"))){
+                    if(properties.getCorrelationId().equals(corrId) && blockingQueue.offer(new String(body, "UTF-8")){
                             System.out.println("Error blockingQueue message");
                         }
                     }
