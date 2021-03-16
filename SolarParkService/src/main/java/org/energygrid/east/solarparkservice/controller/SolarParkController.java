@@ -15,17 +15,20 @@ import javax.validation.constraints.NotNull;
 @RequestMapping("solarpark")
 public class SolarParkController {
 
+
+
     @Autowired
-    public ISolarParkPower solarParkPowerService;
+    private ISolarParkPower solarParkPowerService;
 
 
-    @GetMapping("/solarpark")
+    @GetMapping()
     public ResponseEntity<SolarPark> GetSolarParkById(@NotNull @RequestParam(name = "id") int id) {
         //Todo something with spring security
         boolean doesIdExist = solarParkPowerService.doesIdExist(id);
         if (!doesIdExist) {
             return ResponseEntity.badRequest().build();
         }
+
         SolarPark solarPark = solarParkPowerService.getSolarParkById(id);
 
         return ResponseEntity.ok().body(solarPark);
@@ -57,6 +60,5 @@ public class SolarParkController {
         return ResponseEntity.status(HttpStatus.OK).build();
 
     }
-
 
 }

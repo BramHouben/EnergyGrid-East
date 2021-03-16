@@ -1,20 +1,22 @@
 package org.energygrid.east.solarparkservice.model;
 
+import java.util.UUID;
+
 public class SolarPanel {
 
-    private int solarPanelId;
+    private UUID solarPanelId;
     private boolean broken;
 
-    public SolarPanel(int solarPanelId, boolean broken) {
+    public SolarPanel(UUID solarPanelId, boolean broken) {
         this.solarPanelId = solarPanelId;
         this.broken = broken;
     }
 
-    public int getSolarPanelId() {
+    public UUID getSolarPanelId() {
         return solarPanelId;
     }
 
-    public void setSolarPanelId(int solarPanelId) {
+    public void setSolarPanelId(UUID solarPanelId) {
         this.solarPanelId = solarPanelId;
     }
 
