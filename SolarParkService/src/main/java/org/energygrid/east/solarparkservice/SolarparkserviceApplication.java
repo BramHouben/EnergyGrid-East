@@ -8,21 +8,9 @@ import org.springframework.context.annotation.Bean;
 import javax.annotation.PostConstruct;
 
 @SpringBootApplication
-public class SolarparkserviceApplication implements CommandLineRunner {
+public class SolarparkserviceApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SolarparkserviceApplication.class, args);
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        System.out.println("adwedewd");
-    }
-
-    @Bean
-    public CommandLineRunner test() {
-        return (args) -> {
-            System.out.println("wwwewewew");
-        };
     }
 }
