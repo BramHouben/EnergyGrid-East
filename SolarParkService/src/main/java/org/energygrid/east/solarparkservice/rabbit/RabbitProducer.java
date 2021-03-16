@@ -3,6 +3,7 @@ package org.energygrid.east.solarparkservice.rabbit;
 import com.rabbitmq.client.*;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
 
 public class RabbitProducer extends RabbitConnection {
 
-    private final static Logger logger = Logger.getLogger(RabbitProducer.class.getName());
+    private static final Logger logger = Logger.getLogger(RabbitProducer.class.getName());
 
     private final String corrId;
     private String requestQueueName;
@@ -43,10 +44,8 @@ public class RabbitProducer extends RabbitConnection {
             Consumer consumer = new DefaultConsumer(channel) {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-                    if(properties.getCorrelationId().equals(corrId)){
-                        if(!blockingQueue.offer(new String(body, "UTF-8"))){
-                            System.out.println("Error offering string to blocking queue");
-                        }
+                    if(properties.getCorrelationId().equals(corrId) && !blockingQueue.offer(new String(body, StandardCharsets.UTF_8))){
+                        logger.log(Level.ALL, "Error offering string to blocking queue");
                     }
                 };
             };
@@ -57,9 +56,7 @@ public class RabbitProducer extends RabbitConnection {
 
             return blockingQueue.poll(3000, TimeUnit.MILLISECONDS);
 
-        } catch (TimeoutException e) {
-            logger.log(Level.ALL, e.getMessage());
-        } catch (IOException e) {
+        } catch (TimeoutException | IOException e) {
             logger.log(Level.ALL, e.getMessage());
         } catch (InterruptedException e) {
             logger.log(Level.ALL, e.getMessage());

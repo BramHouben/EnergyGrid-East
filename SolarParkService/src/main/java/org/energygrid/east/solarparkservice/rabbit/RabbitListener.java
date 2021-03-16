@@ -9,6 +9,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +31,7 @@ public class RabbitListener extends RabbitConnection implements ApplicationRunne
 
         try(Connection connection = connectionFactory.newConnection();
             Channel channel = connection.createChannel()) {
-            channel.queueDeclare(queueName, false, false, false, null);
+            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 
             DeliverCallback deliverCallback = (s, delivery) -> {
                 AMQP.BasicProperties properties = new AMQP.BasicProperties()
@@ -38,16 +39,26 @@ public class RabbitListener extends RabbitConnection implements ApplicationRunne
                         .correlationId(delivery.getProperties().getCorrelationId())
                         .build();
 
-                String message = new String(delivery.getBody(), "UTF-8");
-                System.out.println("received message: " + message);
+                String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+
+                logger.log(Level.ALL, "received message: " + message);
 
                 String replyMessage = "reply...";
 
                 channel.basicPublish("", delivery.getProperties().getReplyTo(), properties, replyMessage.getBytes());
             };
 
-            channel.basicConsume(queueName, true, deliverCallback, s -> {});
+            channel.basicConsume(QUEUE_NAME, true, deliverCallback, s -> {});
 
+            startMonitor();
+
+        } catch (TimeoutException | IOException e) {
+            logger.log(Level.ALL, e.getMessage());
+        }
+    }
+
+    private void startMonitor() {
+        while(true) {
             synchronized (monitor) {
                 try {
                     monitor.wait();
@@ -56,11 +67,6 @@ public class RabbitListener extends RabbitConnection implements ApplicationRunne
                     Thread.currentThread().interrupt();
                 }
             }
-
-        } catch (TimeoutException e) {
-            logger.log(Level.ALL, e.getMessage());
-        } catch (IOException e) {
-            logger.log(Level.ALL, e.getMessage());
         }
     }
 }
