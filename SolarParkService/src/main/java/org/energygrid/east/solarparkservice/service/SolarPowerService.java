@@ -3,7 +3,7 @@ package org.energygrid.east.solarparkservice.service;
 import org.energygrid.east.solarparkservice.errormessages.CantAddSolarParkException;
 import org.energygrid.east.solarparkservice.errormessages.CantRemoveSolarParkException;
 import org.energygrid.east.solarparkservice.errormessages.SolarParkNotFoundException;
-import org.energygrid.east.solarparkservice.model.SolarPanel;
+import org.energygrid.east.solarparkservice.model.SolarParkUnit;
 import org.energygrid.east.solarparkservice.model.SolarPark;
 import org.energygrid.east.solarparkservice.model.dto.AddSolarParkDTO;
 import org.energygrid.east.solarparkservice.repo.ISolarParkRepo;
@@ -64,18 +64,20 @@ public class SolarPowerService implements ISolarParkPower {
         solarPark.setZipCode(solarParkDto.getZipCode());
         solarPark.setMax(solarParkDto.getMax());
         solarPark.setSolarParkId(UUID.randomUUID());
-        solarPark.setSolarPanels(makeSolarPanelsForList(solarParkDto.getCountSonarPanels()));
+        solarPark.setSolarParkUnits(makeSolarParkUnits(solarParkDto.getCountSonarPanels()));
         return solarPark;
     }
 
-    private List<SolarPanel> makeSolarPanelsForList(int count) {
-        List<SolarPanel> solarPanels = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
+    private List<SolarParkUnit> makeSolarParkUnits(double count) {
+        double TotalSonarUnits = count/20;
 
-            SolarPanel solarPanel = new SolarPanel(UUID.randomUUID(), false);
-            solarPanels.add(solarPanel);
+        List<SolarParkUnit> solarParkUnits = new ArrayList<>();
+        for (int i = 0; i <=TotalSonarUnits; i++) {
+
+            SolarParkUnit solarParkUnit = new SolarParkUnit(UUID.randomUUID(), false);
+            solarParkUnits.add(solarParkUnit);
         }
-        return solarPanels;
+        return solarParkUnits;
     }
 
     @Override
