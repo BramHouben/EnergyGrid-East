@@ -1,10 +1,6 @@
 package org.energygrid.east.solarparkservice.model.dto;
 
-import org.energygrid.east.solarparkservice.model.SolarPanel;
 import org.springframework.data.geo.Point;
-
-import java.util.List;
-import java.util.UUID;
 
 
 public class AddSolarParkDTO {
@@ -18,7 +14,6 @@ public class AddSolarParkDTO {
     private final double power;
     private final int max;
     private final int yearOfRealised;
-
 
     public AddSolarParkDTO(String solarParkName, int countSonarPanels, Point coordinates, String applicant, String zipCode, String province, double power, int max, int yearOfRealised) {
 

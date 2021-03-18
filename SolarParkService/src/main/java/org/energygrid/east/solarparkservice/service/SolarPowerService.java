@@ -47,12 +47,12 @@ public class SolarPowerService implements ISolarParkPower {
             throw new CantAddSolarParkException();
         }
 
-        SolarPark solarPark = SetDtoToObject(solarParkDto);
+        SolarPark solarPark = setDtoToObject(solarParkDto);
 
         solarParkRepo.insert(solarPark);
     }
 
-    private SolarPark SetDtoToObject(AddSolarParkDTO solarParkDto) {
+    private SolarPark setDtoToObject(AddSolarParkDTO solarParkDto) {
         SolarPark solarPark = new SolarPark();
         solarPark.setSolarParkName(solarParkDto.getSolarParkName());
         solarPark.setCoordinates(solarParkDto.getCoordinates());
