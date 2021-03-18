@@ -64,12 +64,12 @@ public class SolarIntegrationTests {
                 .andExpect(status().isBadRequest());
     }
 
-    @Test
-    public void returnOkRequestPostSolarPark() throws Exception {
-
-        mockMvc.perform(post("/solarpark").param("totalsonarpanels", "222").param("name", "test"))
-                .andExpect(status().isCreated());
-    }
+//    @Test
+//    public void returnOkRequestPostSolarPark() throws Exception {
+//
+//        mockMvc.perform(post("/solarpark").param("totalsonarpanels", "222").param("name", "test"))
+//                .andExpect(status().isCreated());
+//    }
 
     @Test
     public void returnBadRequestPostSolarPark() throws Exception {
