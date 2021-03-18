@@ -1,6 +1,5 @@
 package org.energygrid.east.weatherservice.controller;
 
-import com.google.gson.Gson;
 import org.energygrid.east.weatherservice.models.Weather;
 import org.energygrid.east.weatherservice.service.IWeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
