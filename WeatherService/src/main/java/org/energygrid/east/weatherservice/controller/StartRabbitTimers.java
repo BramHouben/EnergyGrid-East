@@ -23,7 +23,7 @@ public class StartRabbitTimers implements ApplicationRunner {
         RabbitProducer rabbitProducer = new RabbitProducer();
         SolarTimer solarTimer = new SolarTimer(rabbitProducer);
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(solarTimer, 0, 600000);
+        timer.scheduleAtFixedRate(solarTimer, 1000, 600000);
 
     }
 }
