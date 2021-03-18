@@ -33,9 +33,9 @@ public class SolarParkController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> addSolarPark(@NotNull @RequestParam(name = "totalsonarpanels") int totalSonarPanels, @NotNull @RequestParam(name = "name") String name) {
+    public ResponseEntity<String> addSolarPark(@NotNull @RequestBody SolarPark solarPark ) {
 
-        solarParkPowerService.addSolarPark(totalSonarPanels, name);
+        solarParkPowerService.addSolarPark(solarPark);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Solar park successfully made");
 

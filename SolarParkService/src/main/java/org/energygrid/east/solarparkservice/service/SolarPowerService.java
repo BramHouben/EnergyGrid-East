@@ -33,8 +33,7 @@ public class SolarPowerService implements ISolarParkPower {
 
     @Override
     public boolean doesNameExist(String name) {
-        // for now simpe implementation just return true with 1 else false.
-        //todo use repo
+
         if (solarParkRepo.existsBySolarParkName(name)) {
             return true;
         } else {
@@ -43,24 +42,24 @@ public class SolarPowerService implements ISolarParkPower {
     }
 
     @Override
-    public void addSolarPark(int totalSonarPanels, String name) {
-        //todo use repo
-        if (name == null || totalSonarPanels == 0) throw new CantAddSolarParkException();
+    public void addSolarPark(SolarPark solarPark) {
+
+        if (solarPark.getSolarParkName() == null || solarPark.getCountSonarPanels() == 0) throw new CantAddSolarParkException();
         SecureRandom random = new SecureRandom();
         List<SolarPanel> solarPanels = new ArrayList<>();
-        for (int i = 0; i < totalSonarPanels; i++) {
+        for (int i = 0; i < solarPark.getCountSonarPanels(); i++) {
             boolean isBroken = random.nextBoolean();
             SolarPanel solarPanel = new SolarPanel(UUID.randomUUID(), isBroken);
             solarPanels.add(solarPanel);
         }
-
-        SolarPark solarPark = new SolarPark(UUID.randomUUID(), name, totalSonarPanels, solarPanels);
+        solarPark.setSolarParkId(UUID.randomUUID());
+        solarPark.setSolarPanels(solarPanels);
         solarParkRepo.insert(solarPark);
     }
 
+
     @Override
     public void removeSolarPark(String name) {
-        //todo check if exist
         if (!solarParkRepo.existsBySolarParkName(name)) {
             throw new CantRemoveSolarParkException();
         }

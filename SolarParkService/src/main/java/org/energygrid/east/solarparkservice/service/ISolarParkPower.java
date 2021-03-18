@@ -25,12 +25,9 @@ public interface ISolarParkPower {
 
 
     /**
-     * Add solarpark to the region
-     *
-     * @param totalSonarPanels total of sonarpanels in the park
-     * @param name             name of the solarpark
+     * @param solarPark
      */
-    void addSolarPark(int totalSonarPanels, String name);
+    void addSolarPark(SolarPark solarPark );
 
     /**
      * Remove solarPark based on name

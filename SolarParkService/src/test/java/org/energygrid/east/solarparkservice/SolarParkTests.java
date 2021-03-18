@@ -14,7 +14,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-public class SolarParkTests {
+class SolarParkTests {
 
     @Autowired
     ISolarParkPower solarPowerService;
@@ -27,8 +27,7 @@ public class SolarParkTests {
     @Test
     void isSolarParkNull() {
 
-        SolarPark solarPark = new SolarPark(UUID.randomUUID(), "test", 5, Collections.emptyList());
-
+        SolarPark solarPark = new SolarPark();
         assertNotNull(solarPark);
     }
 
