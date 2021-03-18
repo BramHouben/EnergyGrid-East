@@ -46,5 +46,6 @@
         <module>SolarParkService</module>
         <module>gateway</module>
         <module>AuthenticationService</module>
+        <module>UserService</module>
     </modules>
 </project>
