@@ -6,49 +6,53 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Profile("!test")
 @Component
-public class RabbitListener extends RabbitConnection implements ApplicationRunner {
+public class RabbitWeatherListener implements ApplicationRunner {
 
-    private Logger logger = Logger.getLogger(RabbitListener.class.getName());
-
+    private Logger logger = Logger.getLogger(RabbitWeatherListener.class.getName());
+    private RabbitConfig rabbitConfig;
     private Object monitor;
 
-    public RabbitListener() {
-        super();
+    public RabbitWeatherListener() {
+        rabbitConfig = RabbitConfig.getInstance();
         monitor = new Object();
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        final Connection connection = RabbitConnection.getInstance().getConnection();
 
-        try(Connection connection = connectionFactory.newConnection();
-            Channel channel = connection.createChannel()) {
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        if(connection == null) {
+            logger.log(Level.ALL, "Failed to start Rabbit Connection");
+            return;
+        }
+
+        try(Channel channel = connection.createChannel()) {
+            rabbitConfig.declareQueue(channel);
 
             DeliverCallback deliverCallback = (s, delivery) -> {
-                AMQP.BasicProperties properties = new AMQP.BasicProperties()
-                        .builder()
-                        .correlationId(delivery.getProperties().getCorrelationId())
-                        .build();
 
-                String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+                AMQP.BasicProperties properties = rabbitConfig.getProperties(delivery.getProperties().getCorrelationId());
+
+                String message = rabbitConfig.getUTF8Message(delivery.getBody());
+
 
                 logger.log(Level.ALL, "received message: " + message);
 
                 String replyMessage = "reply...";
 
-                channel.basicPublish("", delivery.getProperties().getReplyTo(), properties, replyMessage.getBytes());
+                rabbitConfig.sendMessage(channel, delivery.getProperties().getReplyTo(), properties, replyMessage);
             };
 
-            channel.basicConsume(QUEUE_NAME, true, deliverCallback, s -> {});
+            rabbitConfig.startConsumer(channel, deliverCallback);
 
             startMonitor();
 
@@ -59,14 +63,14 @@ public class RabbitListener extends RabbitConnection implements ApplicationRunne
 
     private void startMonitor() {
         while(true) {
-            synchronized (monitor) {
-                try {
+            synchronized (monitor){
+                try{
                     monitor.wait();
                     break;
-                } catch (InterruptedException e) {
+                }
+                catch (InterruptedException e){
                     logger.log(Level.ALL, e.getMessage());
                     Thread.currentThread().interrupt();
-                    break;
                 }
             }
         }

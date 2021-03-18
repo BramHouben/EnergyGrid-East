@@ -6,7 +6,6 @@ import org.energygrid.east.solarparkservice.model.SolarPark;
 import org.energygrid.east.solarparkservice.service.ISimulation;
 import org.energygrid.east.solarparkservice.service.ISolarParkPower;
 
-import org.energygrid.east.solarparkservice.model.SimulationTimer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,14 +24,14 @@ public class SimulationController {
     private ISimulation simulationService;
 
     @GetMapping("")
-    public ResponseEntity<?> getSimulation(@NotNull @RequestParam(name = "id") String id) {
+    public ResponseEntity<Simulation> getSimulation(@NotNull @RequestParam(name = "id") String id) {
         Simulation simulation = simulationService.getSimulationById(id);
 
         return ResponseEntity.status(200).body(simulation);
     }
 
     @GetMapping("/add")
-    public ResponseEntity<?> addSimulation() {
+    public ResponseEntity<Simulation> addSimulation() {
         Timer timer = new Timer();
 
         SolarPark solarPark = solarParkPowerService.getSolarParkByName("test");
@@ -46,7 +45,7 @@ public class SimulationController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteSimulation(@RequestParam(name = "id") String id) {
+    public ResponseEntity<String> deleteSimulation(@RequestParam(name = "id") String id) {
         Simulation simulation = simulationService.getSimulationById(id);
         simulation.stopTimer();
 

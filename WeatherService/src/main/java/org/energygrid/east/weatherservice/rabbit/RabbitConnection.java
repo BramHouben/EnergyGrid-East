@@ -1,6 +1,5 @@
-package org.energygrid.east.solarparkservice.rabbit;
+package org.energygrid.east.weatherservice.rabbit;
 
-import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
@@ -17,7 +16,7 @@ public class RabbitConnection {
     private ConnectionFactory connectionFactory;
     private Connection connection;
 
-    public RabbitConnection() {
+    private RabbitConnection() {
         connectionFactory = new ConnectionFactory();
         connectionFactory.setHost("localhost");
     }

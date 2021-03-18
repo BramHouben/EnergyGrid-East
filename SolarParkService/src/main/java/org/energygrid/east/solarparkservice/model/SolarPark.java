@@ -2,6 +2,7 @@ package org.energygrid.east.solarparkservice.model;
 
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,17 +20,38 @@ public class SolarPark {
 
     private int countSonarPanels;
 
-    private List<SolarPanel> solarPanels;
+    private Point coordinates;
+
+    private String applicant;
+
+    private String zipCode;
+
+    private String province;
+
+    private double power;
+
+    private int max;
+
+    private int yearOfRealised;
+
+    private List<SolarParkUnit> solarParkUnits;
 
     public SolarPark() {
     }
 
 
-    public SolarPark(UUID solarParkId, String solarParkName, int countSonarPanels, List<SolarPanel> solarPanels) {
+    public SolarPark(UUID solarParkId, String solarParkName, int countSonarPanels, Point coordinates, List<SolarParkUnit> solarParkUnits, String applicant, String zipCode, String province, double power, int max, int yearOfRealised, double longCord, double langCord) {
         this.solarParkId = solarParkId;
-        this.solarParkName = solarParkName;
-        this.solarPanels = solarPanels;
+        this.coordinates = coordinates;
+        this.solarParkUnits = solarParkUnits;
         this.countSonarPanels = countSonarPanels;
+        this.applicant= applicant;
+        this.zipCode = zipCode;
+        this.province= province;
+        this.power = power;
+        this.max = max;
+        this.solarParkName = solarParkName;
+        this.yearOfRealised = yearOfRealised;
     }
 
     public String getSolarParkName() {
@@ -40,12 +62,12 @@ public class SolarPark {
         this.solarParkName = solarParkName;
     }
 
-    public List<SolarPanel> getSolarPanels() {
-        return solarPanels;
+    public void setSolarParkUnits(List<SolarParkUnit> solarParkUnits) {
+        this.solarParkUnits = solarParkUnits;
     }
 
-    public void setSolarPanels(List<SolarPanel> solarPanels) {
-        this.solarPanels = solarPanels;
+    public List<SolarParkUnit> getSolarParkUnits() {
+        return solarParkUnits;
     }
 
     public int getCountSonarPanels() {
@@ -70,7 +92,66 @@ public class SolarPark {
                 "solarParkId=" + solarParkId +
                 ", solarParkName='" + solarParkName + '\'' +
                 ", countSonarPanels=" + countSonarPanels +
-                ", solarPanels=" + solarPanels +
+                ", solarPanels=" + solarParkUnits +
                 '}';
     }
+
+    public Point getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(Point coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public String getApplicant() {
+        return applicant;
+    }
+
+    public void setApplicant(String applicant) {
+        this.applicant = applicant;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public double getPower() {
+        return power;
+    }
+
+    public void setPower(double power) {
+        this.power = power;
+    }
+
+    public int getMax() {
+        return max;
+    }
+
+    public void setMax(int max) {
+        this.max = max;
+    }
+
+    public int getYearOfRealised() {
+        return yearOfRealised;
+    }
+
+    public void setYearOfRealised(int yearOfRealised) {
+        this.yearOfRealised = yearOfRealised;
+    }
+
+
+
 }
