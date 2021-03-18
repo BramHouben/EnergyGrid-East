@@ -5,11 +5,11 @@ import org.energygrid.east.solarparkservice.errormessages.CantRemoveSolarParkExc
 import org.energygrid.east.solarparkservice.errormessages.SolarParkNotFoundException;
 import org.energygrid.east.solarparkservice.model.SolarPanel;
 import org.energygrid.east.solarparkservice.model.SolarPark;
+import org.energygrid.east.solarparkservice.model.dto.AddSolarParkDTO;
 import org.energygrid.east.solarparkservice.repo.ISolarParkRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +22,6 @@ public class SolarPowerService implements ISolarParkPower {
 
     @Override
     public SolarPark getSolarParkByName(String name) {
-        //todo use repo
         SolarPark solarPark = solarParkRepo.getSolarParkBySolarParkName(name);
         if (solarPark == null) {
             throw new SolarParkNotFoundException();
@@ -33,8 +32,7 @@ public class SolarPowerService implements ISolarParkPower {
 
     @Override
     public boolean doesNameExist(String name) {
-        // for now simpe implementation just return true with 1 else false.
-        //todo use repo
+
         if (solarParkRepo.existsBySolarParkName(name)) {
             return true;
         } else {
@@ -43,30 +41,49 @@ public class SolarPowerService implements ISolarParkPower {
     }
 
     @Override
-    public void addSolarPark(int totalSonarPanels, String name) {
-        //todo use repo
-        if (name == null || totalSonarPanels == 0) throw new CantAddSolarParkException();
-        SecureRandom random = new SecureRandom();
-        List<SolarPanel> solarPanels = new ArrayList<>();
-        for (int i = 0; i < totalSonarPanels; i++) {
-            boolean isBroken = random.nextBoolean();
-            SolarPanel solarPanel = new SolarPanel(UUID.randomUUID(), isBroken);
-            solarPanels.add(solarPanel);
+    public void addSolarPark(AddSolarParkDTO solarParkDto) {
+
+        if (solarParkDto.getSolarParkName() == null || solarParkDto.getCountSonarPanels() == 0) {
+            throw new CantAddSolarParkException();
         }
 
-        SolarPark solarPark = new SolarPark(UUID.randomUUID(), name, totalSonarPanels, solarPanels);
+        SolarPark solarPark = setDtoToObject(solarParkDto);
+
         solarParkRepo.insert(solarPark);
+    }
+
+    private SolarPark setDtoToObject(AddSolarParkDTO solarParkDto) {
+        SolarPark solarPark = new SolarPark();
+        solarPark.setSolarParkName(solarParkDto.getSolarParkName());
+        solarPark.setCoordinates(solarParkDto.getCoordinates());
+        solarPark.setPower(solarParkDto.getPower());
+        solarPark.setApplicant(solarParkDto.getApplicant());
+        solarPark.setCountSonarPanels(solarParkDto.getCountSonarPanels());
+        solarPark.setProvince(solarParkDto.getProvince());
+        solarPark.setYearOfRealised(solarParkDto.getYearOfRealised());
+        solarPark.setZipCode(solarParkDto.getZipCode());
+        solarPark.setMax(solarParkDto.getMax());
+        solarPark.setSolarParkId(UUID.randomUUID());
+        solarPark.setSolarPanels(makeSolarPanelsForList(solarParkDto.getCountSonarPanels()));
+        return solarPark;
+    }
+
+    private List<SolarPanel> makeSolarPanelsForList(int count) {
+        List<SolarPanel> solarPanels = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+
+            SolarPanel solarPanel = new SolarPanel(UUID.randomUUID(), false);
+            solarPanels.add(solarPanel);
+        }
+        return solarPanels;
     }
 
     @Override
     public void removeSolarPark(String name) {
-        //todo check if exist
         if (!solarParkRepo.existsBySolarParkName(name)) {
             throw new CantRemoveSolarParkException();
         }
-
         solarParkRepo.removeBySolarParkName(name);
-
     }
 
     @Override

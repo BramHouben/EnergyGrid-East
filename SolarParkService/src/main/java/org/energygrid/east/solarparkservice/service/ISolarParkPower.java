@@ -1,6 +1,7 @@
 package org.energygrid.east.solarparkservice.service;
 
 import org.energygrid.east.solarparkservice.model.SolarPark;
+import org.energygrid.east.solarparkservice.model.dto.AddSolarParkDTO;
 
 import java.util.UUID;
 
@@ -25,12 +26,9 @@ public interface ISolarParkPower {
 
 
     /**
-     * Add solarpark to the region
-     *
-     * @param totalSonarPanels total of sonarpanels in the park
-     * @param name             name of the solarpark
+     * @param solarPark
      */
-    void addSolarPark(int totalSonarPanels, String name);
+    void addSolarPark(AddSolarParkDTO solarPark );
 
     /**
      * Remove solarPark based on name
