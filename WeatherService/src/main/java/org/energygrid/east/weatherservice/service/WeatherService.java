@@ -27,6 +27,7 @@ public class WeatherService implements IWeatherService {
     }
 
     private JsonObject getCurrentWeatherData(String city){
+        //test
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url + "&locatie=" + city);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
