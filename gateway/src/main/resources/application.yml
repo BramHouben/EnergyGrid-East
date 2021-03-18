@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: gateway
+
+zuul:
+  host:
+    # Standard timeout
+    connect-timeout-millis: 20000
+    socket-timeout-millis: 20000
+  routes:
+    solarpark:
+      url: http://localhost:8090/solarpark
+    authentication:
+      url: http://localhost:8100/auth
+
+server:
+  port: 8081
