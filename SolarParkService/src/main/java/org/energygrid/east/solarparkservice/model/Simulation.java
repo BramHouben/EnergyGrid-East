@@ -5,10 +5,10 @@ import java.util.UUID;
 
 public class Simulation {
 
-    private String id;
+    private final String id;
+    private final SolarPark solarPark;
+    private final Timer timer;
     private double totalKwh;
-    private SolarPark solarPark;
-    private Timer timer;
 
     public Simulation(SolarPark solarPark, Timer timer) {
         this.id = UUID.randomUUID().toString();

@@ -1,35 +1,34 @@
 package org.energygrid.east.solarparkservice.service;
 
 import org.energygrid.east.solarparkservice.model.SolarPark;
+import org.energygrid.east.solarparkservice.model.dto.AddSolarParkDTO;
+
+import java.util.UUID;
 
 public interface ISolarParkPower {
-
 
     /**
      * a solar park based on an id
      *
-     * @param id
+     * @param name
      * @return the solar park with the id
      */
-    SolarPark getSolarParkById(int id);
+    SolarPark getSolarParkByName(String name);
 
 
     /**
      * Checks if solarpark exist by searching the id
      *
-     * @param id
+     * @param name
      * @return true if solarpark exist false if doesnt
      */
-    boolean doesIdExist(int id);
+    boolean doesNameExist(String name);
 
 
     /**
-     * Add solarpark to the region
-     *
-     * @param totalSonarPanels total of sonarpanels in the park
-     * @param name             name of the solarpark
+     * @param solarPark
      */
-    void addSolarPark(int totalSonarPanels, String name);
+    void addSolarPark(AddSolarParkDTO solarPark );
 
     /**
      * Remove solarPark based on name
@@ -45,6 +44,6 @@ public interface ISolarParkPower {
      * @param name
      * @param solarpanels
      */
-    void updateSolarPark(int id, String name, int solarpanels);
+    void updateSolarPark(UUID id, String name, int solarpanels);
 
 }

@@ -1,31 +1,57 @@
 package org.energygrid.east.solarparkservice.model;
 
-import java.util.List;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.geo.Point;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
+import java.util.UUID;
+
+@Document(collection = "solarparkdetails")
 public class SolarPark {
 
-    private int solarParkId;
+    @Id
+    private UUID solarParkId;
+
+    @Indexed(unique = true)
     private String solarParkName;
+
     private int countSonarPanels;
+
+    private Point coordinates;
+
+    private String applicant;
+
+    private String zipCode;
+
+    private String province;
+
+    private double power;
+
+    private int max;
+
+    private int yearOfRealised;
+
     private List<SolarPanel> solarPanels;
 
-    public SolarPark(){}
-    public SolarPark(String solarParkName, int countSonarPanels, List<SolarPanel> solarPanels) {
-        this.solarParkName = solarParkName;
-        this.solarPanels = solarPanels;
-        this.countSonarPanels = countSonarPanels;
-    }
-
-    public SolarPark(int solarParkId, String solarParkName, int countSonarPanels, List<SolarPanel> solarPanels) {
-        this.solarParkId = solarParkId;
-        this.solarParkName = solarParkName;
-        this.solarPanels = solarPanels;
-        this.countSonarPanels = countSonarPanels;
+    public SolarPark() {
     }
 
 
-    public void setSolarParkId(int solarParkId) {
+    public SolarPark(UUID solarParkId, String solarParkName, int countSonarPanels, Point coordinates, List<SolarPanel> solarPanels, String applicant, String zipCode, String province, double power, int max, int yearOfRealised, double longCord, double langCord) {
         this.solarParkId = solarParkId;
+        this.coordinates = coordinates;
+        this.solarPanels = solarPanels;
+        this.countSonarPanels = countSonarPanels;
+        this.applicant= applicant;
+        this.zipCode = zipCode;
+        this.province= province;
+        this.power = power;
+        this.max = max;
+        this.solarParkName = solarParkName;
+        this.yearOfRealised = yearOfRealised;
     }
 
     public String getSolarParkName() {
@@ -52,7 +78,80 @@ public class SolarPark {
         this.countSonarPanels = countSonarPanels;
     }
 
-    public int getSolarParkId() {
+    public UUID getSolarParkId() {
         return solarParkId;
     }
+
+    public void setSolarParkId(UUID solarParkId) {
+        this.solarParkId = solarParkId;
+    }
+
+    @Override
+    public String toString() {
+        return "SolarPark{" +
+                "solarParkId=" + solarParkId +
+                ", solarParkName='" + solarParkName + '\'' +
+                ", countSonarPanels=" + countSonarPanels +
+                ", solarPanels=" + solarPanels +
+                '}';
+    }
+
+    public Point getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(Point coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public String getApplicant() {
+        return applicant;
+    }
+
+    public void setApplicant(String applicant) {
+        this.applicant = applicant;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public double getPower() {
+        return power;
+    }
+
+    public void setPower(double power) {
+        this.power = power;
+    }
+
+    public int getMax() {
+        return max;
+    }
+
+    public void setMax(int max) {
+        this.max = max;
+    }
+
+    public int getYearOfRealised() {
+        return yearOfRealised;
+    }
+
+    public void setYearOfRealised(int yearOfRealised) {
+        this.yearOfRealised = yearOfRealised;
+    }
+
+
+
 }
