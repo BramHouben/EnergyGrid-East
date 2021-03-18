@@ -22,7 +22,6 @@ public class SolarPowerService implements ISolarParkPower {
 
     @Override
     public SolarPark getSolarParkByName(String name) {
-        //todo use repo
         SolarPark solarPark = solarParkRepo.getSolarParkBySolarParkName(name);
         if (solarPark == null) {
             throw new SolarParkNotFoundException();
@@ -45,11 +44,11 @@ public class SolarPowerService implements ISolarParkPower {
     public void addSolarPark(SolarPark solarPark) {
 
         if (solarPark.getSolarParkName() == null || solarPark.getCountSonarPanels() == 0) throw new CantAddSolarParkException();
-        SecureRandom random = new SecureRandom();
+
         List<SolarPanel> solarPanels = new ArrayList<>();
         for (int i = 0; i < solarPark.getCountSonarPanels(); i++) {
-            boolean isBroken = random.nextBoolean();
-            SolarPanel solarPanel = new SolarPanel(UUID.randomUUID(), isBroken);
+
+            SolarPanel solarPanel = new SolarPanel(UUID.randomUUID(), false);
             solarPanels.add(solarPanel);
         }
         solarPark.setSolarParkId(UUID.randomUUID());
