@@ -2,7 +2,6 @@ package org.energygrid.east.weatherservice.service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.energygrid.east.weatherservice.models.Weather;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -27,16 +26,20 @@ public class WeatherService implements IWeatherService {
         this.headers = new HttpHeaders();
     }
 
-    @Override
-    public Weather getCurrentWeather(String city) {
+    private JsonObject getCurrentWeatherData(String city){
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url + "&locatie=" + city);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
         ResponseEntity<String> response = template.exchange(builder.toUriString(), HttpMethod.GET, entity, String.class);
 
-        JsonObject obj = new Gson().fromJson(response.getBody(), JsonObject.class);
+        return new Gson().fromJson(response.getBody(), JsonObject.class);
+    }
 
-        var weather = obj.getAsJsonObject().get("liveweer").getAsJsonArray().get(0);
+    @Override
+    public Weather getCurrentWeather(String city) {
+        var fullWeather = getCurrentWeatherData(city);
+
+        var weather = fullWeather.getAsJsonObject().get("liveweer").getAsJsonArray().get(0);
         var temp = weather.getAsJsonObject().get("temp").getAsDouble();
         var symbol = weather.getAsJsonObject().get("image").getAsString();
 
