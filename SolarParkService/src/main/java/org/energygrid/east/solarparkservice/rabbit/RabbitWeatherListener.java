@@ -6,12 +6,14 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DeliverCallback;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Profile("!test")
 @Component
 public class RabbitWeatherListener implements ApplicationRunner {
 
@@ -40,6 +42,7 @@ public class RabbitWeatherListener implements ApplicationRunner {
                 AMQP.BasicProperties properties = rabbitConfig.getProperties(delivery.getProperties().getCorrelationId());
 
                 String message = rabbitConfig.getUTF8Message(delivery.getBody());
+
 
                 logger.log(Level.ALL, "received message: " + message);
 
