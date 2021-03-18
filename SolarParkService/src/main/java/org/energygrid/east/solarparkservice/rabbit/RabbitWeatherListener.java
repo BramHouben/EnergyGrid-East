@@ -32,6 +32,7 @@ public class RabbitWeatherListener implements ApplicationRunner {
 
         if(connection == null) {
             logger.log(Level.ALL, "Failed to start Rabbit Connection");
+            return;
         }
 
         try(Channel channel = connection.createChannel()) {
