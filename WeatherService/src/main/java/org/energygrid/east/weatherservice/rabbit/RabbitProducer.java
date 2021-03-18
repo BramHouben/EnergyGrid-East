@@ -41,8 +41,8 @@ public class RabbitProducer {
             Consumer consumer = new DefaultConsumer(channel) {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-                    if(properties.getCorrelationId().equals(corrId)) {
-                        blockingQueue.offer(new String(body, StandardCharsets.UTF_8));
+                    if(properties.getCorrelationId().equals(corrId) && blockingQueue.offer(new String(body, StandardCharsets.UTF_8))) {
+                        logger.log(Level.ALL, "Weather received");
                     }
                 }
             };
@@ -55,6 +55,7 @@ public class RabbitProducer {
 
         } catch (IOException | TimeoutException | InterruptedException e) {
             logger.log(Level.ALL, e.getMessage());
+            Thread.currentThread().interrupt();
         }
 
         return null;
