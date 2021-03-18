@@ -5,11 +5,11 @@ import org.energygrid.east.solarparkservice.errormessages.CantRemoveSolarParkExc
 import org.energygrid.east.solarparkservice.errormessages.SolarParkNotFoundException;
 import org.energygrid.east.solarparkservice.model.SolarPanel;
 import org.energygrid.east.solarparkservice.model.SolarPark;
+import org.energygrid.east.solarparkservice.model.dto.AddSolarParkDTO;
 import org.energygrid.east.solarparkservice.repo.ISolarParkRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -41,30 +41,49 @@ public class SolarPowerService implements ISolarParkPower {
     }
 
     @Override
-    public void addSolarPark(SolarPark solarPark) {
+    public void addSolarPark(AddSolarParkDTO solarParkDto) {
 
-        if (solarPark.getSolarParkName() == null || solarPark.getCountSonarPanels() == 0) throw new CantAddSolarParkException();
+        if (solarParkDto.getSolarParkName() == null || solarParkDto.getCountSonarPanels() == 0) {
+            throw new CantAddSolarParkException();
+        }
 
+        SolarPark solarPark = SetDtoToObject(solarParkDto);
+
+        solarParkRepo.insert(solarPark);
+    }
+
+    private SolarPark SetDtoToObject(AddSolarParkDTO solarParkDto) {
+        SolarPark solarPark = new SolarPark();
+        solarPark.setSolarParkName(solarParkDto.getSolarParkName());
+        solarPark.setCoordinates(solarParkDto.getCoordinates());
+        solarPark.setPower(solarParkDto.getPower());
+        solarPark.setApplicant(solarParkDto.getApplicant());
+        solarPark.setCountSonarPanels(solarParkDto.getCountSonarPanels());
+        solarPark.setProvince(solarParkDto.getProvince());
+        solarPark.setYearOfRealised(solarParkDto.getYearOfRealised());
+        solarPark.setZipCode(solarParkDto.getZipCode());
+        solarPark.setMax(solarParkDto.getMax());
+        solarPark.setSolarParkId(UUID.randomUUID());
+        solarPark.setSolarPanels(makeSolarPanelsForList(solarParkDto.getCountSonarPanels()));
+        return solarPark;
+    }
+
+    private List<SolarPanel> makeSolarPanelsForList(int count) {
         List<SolarPanel> solarPanels = new ArrayList<>();
-        for (int i = 0; i < solarPark.getCountSonarPanels(); i++) {
+        for (int i = 0; i < count; i++) {
 
             SolarPanel solarPanel = new SolarPanel(UUID.randomUUID(), false);
             solarPanels.add(solarPanel);
         }
-        solarPark.setSolarParkId(UUID.randomUUID());
-        solarPark.setSolarPanels(solarPanels);
-        solarParkRepo.insert(solarPark);
+        return solarPanels;
     }
-
 
     @Override
     public void removeSolarPark(String name) {
         if (!solarParkRepo.existsBySolarParkName(name)) {
             throw new CantRemoveSolarParkException();
         }
-
         solarParkRepo.removeBySolarParkName(name);
-
     }
 
     @Override

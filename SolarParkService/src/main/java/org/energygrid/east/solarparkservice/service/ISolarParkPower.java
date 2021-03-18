@@ -1,6 +1,7 @@
 package org.energygrid.east.solarparkservice.service;
 
 import org.energygrid.east.solarparkservice.model.SolarPark;
+import org.energygrid.east.solarparkservice.model.dto.AddSolarParkDTO;
 
 import java.util.UUID;
 
@@ -27,7 +28,7 @@ public interface ISolarParkPower {
     /**
      * @param solarPark
      */
-    void addSolarPark(SolarPark solarPark );
+    void addSolarPark(AddSolarParkDTO solarPark );
 
     /**
      * Remove solarPark based on name
