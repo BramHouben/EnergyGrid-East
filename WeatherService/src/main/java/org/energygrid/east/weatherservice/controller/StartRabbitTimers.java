@@ -4,10 +4,12 @@ import org.energygrid.east.weatherservice.models.SolarTimer;
 import org.energygrid.east.weatherservice.rabbit.RabbitProducer;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Timer;
 
+@Profile("!test")
 @Component
 public class StartRabbitTimers implements ApplicationRunner {
 
