@@ -44,10 +44,9 @@ public class RabbitWeatherListener implements ApplicationRunner {
 
                 String message = rabbitConfig.getUTF8Message(delivery.getBody());
 
-
                 logger.log(Level.ALL, "received message: " + message);
 
-                String replyMessage = "reply...";
+                String replyMessage = "sunpercentage is 10%";
 
                 rabbitConfig.sendMessage(channel, delivery.getProperties().getReplyTo(), properties, replyMessage);
             };
