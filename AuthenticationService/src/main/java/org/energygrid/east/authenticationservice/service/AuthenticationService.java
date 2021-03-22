@@ -1,5 +1,7 @@
 package org.energygrid.east.authenticationservice.service;
 
+import org.energygrid.east.authenticationservice.model.User;
+import org.energygrid.east.authenticationservice.repository.AuthenticationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -8,12 +10,12 @@ import java.util.Map;
 @Service
 public class AuthenticationService implements IAuthenticationService {
 
-    //@Autowired
-    //public IAuthenticationRepo authenticationRepo;
+    private AuthenticationRepository authenticationRepository;
 
-    private Map<String, String> users = new HashMap<>();
+    private final Map<String, String> users = new HashMap<>();
 
-    public AuthenticationService() {
+    public AuthenticationService(AuthenticationRepository authenticationRepository) {
+        this.authenticationRepository = authenticationRepository;
         users.put("1@user.com", "password1");
         users.put("2@user.com", "password2");
         users.put("3@user.com", "password3");
@@ -24,11 +26,7 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public boolean Login(String email, String password) {
-        //todo use repo
-        String actualPassword = users.get(email);
-
-        if (actualPassword.equals(password)) return true;
-
-        return false;
+        User user = authenticationRepository.findUserByEmailAndPassword(email, password);
+        return user != null;
     }
 }
