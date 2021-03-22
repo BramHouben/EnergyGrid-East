@@ -37,16 +37,16 @@ public class SolarPark {
 
     private int yearOfRealised;
 
-    private List<SolarPanel> solarPanels;
+    private List<SolarParkUnit> solarParkUnits;
 
     public SolarPark() {
     }
 
 
-    public SolarPark(UUID solarParkId, String solarParkName, int countSonarPanels, Point coordinates, List<SolarPanel> solarPanels, String applicant, String zipCode, String province, double power, int max, int yearOfRealised, double longCord, double langCord) {
+    public SolarPark(UUID solarParkId, String solarParkName, int countSonarPanels, Point coordinates, List<SolarParkUnit> solarParkUnits, String applicant, String zipCode, String province, double power, int max, int yearOfRealised, double longCord, double langCord) {
         this.solarParkId = solarParkId;
         this.coordinates = coordinates;
-        this.solarPanels = solarPanels;
+        this.solarParkUnits = solarParkUnits;
         this.countSonarPanels = countSonarPanels;
         this.applicant= applicant;
         this.zipCode = zipCode;
@@ -65,12 +65,12 @@ public class SolarPark {
         this.solarParkName = solarParkName;
     }
 
-    public List<SolarPanel> getSolarPanels() {
-        return solarPanels;
+    public void setSolarParkUnits(List<SolarParkUnit> solarParkUnits) {
+        this.solarParkUnits = solarParkUnits;
     }
 
-    public void setSolarPanels(List<SolarPanel> solarPanels) {
-        this.solarPanels = solarPanels;
+    public List<SolarParkUnit> getSolarParkUnits() {
+        return solarParkUnits;
     }
 
     public int getCountSonarPanels() {
@@ -95,7 +95,7 @@ public class SolarPark {
                 "solarParkId=" + solarParkId +
                 ", solarParkName='" + solarParkName + '\'' +
                 ", countSonarPanels=" + countSonarPanels +
-                ", solarPanels=" + solarPanels +
+                ", solarPanels=" + solarParkUnits +
                 '}';
     }
 
