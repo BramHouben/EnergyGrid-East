@@ -1,5 +1,6 @@
 package org.energygrid.east.weatherservice.rabbit;
 
+import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
@@ -8,21 +9,22 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RabbitConnection {
+public class RabbitConfiguration {
 
-    private static final Logger logger = Logger.getLogger(RabbitConnection.class.getName());
+    private static final Logger logger = Logger.getLogger(RabbitConfiguration.class.getName());
 
-    private static final RabbitConnection rabbitConnection = new RabbitConnection();
-    private ConnectionFactory connectionFactory;
+    private static final RabbitConfiguration rabbitConfiguration = new RabbitConfiguration();
+    private final ConnectionFactory connectionFactory;
     private Connection connection;
 
-    private RabbitConnection() {
+    private RabbitConfiguration() {
         connectionFactory = new ConnectionFactory();
-        connectionFactory.setHost("localhost");
+        connectionFactory.setHost(System.getenv("localhost"));
+        connection = createConnection();
     }
 
-    public static RabbitConnection getInstance() {
-        return rabbitConnection;
+    public static RabbitConfiguration getInstance() {
+        return rabbitConfiguration;
     }
 
     private Connection createConnection() {
@@ -43,10 +45,12 @@ public class RabbitConnection {
         }
     }
 
-    public Connection getConnection() {
-        if(connection == null){
-            return createConnection();
+    public Channel getChannel() {
+        try {
+            return connection.createChannel();
+        } catch (IOException e) {
+            logger.log(Level.ALL, e.getMessage());
+            return null;
         }
-        return connection;
     }
 }
