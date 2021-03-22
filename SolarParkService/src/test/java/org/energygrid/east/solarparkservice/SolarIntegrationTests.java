@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest
 public class SolarIntegrationTests {
 
@@ -67,13 +67,6 @@ public class SolarIntegrationTests {
         mockMvc.perform(get("/solarpark").param("id", "999"))
                 .andExpect(status().isBadRequest());
     }
-
-//    @Test
-//    public void returnOkRequestPostSolarPark() throws Exception {
-//
-//        mockMvc.perform(post("/solarpark").param("totalsonarpanels", "222").param("name", "test"))
-//                .andExpect(status().isCreated());
-//    }
 
     @Test
     public void returnBadRequestPostSolarPark() throws Exception {
