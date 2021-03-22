@@ -7,13 +7,16 @@ import org.energygrid.east.solarparkservice.model.SolarPanel;
 import org.energygrid.east.solarparkservice.model.SolarPark;
 import org.energygrid.east.solarparkservice.model.dto.AddSolarParkDTO;
 import org.energygrid.east.solarparkservice.repo.ISolarParkRepo;
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Configurable(autowire = Autowire.BY_TYPE)
 @Service
 public class SolarPowerService implements ISolarParkPower {
 
