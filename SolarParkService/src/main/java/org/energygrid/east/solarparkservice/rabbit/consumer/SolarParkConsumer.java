@@ -7,8 +7,12 @@ import org.energygrid.east.solarparkservice.rabbit.Monitor;
 import org.energygrid.east.solarparkservice.rabbit.deliverer.SolarParkDelivererCallBack;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SolarParkConsumer implements Consumer {
+
+    private static final Logger logger = Logger.getLogger(SolarParkConsumer.class.getName());
 
     private final String QUEUE_NAME;
     private final Object monitor;
@@ -25,9 +29,10 @@ public class SolarParkConsumer implements Consumer {
             DeliverCallback deliverCallback = new SolarParkDelivererCallBack(channel);
             channel.basicConsume(QUEUE_NAME, true, deliverCallback, s -> { });
 
-            Monitor.getInstance().start(monitor);
+            Monitor monitor = new Monitor();
+            monitor.start();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.ALL, e.getMessage());
         }
     }
 }

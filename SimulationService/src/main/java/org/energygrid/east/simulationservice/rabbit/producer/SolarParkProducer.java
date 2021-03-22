@@ -12,8 +12,12 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SolarParkProducer implements Producer<String> {
+
+    private static final Logger logger = Logger.getLogger(SolarParkProducer.class.getName());
 
     private String solarParkName;
     private final RabbitConfig rabbitConfig;
@@ -42,7 +46,8 @@ public class SolarParkProducer implements Producer<String> {
 
             return blockingQueue.poll(3000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
+            logger.log(Level.ALL, e.getMessage());
+            Thread.currentThread().interrupt();
         }
 
         return null;

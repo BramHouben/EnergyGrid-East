@@ -1,25 +1,26 @@
 package org.energygrid.east.weatherservice.rabbit;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Monitor {
 
-    private static final Monitor monitor = new Monitor();
+    private static final Logger logger = Logger.getLogger(Monitor.class.getName());
 
-    private Monitor() {
+    private final Object monitor;
 
+    public Monitor() {
+        monitor = new Object();
     }
 
-    public static Monitor getInstance() {
-        return monitor;
-    }
-
-    public void start(Object monitor) {
+    public void start() {
         while(true) {
             synchronized (monitor) {
                 try {
                     monitor.wait();
                     break;
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    logger.log(Level.ALL, e.getMessage());
                     Thread.currentThread().interrupt();
                     break;
                 }
