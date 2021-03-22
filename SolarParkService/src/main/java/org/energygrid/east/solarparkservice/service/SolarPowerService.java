@@ -64,7 +64,7 @@ public class SolarPowerService implements ISolarParkPower {
         solarPark.setZipCode(solarParkDto.getZipCode());
         solarPark.setMax(solarParkDto.getMax());
         solarPark.setSolarParkId(UUID.randomUUID());
-        solarPark.setSolarParkUnits(makeSolarParkUnits(solarParkDto.getCountSonarPanels()));
+        solarPark.setUnits(makeSolarParkUnits(solarParkDto.getCountSonarPanels()));
         return solarPark;
     }
 
