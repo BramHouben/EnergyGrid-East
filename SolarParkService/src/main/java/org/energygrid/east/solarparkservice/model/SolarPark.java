@@ -37,16 +37,16 @@ public class SolarPark {
 
     private int yearOfRealised;
 
-    private List<SolarParkUnit> solarParkUnits;
+    private List<SolarParkUnit> units;
 
     public SolarPark() {
     }
 
 
-    public SolarPark(UUID solarParkId, String solarParkName, int countSonarPanels, Point coordinates, List<SolarParkUnit> solarParkUnits, String applicant, String zipCode, String province, double power, int max, int yearOfRealised, double longCord, double langCord) {
+    public SolarPark(UUID solarParkId, String solarParkName, int countSonarPanels, Point coordinates, List<SolarParkUnit> units, String applicant, String zipCode, String province, double power, int max, int yearOfRealised, double longCord, double langCord) {
         this.solarParkId = solarParkId;
         this.coordinates = coordinates;
-        this.solarParkUnits = solarParkUnits;
+        this.units = units;
         this.countSonarPanels = countSonarPanels;
         this.applicant= applicant;
         this.zipCode = zipCode;
@@ -65,12 +65,12 @@ public class SolarPark {
         this.solarParkName = solarParkName;
     }
 
-    public void setSolarParkUnits(List<SolarParkUnit> solarParkUnits) {
-        this.solarParkUnits = solarParkUnits;
+    public void setUnits(List<SolarParkUnit> units) {
+        this.units = units;
     }
 
-    public List<SolarParkUnit> getSolarParkUnits() {
-        return solarParkUnits;
+    public List<SolarParkUnit> getUnits() {
+        return units;
     }
 
     public int getCountSonarPanels() {
@@ -95,7 +95,14 @@ public class SolarPark {
                 "solarParkId=" + solarParkId +
                 ", solarParkName='" + solarParkName + '\'' +
                 ", countSonarPanels=" + countSonarPanels +
-                ", solarPanels=" + solarParkUnits +
+                ", coordinates=" + coordinates +
+                ", applicant='" + applicant + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", province='" + province + '\'' +
+                ", power=" + power +
+                ", max=" + max +
+                ", yearOfRealised=" + yearOfRealised +
+                ", units=" + units +
                 '}';
     }
 
