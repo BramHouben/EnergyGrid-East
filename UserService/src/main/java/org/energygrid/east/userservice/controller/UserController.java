@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<UserViewModel> GetUserByUsernameOrEmail(@RequestParam(required = false) String username, @RequestParam(required = false) String email, @RequestParam(required = false) String uuid) {
+    public ResponseEntity<UserViewModel> GetUserByUuidOrUsernameOrEmail(@RequestParam(required = false) String uuid, @RequestParam(required = false) String username, @RequestParam(required = false) String email) {
         try {
             UserDTO user = userService.GetUserByUuidOrUsernameOrEmail(uuid, username, email);
             if (user == null) {
