@@ -2,16 +2,14 @@ package org.energygrid.east.userservice.model.viewmodel;
 
 import org.energygrid.east.userservice.model.enums.AccountRole;
 
-import java.util.UUID;
-
 public class UserViewModel {
-    private UUID id;
+    private String uuid;
     private String username;
     private String email;
-    private Enum<AccountRole> accountrole;
+    private Enum<AccountRole> accountRole;
 
-    public void setId(UUID id) { this.id = id; }
-    public UUID getId() { return id; }
+    public void setUuid(String id) { this.uuid = id; }
+    public String getUuid() { return uuid; }
 
     public void setUsername(String username) { this.username = username; }
     public String getUsername() { return username; }
@@ -19,6 +17,6 @@ public class UserViewModel {
     public void setEmail(String email) { this.email = email; }
     public String getEmail() { return email; }
 
-    public void setAccountrole(AccountRole accountrole) { this.accountrole = accountrole; }
-    public Enum<AccountRole> getAccountRole() { return accountrole; }
+    public void setAccountRole(AccountRole accountRole) { this.accountRole = accountRole; }
+    public Enum<AccountRole> getAccountRole() { return accountRole; }
 }

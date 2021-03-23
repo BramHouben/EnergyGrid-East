@@ -3,7 +3,9 @@ package org.energygrid.east.userservice.service;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 
+@Service
 public class SecurityService {
     private final Argon2 argon2 = Argon2Factory.create(
             Argon2Factory.Argon2Types.ARGON2id,

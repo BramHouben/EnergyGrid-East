@@ -1,28 +1,48 @@
 package org.energygrid.east.userservice.model.dto;
 
 import org.energygrid.east.userservice.model.enums.AccountRole;
+import org.hibernate.annotations.GenericGenerator;
 
-import java.util.UUID;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
+@Entity
 public class UserDTO {
-    private UUID id;
+    @Id @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    private String uuid;
     private String username;
-    private String email;
     private String password;
-    private Enum<AccountRole> accountrole;
+    private String email;
+    private AccountRole accountRole;
 
-    public void setId(UUID id) { this.id = id; }
-    public UUID getId() { return id; }
+    public UserDTO() {}
 
+    public String getUsername() { return this.username; }
     public void setUsername(String username) { this.username = username; }
-    public String getUsername() { return username; }
 
-    public void setEmail(String email) { this.email = email; }
-    public String getEmail() { return email; }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public void setPassword(String password) { this.password = password; }
-    public String getPassword() { return password; }
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public void setAccountrole(Enum<AccountRole> accountrole) { this.accountrole = accountrole; }
-    public Enum<AccountRole> getAccountRole() { return accountrole; }
+    public String getUuid() {
+        return uuid;
+    }
+    public void setUuid(String userId) {
+        this.uuid = userId;
+    }
+
+    public AccountRole getAccountRole() { return accountRole; }
+    public void setAccountRole(AccountRole accountRole) { this.accountRole = accountRole; }
 }

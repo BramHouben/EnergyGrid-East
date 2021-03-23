@@ -1,53 +1,67 @@
 package org.energygrid.east.userservice.controller;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.fromFrontend.User;
+import org.energygrid.east.userservice.model.viewmodel.UserViewModel;
 import org.energygrid.east.userservice.service.UserService;
 import org.jetbrains.annotations.NotNull;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("user")
 public class UserController {
-    @Autowired UserService userService;
+    @Autowired
+    UserService userService;
+    ModelMapper modelMapper;
+
+    public UserController() {
+        this.modelMapper = new ModelMapper();
+    }
 
     @PostMapping()
-    public ResponseEntity AddUser(@NotNull @RequestParam(name = "user") UserDTO user) {
+    public ResponseEntity AddUser(@NotNull @RequestBody User user) {
         try {
-            return ResponseEntity.ok(null);
+            userService.AddUser(user);
+            return ResponseEntity.status(201).body(null);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }
     }
-    //TODO automap models to prevent sensitive data exposure
+
     @GetMapping()
-    public ResponseEntity<UserDTO> GetUser(@NotNull @RequestParam(name = "id") UUID id) {
+    public ResponseEntity<UserViewModel> GetUserByUsernameOrEmail(@RequestParam(required = false) String username, @RequestParam(required = false) String email, @RequestParam(required = false) String uuid) {
         try {
-            UserDTO user = userService.GetUserById(id);
-            return ResponseEntity.status(200).body(user);
+            UserDTO user = userService.GetUserByUuidOrUsernameOrEmail(uuid, username, email);
+            if (user == null) {
+                return ResponseEntity.status(404).body(null);
+            }
+
+            var userViewmodel = modelMapper.map(user, UserViewModel.class);
+            return ResponseEntity.ok(userViewmodel);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }
     }
 
     @PutMapping()
-    public ResponseEntity EditUser(@NotNull User user) {
+    public ResponseEntity EditUser(@NotNull @RequestBody User user) {
         try {
-            // TODO map to dto
-            userService.EditUser();
+            var userDto = modelMapper.map(user, UserDTO.class);
+            userService.EditUser(userDto);
             return ResponseEntity.ok(null);
+        } catch (NullPointerException e) {
+            return ResponseEntity.status(404).body(null);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }
     }
 
-    @DeleteMapping()
-    public ResponseEntity DeleteUser(@NotNull @RequestParam(name = "id") UUID id) {
+    @DeleteMapping("{uuid}")
+    public ResponseEntity DeleteUser(@NotNull @PathVariable String uuid) {
         try {
-            userService.DeleteUser(id);
+            userService.DeleteUser(uuid);
             return ResponseEntity.ok(null);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
