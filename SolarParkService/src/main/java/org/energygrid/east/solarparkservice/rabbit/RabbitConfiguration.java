@@ -19,8 +19,8 @@ public class RabbitConfiguration {
 
     private RabbitConfiguration() {
         connectionFactory = new ConnectionFactory();
-        connectionFactory.setHost(System.getenv("localhost"));
-        connection = createConnection();
+        connectionFactory.setHost("localhost");
+        createConnection();
     }
 
     public static RabbitConfiguration getInstance() {

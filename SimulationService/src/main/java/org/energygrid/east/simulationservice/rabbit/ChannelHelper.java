@@ -4,8 +4,12 @@ import com.rabbitmq.client.Channel;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class ChannelHelper {
+
+    private static final Logger logger = Logger.getLogger(ChannelHelper.class.getName());
 
     private final Channel channel;
 
@@ -23,7 +27,7 @@ public abstract class ChannelHelper {
                 channel.close();
             }
         } catch (IOException | TimeoutException e) {
-            e.printStackTrace();
+            logger.log(Level.ALL, e.getMessage());
         }
     }
 }

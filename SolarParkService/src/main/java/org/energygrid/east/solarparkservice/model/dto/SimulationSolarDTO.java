@@ -13,4 +13,16 @@ public class SimulationSolarDTO {
         this.countSonarPanels = countSonarPanels;
         this.coordinates = coordinates;
     }
+
+    public String getSolarParkName() {
+        return solarParkName;
+    }
+
+    public int getCountSonarPanels() {
+        return countSonarPanels;
+    }
+
+    public Point getCoordinates() {
+        return coordinates;
+    }
 }
