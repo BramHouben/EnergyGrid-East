@@ -41,10 +41,8 @@ public class SimulationController {
     @GetMapping("/getLatestSimulation")
     public ResponseEntity<EnergyRegionSolarParksOutput> simulationEnergyGrid(@RequestBody List<EnergyRegionSolarParksInput> energyRegionSolarParksInput) {
 
-        EnergyRegionSolarParksOutput energyRegionSolarParksOutput = simulationService.simulationEnergyGrid(energyRegionSolarParksInput);
+        EnergyRegionSolarParksOutput energyRegionSolarParksOutput = simulationService.simulateEnergyGrid(energyRegionSolarParksInput);
 
     return ResponseEntity.ok().body(energyRegionSolarParksOutput);
     }
-
-
-}
+    }

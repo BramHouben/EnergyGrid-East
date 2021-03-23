@@ -14,5 +14,5 @@ public interface ISimulation {
 
     void deleteSimulation(String id);
 
-    EnergyRegionSolarParksOutput simulationEnergyGrid(List<EnergyRegionSolarParksInput> energyRegionSolarParksInput);
+    EnergyRegionSolarParksOutput simulateEnergyGrid(List<EnergyRegionSolarParksInput> energyRegionSolarParksInput);
 }

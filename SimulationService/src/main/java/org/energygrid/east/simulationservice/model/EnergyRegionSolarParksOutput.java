@@ -1,41 +1,21 @@
 package org.energygrid.east.simulationservice.model;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-public class EnergyRegionSolarParksOutput
-{
-    private UUID id;
-    private double totalKWHRegion;
+public class EnergyRegionSolarParksOutput {
 
-    public EnergyRegionSolarParksOutput(){
+    List<Double> Kwh = new ArrayList<>();
 
+    public List<Double> getKwh() {
+        return Kwh;
     }
 
-    public EnergyRegionSolarParksOutput(UUID id, double totalKWHRegion) {
-        this.id = id;
-
-        this.totalKWHRegion = totalKWHRegion;
+    public void addKwh(Double kwh) {
+        this.Kwh.add(kwh);
     }
 
+    public EnergyRegionSolarParksOutput() {
 
-    public double getTotalKWHRegion() {
-        return totalKWHRegion;
-    }
-
-
-
-    public void setTotalKWHRegion(double totalKWHRegion) {
-        this.totalKWHRegion = totalKWHRegion;
-    }
-
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 }
-
