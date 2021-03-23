@@ -12,6 +12,8 @@ zuul:
       url: http://localhost:8090/solarpark
     authentication:
       url: http://localhost:8100/auth
+    weather:
+      url: http://localhost:8110/weather
 
 server:
   port: 8081
