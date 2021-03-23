@@ -1,4 +1,5 @@
 package org.energygrid.east.userservice.controller;
+
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.fromFrontend.User;
 import org.energygrid.east.userservice.model.viewmodel.UserViewModel;
@@ -40,6 +41,8 @@ public class UserController {
 
             var userViewmodel = modelMapper.map(user, UserViewModel.class);
             return ResponseEntity.ok(userViewmodel);
+        } catch (NullPointerException e) {
+            return ResponseEntity.status(404).body(null);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }

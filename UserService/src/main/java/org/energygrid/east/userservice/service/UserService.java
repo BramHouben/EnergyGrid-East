@@ -37,7 +37,7 @@ public class UserService {
 
     public UserDTO GetUserByUuidOrUsernameOrEmail(String uuid, String username, String email) {
         if (StringUtils.isEmpty(uuid) && StringUtils.isEmpty(username) && StringUtils.isEmpty(email)) {
-            throw new RuntimeException("uuid, username and or email was empty");
+            throw new NullPointerException("uuid, username and or email was empty");
         }
         return userRepo.getUserByUuidOrUsernameOrEmail(uuid, username, email);
     }
