@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class RabbitProducer {
 
     private static final Logger logger = Logger.getLogger(RabbitProducer.class.getName());
-    private final String REQUEST_QUEUE_NAME = "solarparkservice_queue";
+    private final String REQUEST_QUEUE_NAME = "solarpark_queue";
     private final RabbitConfig rabbitConfig;
     private final Connection connection;
 
@@ -49,7 +49,7 @@ public class RabbitProducer {
 
             channel.basicConsume(replyQueueName, true, consumer);
 
-            channel.basicPublish("", REQUEST_QUEUE_NAME, properties, "give me weather".getBytes());
+            channel.basicPublish("", REQUEST_QUEUE_NAME, properties, "give me sunpercentage".getBytes());
 
             return blockingQueue.poll(3000, TimeUnit.MILLISECONDS);
 
