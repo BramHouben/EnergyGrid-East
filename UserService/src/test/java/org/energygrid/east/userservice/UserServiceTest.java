@@ -32,12 +32,12 @@ public class UserServiceTest {
     }
 
     @Test
-    public void EditUserTest() {
+    public void EditUserIllegalArgumentExceptionTest() {
         Assert.assertThrows(IllegalArgumentException.class, () -> userService.EditUser(null));
     }
 
     @Test
-    public void DeleteUserTest() {
+    public void DeleteUserIllegalArgumentExceptionTest() {
         Assert.assertThrows(IllegalArgumentException.class, () -> userService.DeleteUser(null));
     }
 }
