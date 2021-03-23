@@ -4,7 +4,7 @@ import org.springframework.data.geo.Point;
 
 import java.io.Serializable;
 
-public class EnergyRegionSolarParksInput implements Serializable {
+public class EnergyRegionSolarParksInput {
 
     private  String solarParkName;
     private int totalCountSolarPanels;
