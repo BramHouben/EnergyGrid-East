@@ -65,11 +65,11 @@ public class SimulationController {
         return ResponseEntity.status(200).body("Simulation: " + id + " stopped!");
     }
 
-    @GetMapping("/getLatestSimulation")
+    @PostMapping("/getLatestSimulation")
     public ResponseEntity<EnergyRegionSolarParksOutput> simulationEnergyGrid(@RequestBody List<EnergyRegionSolarParksInput> energyRegionSolarParksInput) {
 
         EnergyRegionSolarParksOutput energyRegionSolarParksOutput = simulationService.simulateEnergyGrid(energyRegionSolarParksInput);
 
-    return ResponseEntity.ok().body(energyRegionSolarParksOutput);
+        return ResponseEntity.ok().body(energyRegionSolarParksOutput);
     }
-    }
+}
