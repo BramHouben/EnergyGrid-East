@@ -81,11 +81,11 @@ public class SimulationService implements ISimulation {
                 var baseKwh = energypark.getTotalCountSolarPanels() * energyPerSolarPanel;
                 var finalKwh = baseKwh;
                 finalKwh = baseKwh * correctionFactor;
-                var temperature = hour.getAsJsonObject().get("temp").getAsDouble();
+                var temperature = hour.getAsJsonObject().get("temp").getAsDouble() + 30;
 
                 if (temperature > 25) {
                     var temperatureCorrection = (temperature - 25) * 0.4;
-                    finalKwh = finalKwh * (temperatureCorrection / 100);
+                    finalKwh = finalKwh * (1 - (temperatureCorrection / 100));
                 };
                 kwh += finalKwh;
             }
