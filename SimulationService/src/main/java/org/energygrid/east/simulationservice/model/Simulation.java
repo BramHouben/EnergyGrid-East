@@ -1,6 +1,5 @@
 package org.energygrid.east.simulationservice.model;
 
-import java.util.Timer;
 import java.util.UUID;
 
 public class Simulation {

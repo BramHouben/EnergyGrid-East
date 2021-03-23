@@ -31,7 +31,7 @@ public class AuthenticationController {
             String jwtToken = CreateJWTToken.getInstance().create(claims);
 
             return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
-        };
+        }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
