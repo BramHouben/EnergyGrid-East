@@ -12,6 +12,7 @@ zuul:
       url: http://localhost:8090/solarpark
     authentication:
       url: http://localhost:8100/auth
-
+    simulation:
+      url: http://localhost:8120/simulation
 server:
   port: 8081
