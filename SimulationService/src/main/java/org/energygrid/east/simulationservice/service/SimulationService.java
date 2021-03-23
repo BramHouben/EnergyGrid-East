@@ -6,6 +6,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import org.energygrid.east.simulationservice.model.EnergyRegionSolarParksInput;
 import org.energygrid.east.simulationservice.model.EnergyRegionSolarParksOutput;
+import org.energygrid.east.simulationservice.model.Kwh;
 import org.energygrid.east.simulationservice.model.Simulation;
 import org.springframework.data.geo.Point;
 import org.springframework.http.HttpEntity;
@@ -16,8 +17,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 
 @Service
@@ -66,8 +70,10 @@ public class SimulationService implements ISimulation {
 
         for (var hour: hours) {
             double kwh = 0;
+            LocalDateTime triggerTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(hour.getAsJsonObject().get("dt").getAsInt()), TimeZone.getDefault().toZoneId());
+
             if(hour.getAsJsonObject().get("uvi").getAsDouble() == 0) {
-                energyRegionSolarParksOutput.addKwh(0.0);
+                energyRegionSolarParksOutput.addKwh(new Kwh(0.0, triggerTime));
                 continue;
             }
 
@@ -77,16 +83,13 @@ public class SimulationService implements ISimulation {
                 finalKwh = baseKwh * correctionFactor;
                 var temperature = hour.getAsJsonObject().get("temp").getAsDouble();
 
-                //Deze moet geparsed worden naar een dateTime
-                //hour.getAsJsonObject().get("dt")
-
                 if (temperature > 25) {
                     var temperatureCorrection = (temperature - 25) * 0.4;
                     finalKwh = finalKwh * (temperatureCorrection / 100);
                 };
                 kwh += finalKwh;
             }
-            energyRegionSolarParksOutput.addKwh(kwh);
+            energyRegionSolarParksOutput.addKwh(new Kwh(kwh, triggerTime));
         }
 
         return energyRegionSolarParksOutput;
