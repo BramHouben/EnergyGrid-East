@@ -23,7 +23,7 @@ public class SecurityServiceTest {
 
     @Test
     public void HashPasswordIllegalArgumentExceptionTest() {
-        Assert.assertThrows(IllegalArgumentException.class, () -> securityService.HashPassword(null));
+        Assert.assertThrows(NullPointerException.class, () -> securityService.HashPassword(null));
     }
 
     @Test
@@ -35,7 +35,7 @@ public class SecurityServiceTest {
 
     @Test
     public void VerifyPasswordIllegalArgumentExceptionTest() {
-        Assert.assertThrows(IllegalArgumentException.class, () -> securityService.Verify(null ,null));
+        Assert.assertThrows(NullPointerException.class, () -> securityService.Verify(null ,null));
     }
 
     @Test
