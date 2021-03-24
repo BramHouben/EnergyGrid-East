@@ -1,5 +1,6 @@
 package org.energygrid.east.weatherservice.controller;
 
+import org.energygrid.east.weatherservice.entity.City;
 import org.energygrid.east.weatherservice.models.Weather;
 import org.energygrid.east.weatherservice.service.IWeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,9 @@ public class WeatherController {
         this.weatherService = weatherService;
     }
 
-    @GetMapping(value = "/current")
-    public ResponseEntity<Weather> getCurrentWeather(@NotNull @RequestParam(name = "city") String city){
-        Weather currentWeather = weatherService.getCurrentWeather(city);
+    @PostMapping("/current")
+    public ResponseEntity<Weather> getCurrentWeather(@NotNull @RequestBody City city ){
+        Weather currentWeather = weatherService.getCurrentWeather(city.getCity());
 
         if(currentWeather == null) return ResponseEntity.badRequest().build();
 
