@@ -20,9 +20,9 @@ public class WeatherController {
         this.weatherService = weatherService;
     }
 
-    @GetMapping("/current")
-    public ResponseEntity<Weather> getCurrentWeather(@NotNull @RequestParam(name = "city") String city){
-        Weather currentWeather = weatherService.getCurrentWeather(city);
+    @PostMapping("/current")
+    public ResponseEntity<Weather> getCurrentWeather(@NotNull @RequestBody City city ){
+        Weather currentWeather = weatherService.getCurrentWeather(city.getCity());
 
         if(currentWeather == null) return ResponseEntity.badRequest().build();
 
