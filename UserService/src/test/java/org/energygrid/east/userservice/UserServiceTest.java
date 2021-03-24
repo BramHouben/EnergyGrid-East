@@ -4,11 +4,14 @@ import org.energygrid.east.userservice.service.UserService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 @SpringBootTest
 public class UserServiceTest {
-    /*
+
     private final UserService userService;
+
     public UserServiceTest() {
         userService = new UserService();
     }
@@ -39,5 +42,5 @@ public class UserServiceTest {
     @Test
     public void DeleteUserIllegalArgumentExceptionTest() {
         Assert.assertThrows(IllegalArgumentException.class, () -> userService.DeleteUser(null));
-    }*/
+    }
 }

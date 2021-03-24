@@ -4,7 +4,9 @@ import org.energygrid.east.userservice.service.SecurityService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
+@ActiveProfiles("test")
 @SpringBootTest
 public class SecurityServiceTest {
     private final SecurityService securityService;
