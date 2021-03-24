@@ -6,7 +6,7 @@ public class UserViewModel {
     private String uuid;
     private String username;
     private String email;
-    private Enum<AccountRole> accountRole;
+    private AccountRole accountRole;
 
     public void setUuid(String id) { this.uuid = id; }
     public String getUuid() { return uuid; }
@@ -18,5 +18,5 @@ public class UserViewModel {
     public String getEmail() { return email; }
 
     public void setAccountRole(AccountRole accountRole) { this.accountRole = accountRole; }
-    public Enum<AccountRole> getAccountRole() { return accountRole; }
+    public AccountRole getAccountRole() { return accountRole; }
 }

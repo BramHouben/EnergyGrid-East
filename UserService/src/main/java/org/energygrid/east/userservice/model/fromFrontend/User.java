@@ -11,18 +11,18 @@ public class User {
     private String password;
     private AccountRole accountRole;
 
-    public void setUuid(String uuid) { this.uuid = uuid; }
-    public String getUuid() { return uuid; }
+    public void SetUuid(String uuid) { this.uuid = uuid; }
+    public String GetUuid() { return uuid; }
 
-    public void setUsername(String username) { this.username = username; }
-    public String getUsername() { return username; }
+    public void SetUsername(String username) { this.username = username; }
+    public String GetUsername() { return username; }
 
-    public void setEmail(String email) { this.email = email; }
-    public String getEmail() { return email; }
+    public void SetEmail(String email) { this.email = email; }
+    public String GetEmail() { return email; }
 
-    public void setPassword(String password) { this.password = password; }
-    public String getPassword() { return password; }
+    public void SetPassword(String password) { this.password = password; }
+    public String GetPassword() { return password; }
 
-    public void setAccountRole(AccountRole accountRole) { this.accountRole = accountRole; }
-    public AccountRole getAccountRole() { return accountRole; }
+    public void SetAccountRole(AccountRole accountRole) { this.accountRole = accountRole; }
+    public AccountRole GetAccountRole() { return accountRole; }
 }

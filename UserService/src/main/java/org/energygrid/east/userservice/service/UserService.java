@@ -19,18 +19,18 @@ public class UserService {
     private SecurityService securityService;
 
     public void AddUser(@NotNull User user) {
-        UserDTO dbUser = userRepo.getUserByUuidOrUsernameOrEmail(null, user.getUsername(), user.getEmail());
+        UserDTO dbUser = userRepo.getUserByUuidOrUsernameOrEmail(null, user.GetUsername(), user.GetEmail());
         if (dbUser != null) {
             throw new DuplicatedNameException("Username or email already in use");
         }
 
-        String passwordHash = securityService.HashPassword(user.getPassword());
+        String passwordHash = securityService.HashPassword(user.GetPassword());
         UserDTO userToStore = new UserDTO();
-        userToStore.setUuid(UUID.randomUUID().toString());
-        userToStore.setUsername(user.getUsername());
-        userToStore.setEmail(user.getEmail());
-        userToStore.setPassword(passwordHash);
-        userToStore.setAccountRole(user.getAccountRole());
+        userToStore.SetUuid(UUID.randomUUID().toString());
+        userToStore.SetUsername(user.GetUsername());
+        userToStore.SetEmail(user.GetEmail());
+        userToStore.SetPassword(passwordHash);
+        userToStore.SetAccountRole(user.GetAccountRole());
 
         userRepo.save(userToStore);
     }
@@ -43,22 +43,22 @@ public class UserService {
     }
 
     public void EditUser(@NotNull UserDTO user) {
-        var dbUser = userRepo.getUserByUuid(user.getUuid());
+        var dbUser = userRepo.getUserByUuid(user.GetUuid());
         if (dbUser == null) {
             throw new NullPointerException();
         }
 
         var userToStore = new UserDTO();
-        if (user.getPassword() != null) {
-            userToStore.setPassword(securityService.HashPassword(user.getPassword()));
+        if (user.GetPassword() != null) {
+            userToStore.SetPassword(securityService.HashPassword(user.GetPassword()));
         } else {
-            userToStore.setPassword(dbUser.getPassword());
+            userToStore.SetPassword(dbUser.GetPassword());
         }
 
-        userToStore.setUuid(user.getUuid());
-        userToStore.setUsername(user.getUsername());
-        userToStore.setAccountRole(user.getAccountRole());
-        userToStore.setEmail(user.getEmail());
+        userToStore.SetUuid(user.GetUuid());
+        userToStore.SetUsername(user.GetUsername());
+        userToStore.SetAccountRole(user.GetAccountRole());
+        userToStore.SetEmail(user.GetEmail());
 
         userRepo.save(userToStore);
     }

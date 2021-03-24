@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class UserServiceTest {
-    /*
     private final UserService userService;
     public UserServiceTest() {
         userService = new UserService();
@@ -39,5 +38,5 @@ public class UserServiceTest {
     @Test
     public void DeleteUserIllegalArgumentExceptionTest() {
         Assert.assertThrows(IllegalArgumentException.class, () -> userService.DeleteUser(null));
-    }*/
+    }
 }
