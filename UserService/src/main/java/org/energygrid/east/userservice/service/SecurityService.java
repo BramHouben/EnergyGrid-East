@@ -2,7 +2,7 @@ package org.energygrid.east.userservice.service;
 
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
-import org.jetbrains.annotations.NotNull;
+import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service

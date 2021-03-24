@@ -16,8 +16,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void AddUserIllegalArgumentExceptionTest() {
-        Assert.assertThrows(IllegalArgumentException.class, () -> userService.AddUser(null));
+    public void AddUserNullPointerExceptionTest() {
+        Assert.assertThrows(NullPointerException.class, () -> userService.AddUser(null));
     }
 
     @Test
@@ -34,12 +34,12 @@ public class UserServiceTest {
     }
 
     @Test
-    public void EditUserIllegalArgumentExceptionTest() {
-        Assert.assertThrows(IllegalArgumentException.class, () -> userService.EditUser(null));
+    public void EditUserNullPointerExceptionTest() {
+        Assert.assertThrows(NullPointerException.class, () -> userService.EditUser(null));
     }
 
     @Test
-    public void DeleteUserIllegalArgumentExceptionTest() {
-        Assert.assertThrows(IllegalArgumentException.class, () -> userService.DeleteUser(null));
+    public void DeleteUserNullPointerExceptionTest() {
+        Assert.assertThrows(NullPointerException.class, () -> userService.DeleteUser(null));
     }
 }
