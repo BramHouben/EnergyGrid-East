@@ -17,10 +17,13 @@ public class SolarPark {
 
     @Indexed(unique = true)
     private String solarParkName;
+    //
 
     private int countSonarPanels;
+    //
 
     private Point coordinates;
+    //
 
     private String applicant;
 
