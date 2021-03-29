@@ -1,27 +1,25 @@
-package org.energygrid.east.simulationservice.rabbit;
+package org.energygrid.east.weatherservice.rabbit;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RabbitProducer<T> extends ChannelHelper{
+public class RabbitProducer extends ChannelHelper{
 
     private static final Logger logger = Logger.getLogger(RabbitProducer.class.getName());
 
     public RabbitProducer() {
-
+        super();
     }
 
-    public T produce(Producer<T> producer) {
-        try {
-            return producer.produce(getChannel());
+    public void produce(Producer producer) {
+        try{
+            producer.produce(getChannel());
         }
         catch (Exception e){
             logger.log(Level.ALL, e.getMessage());
-            return null;
         }
         finally {
             closeChannel();
         }
     }
-
 }

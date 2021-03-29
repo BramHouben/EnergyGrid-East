@@ -3,9 +3,9 @@ package org.energygrid.east.simulationservice.controller;
 import org.energygrid.east.simulationservice.model.EnergyRegionSolarParksInput;
 import org.energygrid.east.simulationservice.model.EnergyRegionSolarParksOutput;
 import org.energygrid.east.simulationservice.model.Simulation;
-import org.energygrid.east.simulationservice.rabbit.RabbitProducer;
-import org.energygrid.east.simulationservice.rabbit.producer.SolarParkProducer;
-import org.energygrid.east.simulationservice.rabbit.producer.WeatherProducer;
+import org.energygrid.east.simulationservice.rabbit.RabbitConsumer;
+import org.energygrid.east.simulationservice.rabbit.producer.SolarParkConsumer;
+import org.energygrid.east.simulationservice.rabbit.producer.WeatherConsumer;
 import org.energygrid.east.simulationservice.service.ISimulation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,20 +30,22 @@ public class SimulationController {
 
     @GetMapping("/weather")
     public ResponseEntity<String> getWeather() {
-        RabbitProducer<String> rabbitProducer = new RabbitProducer<>();
-        WeatherProducer weatherProducer = new WeatherProducer();
+        RabbitConsumer<String> rabbitConsumer = new RabbitConsumer<>();
+        WeatherConsumer weatherConsumer = new WeatherConsumer();
 
-        String weather = rabbitProducer.produce(weatherProducer);
+        String weather = rabbitConsumer.consume(weatherConsumer);
+
+        System.out.println("weather recieved: " + weather);
 
         return ResponseEntity.status(200).body(weather);
     }
 
     @GetMapping("/solar")
     public ResponseEntity<String> getSolar(@NotNull @RequestParam(name = "name") String name) {
-        RabbitProducer<String> rabbitProducer = new RabbitProducer<>();
-        SolarParkProducer solarParkProducer = new SolarParkProducer(name);
+        RabbitConsumer<String> rabbitConsumer = new RabbitConsumer<>();
+        SolarParkConsumer solarParkProducer = new SolarParkConsumer(name);
 
-        String jsonSolar = rabbitProducer.produce(solarParkProducer);
+        String jsonSolar = rabbitConsumer.consume(solarParkProducer);
 
         if(jsonSolar == null){
             return ResponseEntity.badRequest().build();

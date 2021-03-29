@@ -2,7 +2,7 @@ package org.energygrid.east.simulationservice.rabbit;
 
 import com.rabbitmq.client.Channel;
 
-public interface Producer<T> {
+public interface Consumer<T> {
 
-    T produce(Channel channel);
+    T consume(Channel channel);
 }
