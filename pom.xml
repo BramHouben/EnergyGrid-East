@@ -74,5 +74,7 @@
         <module>gateway</module>
         <module>WeatherService</module>
         <module>AuthenticationService</module>
+        <module>UserService</module>
+        <module>SimulationService</module>
     </modules>
 </project>
