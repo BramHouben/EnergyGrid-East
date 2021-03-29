@@ -46,7 +46,7 @@ public class SolarPowerService implements ISolarParkPower {
     @Override
     public void addSolarPark(AddSolarParkDTO solarParkDto) {
 
-        if (solarParkDto.getSolarParkName() == null || solarParkDto.getCountSonarPanels() == 0) {
+        if (solarParkDto.getSolarParkName() == null || solarParkDto.getCountSonarPanels() == 0|| solarParkDto.getCoordinates() == null) {
             throw new CantAddSolarParkException();
         }
 
@@ -67,7 +67,7 @@ public class SolarPowerService implements ISolarParkPower {
         solarPark.setZipCode(solarParkDto.getZipCode());
         solarPark.setMax(solarParkDto.getMax());
         solarPark.setSolarParkId(UUID.randomUUID());
-        solarPark.setSolarParkUnits(makeSolarParkUnits(solarParkDto.getCountSonarPanels()));
+        solarPark.setUnits(makeSolarParkUnits(solarParkDto.getCountSonarPanels()));
         return solarPark;
     }
 

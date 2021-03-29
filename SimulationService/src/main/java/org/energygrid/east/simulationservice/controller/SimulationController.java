@@ -1,5 +1,7 @@
 package org.energygrid.east.simulationservice.controller;
 
+import org.energygrid.east.simulationservice.model.EnergyRegionSolarParksInput;
+import org.energygrid.east.simulationservice.model.EnergyRegionSolarParksOutput;
 import org.energygrid.east.simulationservice.model.Simulation;
 import org.energygrid.east.simulationservice.rabbit.RabbitProducer;
 import org.energygrid.east.simulationservice.rabbit.producer.SolarParkProducer;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @RestController
 @RequestMapping("simulation")
@@ -60,5 +63,13 @@ public class SimulationController {
     public ResponseEntity<String> deleteSimulation(@RequestParam(name = "id") String id) {
         simulationService.deleteSimulation(id);
         return ResponseEntity.status(200).body("Simulation: " + id + " stopped!");
+    }
+
+    @PostMapping("/getLatestSimulation")
+    public ResponseEntity<EnergyRegionSolarParksOutput> simulationEnergyGrid(@RequestBody List<EnergyRegionSolarParksInput> energyRegionSolarParksInput) {
+
+        EnergyRegionSolarParksOutput energyRegionSolarParksOutput = simulationService.simulateEnergyGrid(energyRegionSolarParksInput);
+
+        return ResponseEntity.ok().body(energyRegionSolarParksOutput);
     }
 }
