@@ -7,10 +7,6 @@ public class RabbitConsumer<T> extends ChannelHelper{
 
     private static final Logger logger = Logger.getLogger(RabbitConsumer.class.getName());
 
-    public RabbitConsumer() {
-
-    }
-
     public T consume(Consumer<T> consumer) {
         try {
             return consumer.consume(getChannel());

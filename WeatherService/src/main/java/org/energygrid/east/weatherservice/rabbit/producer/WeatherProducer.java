@@ -13,18 +13,18 @@ public class WeatherProducer implements Producer {
 
     private static final Logger logger = Logger.getLogger(WeatherProducer.class.getName());
 
-    private final String EXCHANGE_NAME;
+    private final String exchange_name;
 
     public WeatherProducer() {
-        EXCHANGE_NAME = "weather_exchange";
+        exchange_name = "weather_exchange";
     }
 
     @Override
     public void produce(Channel channel) {
         try {
-            channel.exchangeDeclare(EXCHANGE_NAME, "direct", true);
+            channel.exchangeDeclare(exchange_name, "direct", true);
 
-            WeatherTimer weatherTimer = new WeatherTimer(channel, EXCHANGE_NAME);
+            WeatherTimer weatherTimer = new WeatherTimer(channel, exchange_name);
 
             Timer timer = new Timer();
             timer.scheduleAtFixedRate(weatherTimer, 0, 10000);

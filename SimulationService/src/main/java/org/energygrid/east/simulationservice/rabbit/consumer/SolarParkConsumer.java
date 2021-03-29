@@ -1,10 +1,10 @@
-package org.energygrid.east.simulationservice.rabbit.producer;
+package org.energygrid.east.simulationservice.rabbit.consumer;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import org.energygrid.east.simulationservice.rabbit.Consumer;
 import org.energygrid.east.simulationservice.rabbit.RabbitConfig;
-import org.energygrid.east.simulationservice.rabbit.consumer.DefaultRabbitRPCConsumer;
+import org.energygrid.east.simulationservice.rabbit.defaultconsumer.DefaultRabbitRPCConsumer;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -21,13 +21,13 @@ public class SolarParkConsumer implements Consumer<String> {
     private String solarParkName;
     private final RabbitConfig rabbitConfig;
     private final String corrId;
-    private final String REQUEST_QUEUE_NAME;
+    private final String request_queu_name;
 
     public SolarParkConsumer(String solarParkName) {
         this.solarParkName = solarParkName;
         rabbitConfig = RabbitConfig.getInstance();
         corrId = UUID.randomUUID().toString();
-        REQUEST_QUEUE_NAME = "solarparkservice_queue";
+        request_queu_name = "solarparkservice_queue";
     }
 
 
@@ -41,7 +41,7 @@ public class SolarParkConsumer implements Consumer<String> {
             com.rabbitmq.client.Consumer consumer = new DefaultRabbitRPCConsumer(channel, blockingQueue, corrId);
 
             channel.basicConsume(replyQueueName, true, consumer);
-            channel.basicPublish("", REQUEST_QUEUE_NAME, properties, solarParkName.getBytes());
+            channel.basicPublish("", request_queu_name, properties, solarParkName.getBytes());
 
             return blockingQueue.poll(3000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | IOException e) {

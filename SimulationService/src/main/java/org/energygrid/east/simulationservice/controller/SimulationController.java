@@ -4,8 +4,8 @@ import org.energygrid.east.simulationservice.model.EnergyRegionSolarParksInput;
 import org.energygrid.east.simulationservice.model.EnergyRegionSolarParksOutput;
 import org.energygrid.east.simulationservice.model.Simulation;
 import org.energygrid.east.simulationservice.rabbit.RabbitConsumer;
-import org.energygrid.east.simulationservice.rabbit.producer.SolarParkConsumer;
-import org.energygrid.east.simulationservice.rabbit.producer.WeatherConsumer;
+import org.energygrid.east.simulationservice.rabbit.consumer.SolarParkConsumer;
+import org.energygrid.east.simulationservice.rabbit.consumer.WeatherConsumer;
 import org.energygrid.east.simulationservice.service.ISimulation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +34,6 @@ public class SimulationController {
         WeatherConsumer weatherConsumer = new WeatherConsumer();
 
         String weather = rabbitConsumer.consume(weatherConsumer);
-
-        System.out.println("weather recieved: " + weather);
 
         return ResponseEntity.status(200).body(weather);
     }

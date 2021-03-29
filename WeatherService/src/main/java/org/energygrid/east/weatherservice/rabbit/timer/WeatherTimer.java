@@ -1,6 +1,5 @@
 package org.energygrid.east.weatherservice.rabbit.timer;
 
-import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 
 import java.io.IOException;
@@ -13,18 +12,18 @@ public class WeatherTimer extends TimerTask {
     private Logger logger = Logger.getLogger(WeatherTimer.class.getName());
 
     private final Channel channel;
-    private final String EXCHANGE_NAME;
+    private final String exchange_name;
 
-    public WeatherTimer(Channel channel, String EXCHANGE_NAME) {
+    public WeatherTimer(Channel channel, String exchange_name) {
         this.channel = channel;
-        this.EXCHANGE_NAME = EXCHANGE_NAME;
+        this.exchange_name = exchange_name;
     }
 
     @Override
     public void run() {
         try {
-            channel.basicPublish(EXCHANGE_NAME, "", null, "45 degrees".getBytes());
-            System.out.println("WEATHER PUBLISHED");
+            channel.basicPublish(exchange_name, "", null, "45 degrees".getBytes());
+            logger.log(Level.ALL, "weather published");
         } catch (IOException e) {
             logger.log(Level.ALL, e.getMessage());
         }
