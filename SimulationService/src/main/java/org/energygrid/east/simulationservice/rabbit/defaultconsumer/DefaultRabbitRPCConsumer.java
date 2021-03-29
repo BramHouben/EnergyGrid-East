@@ -1,4 +1,4 @@
-package org.energygrid.east.simulationservice.rabbit.consumer;
+package org.energygrid.east.simulationservice.rabbit.defaultconsumer;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;

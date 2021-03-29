@@ -1,7 +1,7 @@
 package org.energygrid.east.weatherservice.controller;
 
-import org.energygrid.east.weatherservice.rabbit.RabbitConsumer;
-import org.energygrid.east.weatherservice.rabbit.consumer.WeatherConsumer;
+import org.energygrid.east.weatherservice.rabbit.RabbitProducer;
+import org.energygrid.east.weatherservice.rabbit.producer.WeatherProducer;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
@@ -18,10 +18,10 @@ public class RabbitComponent implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        RabbitConsumer rabbitConsumer = new RabbitConsumer();
-        WeatherConsumer weatherConsumer = new WeatherConsumer();
+        RabbitProducer rabbitProducer = new RabbitProducer();
+        WeatherProducer weatherProducer = new WeatherProducer();
 
-        rabbitConsumer.consume(weatherConsumer);
+        rabbitProducer.produce(weatherProducer);
 
     }
 }
