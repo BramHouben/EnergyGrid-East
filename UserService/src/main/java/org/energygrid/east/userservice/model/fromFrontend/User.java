@@ -10,6 +10,7 @@ public class User {
     private String email;
     private String password;
     private AccountRole accountRole;
+    private String language;
 
     public void SetUuid(String uuid) { this.uuid = uuid; }
     public String GetUuid() { return uuid; }
@@ -25,4 +26,7 @@ public class User {
 
     public void SetAccountRole(AccountRole accountRole) { this.accountRole = accountRole; }
     public AccountRole GetAccountRole() { return accountRole; }
+
+    public String GetLanguage() { return language; }
+    public void SetLanguage(String language) { this.language = language; }
 }

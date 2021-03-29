@@ -31,6 +31,7 @@ public class UserService {
         userToStore.SetEmail(user.GetEmail());
         userToStore.SetPassword(passwordHash);
         userToStore.SetAccountRole(user.GetAccountRole());
+        userToStore.SetLanguage(user.GetLanguage());
 
         userRepo.save(userToStore);
     }
@@ -59,6 +60,7 @@ public class UserService {
         userToStore.SetUsername(user.GetUsername());
         userToStore.SetAccountRole(user.GetAccountRole());
         userToStore.SetEmail(user.GetEmail());
+        userToStore.SetLanguage(user.GetLanguage());
 
         userRepo.save(userToStore);
     }

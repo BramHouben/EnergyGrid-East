@@ -16,6 +16,7 @@ public class UserDTO {
     private String password;
     private String email;
     private AccountRole accountRole;
+    private String language;
 
     public UserDTO() {}
 
@@ -45,4 +46,7 @@ public class UserDTO {
 
     public AccountRole GetAccountRole() { return accountRole; }
     public void SetAccountRole(AccountRole accountRole) { this.accountRole = accountRole; }
+
+    public String GetLanguage() { return language; }
+    public void SetLanguage(String language) { this.language = language; }
 }
