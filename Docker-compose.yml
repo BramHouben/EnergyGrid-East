@@ -43,3 +43,28 @@ services:
       - ./database:/data
     ports:
       - 29017:29017
+
+  weatherservice:
+    build: weatherservice
+    hostname: weatherservice
+    container_name: weatherservice
+    restart: always
+    ports:
+      - 8110:8110
+
+  userservice:
+    build: userservice
+    hostname: userservice
+    container_name: userservice
+    restart: always
+    ports:
+      - 8130:8130
+
+
+  authenticationservice:
+    build: AuthenticationService
+    hostname: authenticationService
+    container_name: authenticationService
+    restart: always
+    ports:
+      - 8100:8100
