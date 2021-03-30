@@ -8,9 +8,9 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <packaging>jar</packaging>
-    <artifactId>Solarparkservice</artifactId>
+    <artifactId>solarparkservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Solarparkservice</name>
+    <name>solarparkservice</name>
     <description>Solarpark for energygrid</description>
     <properties>
         <java.version>11</java.version>
@@ -66,7 +66,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <finalName>Solarparkservice</finalName>
+                    <finalName>solarparkservice</finalName>
                 </configuration>
             </plugin>
 

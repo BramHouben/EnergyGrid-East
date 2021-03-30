@@ -21,7 +21,7 @@ services:
     ports:
       - 8081:8081
     environment:
-      ZUUL_ROUTES_[naam]_URL: http://
+      ZUUL_ROUTES_SOLARPARK_URL: http://solarparkservice:8090/solarpark
 
   solarparkservice:
     build: SolarParkService
@@ -45,7 +45,7 @@ services:
       - 29017:29017
 
   weatherservice:
-    build: Weatherservice
+    build: WeatherService
     hostname: weatherservice
     container_name: weatherservice
     restart: always
@@ -59,7 +59,6 @@ services:
     restart: always
     ports:
       - 8130:8130
-
 
   authenticationservice:
     build: AuthenticationService
