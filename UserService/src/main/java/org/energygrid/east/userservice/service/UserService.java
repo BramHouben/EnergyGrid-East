@@ -2,9 +2,11 @@ package org.energygrid.east.userservice.service;
 
 import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
+import org.energygrid.east.userservice.model.enums.AccountRole;
 import org.energygrid.east.userservice.model.fromFrontend.User;
-import org.energygrid.east.userservice.repo.IUserRepo;
 import javax.validation.constraints.NotNull;
+
+import org.energygrid.east.userservice.repo.IUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -18,54 +20,54 @@ public class UserService {
     @Autowired
     private SecurityService securityService;
 
-    public void AddUser(@NotNull User user) {
-        UserDTO dbUser = userRepo.getUserByUuidOrUsernameOrEmail(null, user.GetUsername(), user.GetEmail());
+    public void addUser(@NotNull User user) {
+        UserDTO dbUser = userRepo.getUserByUuidOrUsernameOrEmail(null, user.getUsername(), user.getEmail());
         if (dbUser != null) {
             throw new DuplicatedNameException("Username or email already in use");
         }
 
-        String passwordHash = securityService.HashPassword(user.GetPassword());
+        String passwordHash = securityService.HashPassword(user.getPassword());
         UserDTO userToStore = new UserDTO();
-        userToStore.SetUuid(UUID.randomUUID().toString());
-        userToStore.SetUsername(user.GetUsername());
-        userToStore.SetEmail(user.GetEmail());
-        userToStore.SetPassword(passwordHash);
-        userToStore.SetAccountRole(user.GetAccountRole());
-        userToStore.SetLanguage(user.GetLanguage());
+        userToStore.setUuid(UUID.randomUUID().toString());
+        userToStore.setUsername(user.getUsername());
+        userToStore.setEmail(user.getEmail());
+        userToStore.setPassword(passwordHash);
+        userToStore.setAccountRole(AccountRole.LargeScaleCustomer);
+        userToStore.setLanguage(user.getLanguage());
 
         userRepo.save(userToStore);
     }
 
-    public UserDTO GetUserByUuidOrUsernameOrEmail(String uuid, String username, String email) {
+    public UserDTO getUserByUuidOrUsernameOrEmail(String uuid, String username, String email) {
         if (StringUtils.isEmpty(uuid) && StringUtils.isEmpty(username) && StringUtils.isEmpty(email)) {
             throw new NullPointerException("uuid, username and or email was empty");
         }
         return userRepo.getUserByUuidOrUsernameOrEmail(uuid, username, email);
     }
 
-    public void EditUser(@NotNull UserDTO user) {
-        var dbUser = userRepo.getUserByUuid(user.GetUuid());
+    public void editUser(@NotNull UserDTO user) {
+        var dbUser = userRepo.getUserByUuid(user.getUuid());
         if (dbUser == null) {
             throw new NullPointerException();
         }
 
         var userToStore = new UserDTO();
-        if (user.GetPassword() != null) {
-            userToStore.SetPassword(securityService.HashPassword(user.GetPassword()));
+        if (user.getPassword() != null) {
+            userToStore.setPassword(securityService.HashPassword(user.getPassword()));
         } else {
-            userToStore.SetPassword(dbUser.GetPassword());
+            userToStore.setPassword(dbUser.getPassword());
         }
 
-        userToStore.SetUuid(user.GetUuid());
-        userToStore.SetUsername(user.GetUsername());
-        userToStore.SetAccountRole(user.GetAccountRole());
-        userToStore.SetEmail(user.GetEmail());
-        userToStore.SetLanguage(user.GetLanguage());
+        userToStore.setUuid(user.getUuid());
+        userToStore.setUsername(user.getUsername());
+        userToStore.setAccountRole(user.getAccountRole());
+        userToStore.setEmail(user.getEmail());
+        userToStore.setLanguage(user.getLanguage());
 
         userRepo.save(userToStore);
     }
 
-    public void DeleteUser(@NotNull String uuid) {
+    public void deleteUser(@NotNull String uuid) {
         UserDTO userToDelete = userRepo.getUserByUuid(uuid);
         userRepo.delete(userToDelete);
     }

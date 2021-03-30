@@ -12,21 +12,53 @@ public class User {
     private AccountRole accountRole;
     private String language;
 
-    public void SetUuid(String uuid) { this.uuid = uuid; }
-    public String GetUuid() { return uuid; }
+    public User() {}
 
-    public void SetUsername(String username) { this.username = username; }
-    public String GetUsername() { return username; }
+    public String getUuid() {
+        return uuid;
+    }
 
-    public void SetEmail(String email) { this.email = email; }
-    public String GetEmail() { return email; }
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
-    public void SetPassword(String password) { this.password = password; }
-    public String GetPassword() { return password; }
+    public String getUsername() {
+        return username;
+    }
 
-    public void SetAccountRole(AccountRole accountRole) { this.accountRole = accountRole; }
-    public AccountRole GetAccountRole() { return accountRole; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public String GetLanguage() { return language; }
-    public void SetLanguage(String language) { this.language = language; }
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public AccountRole getAccountRole() {
+        return accountRole;
+    }
+
+    public void setAccountRole(AccountRole accountRole) {
+        this.accountRole = accountRole;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 }

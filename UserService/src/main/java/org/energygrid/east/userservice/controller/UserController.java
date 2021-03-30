@@ -24,7 +24,7 @@ public class UserController {
     @PostMapping()
     public ResponseEntity AddUser(@NotNull @RequestBody User user) {
         try {
-            userService.AddUser(user);
+            userService.addUser(user);
             return ResponseEntity.status(201).body(null);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
@@ -34,7 +34,7 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<UserViewModel> GetUserByUuidOrUsernameOrEmail(@RequestParam(required = false) String uuid, @RequestParam(required = false) String username, @RequestParam(required = false) String email) {
         try {
-            UserDTO user = userService.GetUserByUuidOrUsernameOrEmail(uuid, username, email);
+            UserDTO user = userService.getUserByUuidOrUsernameOrEmail(uuid, username, email);
             if (user == null) {
                 return ResponseEntity.status(404).body(null);
             }
@@ -52,7 +52,7 @@ public class UserController {
     public ResponseEntity EditUser(@NotNull @RequestBody User user) {
         try {
             var userDto = modelMapper.map(user, UserDTO.class);
-            userService.EditUser(userDto);
+            userService.editUser(userDto);
             return ResponseEntity.ok(null);
         } catch (NullPointerException e) {
             return ResponseEntity.status(404).body(null);
@@ -64,7 +64,7 @@ public class UserController {
     @DeleteMapping("{uuid}")
     public ResponseEntity DeleteUser(@NotNull @PathVariable String uuid) {
         try {
-            userService.DeleteUser(uuid);
+            userService.deleteUser(uuid);
             return ResponseEntity.ok(null);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
