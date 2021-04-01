@@ -2,7 +2,7 @@ package org.energygrid.east.solarparkservice.rabbit;
 
 import com.rabbitmq.client.Channel;
 
-public interface Consumer<T> {
+public interface Producer<T> {
 
-    void consume(Channel channel);
+    void produce(Channel channel);
 }

@@ -4,6 +4,7 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import org.energygrid.east.simulationsolarservice.rabbit.Consumer;
 import org.energygrid.east.simulationsolarservice.rabbit.RabbitConfig;
+import org.energygrid.east.simulationsolarservice.rabbit.defaultconsumer.DefaultRabbitConsumer;
 import org.energygrid.east.simulationsolarservice.rabbit.defaultconsumer.DefaultRabbitRPCConsumer;
 
 import java.io.IOException;
@@ -18,30 +19,28 @@ public class SolarParkConsumer implements Consumer<String> {
 
     private static final Logger logger = Logger.getLogger(SolarParkConsumer.class.getName());
 
-    private String solarParkName;
-    private final RabbitConfig rabbitConfig;
-    private final String corrId;
-    private final String request_queu_name;
+    private final String solarParkName;
+    private final String queue_name;
+    private final String exchange_name;
 
     public SolarParkConsumer(String solarParkName) {
         this.solarParkName = solarParkName;
-        rabbitConfig = RabbitConfig.getInstance();
-        corrId = UUID.randomUUID().toString();
-        request_queu_name = "solarparkservice_queue";
+        queue_name = "simulation_solar_queue";
+        exchange_name = "weather_exchange";
     }
 
 
     @Override
     public String consume(Channel channel) {
         try {
-            String replyQueueName = channel.queueDeclare().getQueue();
-            AMQP.BasicProperties properties = rabbitConfig.getProperties(corrId, replyQueueName);
+            channel.queueDeclare(queue_name, false, false, false, null);
+            channel.exchangeDeclare(exchange_name, "direct", true);
+            channel.queueBind(queue_name, exchange_name, "");
 
             BlockingQueue<String> blockingQueue = new ArrayBlockingQueue<>(1);
-            com.rabbitmq.client.Consumer consumer = new DefaultRabbitRPCConsumer(channel, blockingQueue, corrId);
+            com.rabbitmq.client.Consumer consumer = new DefaultRabbitConsumer(channel, blockingQueue);
 
-            channel.basicConsume(replyQueueName, true, consumer);
-            channel.basicPublish("", request_queu_name, properties, solarParkName.getBytes());
+            channel.basicConsume(queue_name, true, consumer);
 
             return blockingQueue.poll(3000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | IOException e) {

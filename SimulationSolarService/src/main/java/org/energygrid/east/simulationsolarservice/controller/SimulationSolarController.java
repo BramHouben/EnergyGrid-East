@@ -41,9 +41,9 @@ public class SimulationSolarController {
     @GetMapping("/solar")
     public ResponseEntity<String> getSolar(@NotNull @RequestParam(name = "name") String name) {
         RabbitConsumer<String> rabbitConsumer = new RabbitConsumer<>();
-        SolarParkConsumer solarParkProducer = new SolarParkConsumer(name);
+        SolarParkConsumer solarParkConsumer = new SolarParkConsumer(name);
 
-        String jsonSolar = rabbitConsumer.consume(solarParkProducer);
+        String jsonSolar = rabbitConsumer.consume(solarParkConsumer);
 
         if(jsonSolar == null){
             return ResponseEntity.badRequest().build();

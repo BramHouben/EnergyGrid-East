@@ -3,17 +3,17 @@ package org.energygrid.east.solarparkservice.rabbit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RabbitConsumer extends ChannelHelper {
+public class RabbitProducer extends ChannelHelper {
 
-    private static final Logger logger = Logger.getLogger(RabbitConsumer.class.getName());
+    private static final Logger logger = Logger.getLogger(RabbitProducer.class.getName());
 
-    public RabbitConsumer() {
+    public RabbitProducer() {
         super();
     }
 
-    public void consume(Consumer consumer) {
+    public void produce(Producer producer) {
         try{
-            consumer.consume(getChannel());
+            producer.produce(getChannel());
         }
         catch (Exception e){
             logger.log(Level.ALL, e.getMessage());
