@@ -1,5 +1,6 @@
 package org.energygrid.east.userservice.controller;
 
+import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.fromFrontend.User;
 import org.energygrid.east.userservice.model.viewmodel.UserViewModel;
@@ -26,6 +27,8 @@ public class UserController {
         try {
             userService.addUser(user);
             return ResponseEntity.status(201).body(null);
+        } catch (DuplicatedNameException e) {
+            return ResponseEntity.status(409).body(null);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }
