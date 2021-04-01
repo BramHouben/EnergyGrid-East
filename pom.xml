@@ -76,6 +76,6 @@
         <module>WeatherService</module>
         <module>AuthenticationService</module>
         <module>UserService</module>
-        <module>SimulationService</module>
+        <module>SimulationSolarService</module>
     </modules>
 </project>
