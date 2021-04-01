@@ -3,6 +3,8 @@ package org.energygrid.east.solarparkservice.controller;
 
 import org.energygrid.east.solarparkservice.model.SolarPark;
 import org.energygrid.east.solarparkservice.model.dto.AddSolarParkDTO;
+import org.energygrid.east.solarparkservice.rabbit.RabbitProducer;
+import org.energygrid.east.solarparkservice.rabbit.producer.SolarParkProducer;
 import org.energygrid.east.solarparkservice.service.ISolarParkPower;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,10 @@ public class SolarParkController {
     public ResponseEntity<String> addSolarPark(@NotNull @RequestBody AddSolarParkDTO solarPark ) {
 
         solarParkPowerService.addSolarPark(solarPark);
+
+        RabbitProducer rabbitProducer = new RabbitProducer();
+        SolarParkProducer solarParkConsumer = new SolarParkProducer(solarPark);
+        rabbitProducer.produce(solarParkConsumer);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Solar park successfully made");
 
