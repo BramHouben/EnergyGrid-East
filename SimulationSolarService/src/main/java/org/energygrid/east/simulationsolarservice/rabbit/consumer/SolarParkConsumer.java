@@ -19,14 +19,12 @@ public class SolarParkConsumer implements Consumer<String> {
 
     private static final Logger logger = Logger.getLogger(SolarParkConsumer.class.getName());
 
-    private final String solarParkName;
     private final String queue_name;
     private final String exchange_name;
 
-    public SolarParkConsumer(String solarParkName) {
-        this.solarParkName = solarParkName;
+    public SolarParkConsumer() {
         queue_name = "simulation_solar_queue";
-        exchange_name = "weather_exchange";
+        exchange_name = "solarpark_exchange";
     }
 
 
