@@ -55,7 +55,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
         uses: jakejarvis/wait-action@master
         with:
-          time: '30s'
+          time: '90s'
     
       - name: Build and analyze
         env:
