@@ -13,6 +13,10 @@ jobs:
       RABBIT_HOST: rabbitmq
     
     steps:
+      - name: action-docker-compose
+        uses: sudo-bot/action-docker-compose@latest
+        with:
+          cli-args: up
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
