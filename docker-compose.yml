@@ -59,7 +59,9 @@ services:
     environment:
       RABBIT_HOST: rabbitmq
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+      
     links: 
       - rabbitmq
 
