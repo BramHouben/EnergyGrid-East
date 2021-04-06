@@ -77,5 +77,6 @@
         <module>AuthenticationService</module>
         <module>UserService</module>
         <module>SimulationSolarService</module>
+        <module>RegionService</module>
     </modules>
 </project>
