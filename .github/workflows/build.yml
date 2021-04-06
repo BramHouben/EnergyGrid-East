@@ -5,6 +5,7 @@ on:
       - dev
   pull_request:
     types: [opened, synchronize, reopened]
+    
 jobs:
   build:
     name: Build
@@ -13,8 +14,6 @@ jobs:
       RABBIT_HOST: rabbitmq
     
     steps:
-      - name: Build the stack
-        run: docker-compose up -d
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
@@ -39,3 +38,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage
+        
+      - name: Build the stack
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        run: mvn compile docker-compose up -d
