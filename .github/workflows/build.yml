@@ -13,12 +13,6 @@ jobs:
       RABBIT_HOST: rabbitmq
     
     steps:
-      - name: comile 
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          run: mvn -B compile
-      - uses: actions/checkout@v
-      
       - name: Build the stack
         run: docker-compose up -d
       - uses: actions/checkout@v2
