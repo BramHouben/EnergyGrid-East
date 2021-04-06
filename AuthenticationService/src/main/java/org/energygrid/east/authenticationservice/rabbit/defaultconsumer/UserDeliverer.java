@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 
 public class UserDeliverer implements DeliverCallback {
 
-    private final static Logger logger = Logger.getLogger(UserDeliverer.class.getName());
 
     @Override
     public void handle(String s, Delivery delivery) throws IOException {
