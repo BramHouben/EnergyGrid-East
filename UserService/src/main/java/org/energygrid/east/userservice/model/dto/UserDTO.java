@@ -13,6 +13,7 @@ public class UserDTO {
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     private String uuid;
     private String username;
+    private String email;
     private AccountRole accountRole;
     private String language;
 
@@ -46,5 +47,13 @@ public class UserDTO {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
