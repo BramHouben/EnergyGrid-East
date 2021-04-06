@@ -52,7 +52,7 @@ services:
     ports:
       - 8110:8110
     environment:
-      RABBIT_HOST: rabbitmq
+      RABBIT_HOST: localhost
 
   userservice:
     build: UserService
