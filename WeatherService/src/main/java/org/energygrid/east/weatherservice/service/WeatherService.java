@@ -23,9 +23,7 @@ import java.util.List;
 
 @Service
 public class WeatherService implements IWeatherService {
-
-    private String currentWeatherUrl = "https://api.openweathermap.org/data/2.5/weather";
-    private String weatherForecastUrl = "https://api.openweathermap.org/data/2.5/onecall";
+    private String url = "https://api.openweathermap.org/data/2.5/";
     private String apiKey = "d43994b92b8caae6ee650e65194f0ad8";
     private RestTemplate template;
     private HttpHeaders headers;
@@ -46,11 +44,11 @@ public class WeatherService implements IWeatherService {
     }
 
     private String currentWeatherStringBuilder(Point2D.Double coordinates){
-        return currentWeatherUrl + "?lat=" + coordinates.getX() + "&lon=" + coordinates.getY()+ "&appid=" + apiKey;
+        return url + "weather?lat=" + coordinates.getX() + "&lon=" + coordinates.getY()+ "&appid=" + apiKey;
     }
 
     private String weatherForecastStringBuilder(Point2D.Double coordinates){
-        return weatherForecastUrl + "?lat=" + coordinates.getX() + "&lon=" + coordinates.getY() + "&exclude=current,minutely,hourly,alerts" + "&appid=" + apiKey;
+        return url + "onecall?lat=" + coordinates.getX() + "&lon=" + coordinates.getY() + "&exclude=current,minutely,hourly,alerts" + "&appid=" + apiKey;
     }
 
     private double kelvinToCelsius(double kelvin){
@@ -83,7 +81,7 @@ public class WeatherService implements IWeatherService {
         var forecastData = fullWeatherForecast.get("daily").getAsJsonArray();
         forecastData.remove(forecastData.size() - 1);
 
-        List<Forecast> weekForecast = new ArrayList<Forecast>();
+        List<Forecast> weekForecast = new ArrayList<>();
 
         for (JsonElement day : forecastData) {
             double minTemp = Math.round(kelvinToCelsius(day.getAsJsonObject().get("temp").getAsJsonObject().get("min").getAsDouble()));

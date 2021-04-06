@@ -1,7 +1,5 @@
 package org.energygrid.east.weatherservice.models;
 
-import java.util.Date;
-
 public class Forecast {
     private double minTemperature;
     private double maxTemperature;
