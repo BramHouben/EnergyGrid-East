@@ -1,6 +1,5 @@
 package org.energygrid.east.weatherservice.entity;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 
 public class Coordinates {
