@@ -9,13 +9,9 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    
-    services:
-     rabbitmq:
-      image: rabbitmq
-      ports:
-        - 5672/tcp
-    
+    env:
+      RABBIT_HOST: rabbitmq
+      
     steps:
       - uses: actions/checkout@v2
         with:
