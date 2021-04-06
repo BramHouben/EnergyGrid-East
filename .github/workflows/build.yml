@@ -50,6 +50,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         run: docker-compose up -d 
     
+      - name: Sleep for 30 seconds
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '30s'
+    
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
