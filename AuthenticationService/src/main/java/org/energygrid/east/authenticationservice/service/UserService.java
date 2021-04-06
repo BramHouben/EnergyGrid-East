@@ -15,10 +15,10 @@ public class UserService implements IUserService {
     private AuthenticationRepository authenticationRepository;
 
     @Override
-    public void AddUser(String email, String password) {
+    public void addUser(String email, String password) {
 
         if (authenticationRepository.findUserByEmail(email) == null) {
-            var hashedPassword = securityService.HashPassword(password);
+            var hashedPassword = securityService.hashPassword(password);
 
             authenticationRepository.save(new User(email, hashedPassword));
         }

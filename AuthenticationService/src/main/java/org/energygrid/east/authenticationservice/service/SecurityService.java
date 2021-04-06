@@ -14,11 +14,11 @@ public class SecurityService {
             64
     );
 
-    public String HashPassword(@NotNull String password) {
+    public String hashPassword(@NotNull String password) {
         return argon2.hash(22, 65536,1, password);
     }
 
-    public boolean Verify(@NotNull String password, @NotNull String passwordHash) {
+    public boolean verify(@NotNull String password, @NotNull String passwordHash) {
         return argon2.verify(passwordHash, password);
     }
 }

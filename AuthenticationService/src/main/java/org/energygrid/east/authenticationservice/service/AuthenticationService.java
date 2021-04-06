@@ -25,13 +25,13 @@ public class AuthenticationService implements IAuthenticationService {
 
 
     @Override
-    public boolean Login(String email, String password) {
+    public boolean login(String email, String password) {
         User user = authenticationRepository.findUserByEmailAndPassword(email, password);
         return user != null;
     }
 
     @Override
-    public void AddUser(String email, String password) {
+    public void addUser(String email, String password) {
         var user = new User(email, password);
         authenticationRepository.save(user);
     }

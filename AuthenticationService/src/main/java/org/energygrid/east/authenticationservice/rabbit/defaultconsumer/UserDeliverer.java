@@ -24,6 +24,6 @@ public class UserDeliverer implements DeliverCallback {
 
         User user = gson.fromJson(json, User.class);
 
-        userService.AddUser(user.getEmail(), user.getPassword());
+        userService.addUser(user.getEmail(), user.getPassword());
     }
 }
