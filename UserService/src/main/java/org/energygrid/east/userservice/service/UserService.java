@@ -53,7 +53,7 @@ public class UserService {
             // TODO add rabbitmq message to update password on auth service
         }
 
-        if (user.getEmail() != dbUser.getEmail()) {
+        if (!user.getEmail().equals(dbUser.getEmail())) {
             // TODO add rabbitmq message to update email on auth service
         }
 
