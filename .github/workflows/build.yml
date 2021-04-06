@@ -37,9 +37,8 @@ jobs:
       - name: compile
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-        run: mvn compile
+        run: mvn clean package -Dmaven.test.skip=true
         
-    
       - name: install stack
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
