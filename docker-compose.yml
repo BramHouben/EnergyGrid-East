@@ -12,6 +12,11 @@ services:
       - 5672:5672
       - 15672:15672
     restart: always
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:15672"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
 
   gateway:
     container_name: gateway
@@ -52,7 +57,11 @@ services:
     ports:
       - 8110:8110
     environment:
-      RABBIT_HOST: localhost
+      RABBIT_HOST: rabbitmq
+    depends_on:
+      - rabbitmq
+    links: 
+      - rabbitmq
 
   userservice:
     build: UserService
