@@ -20,36 +20,36 @@ public class RegionController {
     IRegionService regionService;
 
     @GetMapping("provinceinfo")
-    public ResponseEntity<List<House>> getProvinceInfo(@RequestParam(name = "regionname") String regionName) {
+    public ResponseEntity<List<House>> getProvinceInfo(@RequestParam(name = "regionname") String regionName, @RequestParam(name = "page") int page) {
 
         if (regionName.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        List<House> houses = regionService.getAllHousesProvince(regionName);
+        List<House> houses = regionService.getAllHousesProvince(regionName,page);
 
         return ResponseEntity.ok().body(houses);
 
 
     }
     @GetMapping("cityinfo")
-    public ResponseEntity<List<House>> getCityInfo(@RequestParam(name = "cityname") String cityName) {
+    public ResponseEntity<List<House>> getCityInfo(@RequestParam(name = "cityname") String cityName, @RequestParam(name = "page") int page) {
 
         if (cityName.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        List<House> houses = regionService.getAllHousesCity(cityName);
+        List<House> houses = regionService.getAllHousesCity(cityName,page);
 
         return ResponseEntity.ok().body(houses);
 
 
     }
     @GetMapping("streetinfo")
-    public ResponseEntity<List<House>> getStreetInfo(@RequestParam(name = "streetname") String streetName) {
+    public ResponseEntity<List<House>> getStreetInfo(@RequestParam(name = "streetname") String streetName, @RequestParam(name = "page") int page) {
 
         if (streetName.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        List<House> houses = regionService.getAllHousesStreet(streetName);
+        List<House> houses = regionService.getAllHousesStreet(streetName,page);
 
         return ResponseEntity.ok().body(houses);
 

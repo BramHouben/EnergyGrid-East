@@ -14,17 +14,17 @@ public class RegionService implements IRegionService {
     private IRegionRepo regionRepo;
 
     @Override
-    public List<House> getAllHousesProvince(String regionName) {
+    public List<House> getAllHousesProvince(String regionName, int page) {
         return regionRepo.getAllByRegion(regionName);
     }
 
     @Override
-    public List<House> getAllHousesCity(String cityName) {
+    public List<House> getAllHousesCity(String cityName,int page) {
         return regionRepo.getAllByCity(cityName);
     }
 
     @Override
-    public List<House> getAllHousesStreet(String streetName) {
+    public List<House> getAllHousesStreet(String streetName,int page) {
         return regionRepo.getAllByStreet(streetName);
     }
 }

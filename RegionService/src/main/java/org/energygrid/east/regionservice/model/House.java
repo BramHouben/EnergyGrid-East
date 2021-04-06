@@ -1,7 +1,6 @@
 package org.energygrid.east.regionservice.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -73,9 +72,6 @@ public class House {
     public void setPostcode(String postcode) {
         this.postcode = postcode;
     }
-
-
-
 
     public String getRegion() {
         return region;
