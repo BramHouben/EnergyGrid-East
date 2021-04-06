@@ -1,0 +1,69 @@
+# Eerst docker-compose build
+# daarna docker-compose up
+
+version: '3'
+services:
+
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: rabbitmq
+    image: rabbitmq:management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    restart: always
+
+  gateway:
+    container_name: gateway
+    hostname: gateway
+    build: gateway
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ZUUL_ROUTES_SOLARPARK_URL: http://solarparkservice:8090/solarpark
+
+  solarparkservice:
+    build: SolarParkService
+    hostname: solarparkservice
+    container_name: solarparkservice
+    restart: always
+    ports:
+      - 8090:8090
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongosolarpark:29017/solarpark
+    links:
+      - mongosolarpark
+
+  mongosolarpark:
+    hostname: mongosolarpark
+    container_name: mongosolarpark
+    image: mongo
+    volumes:
+      - ./database:/data
+    ports:
+      - 29017:29017
+
+  weatherservice:
+    build: WeatherService
+    hostname: weatherservice
+    container_name: weatherservice
+    restart: always
+    ports:
+      - 8110:8110
+
+  userservice:
+    build: Userservice
+    hostname: userservice
+    container_name: userservice
+    restart: always
+    ports:
+      - 8130:8130
+
+  authenticationservice:
+    build: AuthenticationService
+    hostname: authenticationService
+    container_name: authenticationService
+    restart: always
+    ports:
+      - 8100:8100
