@@ -20,36 +20,38 @@ public class RegionController {
     IRegionService regionService;
 
     @GetMapping("provinceinfo")
-    public ResponseEntity<List<House>> getProvinceInfo(@RequestParam(name = "regionname") String regionName, @RequestParam(name = "page") int page) {
+    public ResponseEntity<List<House>> getProvinceInfo(@RequestParam(name = "regionname") String regionName, @RequestParam(name = "page") long page) {
 
         if (regionName.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        List<House> houses = regionService.getAllHousesProvince(regionName,page);
+        List<House> houses = regionService.getAllHousesProvince(regionName, page);
 
         return ResponseEntity.ok().body(houses);
 
 
     }
+
     @GetMapping("cityinfo")
-    public ResponseEntity<List<House>> getCityInfo(@RequestParam(name = "cityname") String cityName, @RequestParam(name = "page") int page) {
+    public ResponseEntity<List<House>> getCityInfo(@RequestParam(name = "cityname") String cityName, @RequestParam(name = "page") long page) {
 
         if (cityName.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        List<House> houses = regionService.getAllHousesCity(cityName,page);
+        List<House> houses = regionService.getAllHousesCity(cityName, page);
 
         return ResponseEntity.ok().body(houses);
 
 
     }
+
     @GetMapping("streetinfo")
-    public ResponseEntity<List<House>> getStreetInfo(@RequestParam(name = "streetname") String streetName, @RequestParam(name = "page") int page) {
+    public ResponseEntity<List<House>> getStreetInfo(@RequestParam(name = "streetname") String streetName, @RequestParam(name = "page") long page) {
 
         if (streetName.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        List<House> houses = regionService.getAllHousesStreet(streetName,page);
+        List<House> houses = regionService.getAllHousesStreet(streetName, page);
 
         return ResponseEntity.ok().body(houses);
 

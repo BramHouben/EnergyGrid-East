@@ -13,4 +13,5 @@ public interface IRegionRepo extends MongoRepository<House, String> {
     List<House> getAllByRegion(String provinceName);
     List<House> getAllByCity(String city);
     List<House> getAllByStreet(String street);
+
 }
