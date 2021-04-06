@@ -39,10 +39,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         run: mvn compile
         
+    
       - name: Build the stack
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-        run: docker-compose up -d
+        run: docker-compose build -f docker-compose up -d 
         
       - name: Build and analyze
         env:
