@@ -4,7 +4,6 @@ import com.rabbitmq.client.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.logging.Logger;
 
 public class UserDeliverer implements DeliverCallback {
 
