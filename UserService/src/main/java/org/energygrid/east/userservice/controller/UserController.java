@@ -54,8 +54,7 @@ public class UserController {
     @PutMapping()
     public ResponseEntity EditUser(@NotNull @RequestBody User user) {
         try {
-            var userDto = modelMapper.map(user, UserDTO.class);
-            userService.editUser(userDto);
+            userService.editUser(user);
             return ResponseEntity.ok(null);
         } catch (NullPointerException e) {
             return ResponseEntity.status(404).body(null);

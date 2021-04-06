@@ -9,6 +9,7 @@ public class User {
     private String username;
     private String email;
     private String password;
+    private String newPassword;
     private AccountRole accountRole;
     private String language;
 
@@ -60,5 +61,13 @@ public class User {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 }

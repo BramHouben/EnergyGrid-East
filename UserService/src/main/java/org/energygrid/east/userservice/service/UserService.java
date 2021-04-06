@@ -17,21 +17,17 @@ import java.util.UUID;
 public class UserService {
     @Autowired
     private IUserRepo userRepo;
-    @Autowired
-    private SecurityService securityService;
 
     public void addUser(@NotNull User user) {
         UserDTO dbUser = userRepo.getUserByUuidOrUsernameOrEmail(null, user.getUsername(), user.getEmail());
         if (dbUser != null) {
             throw new DuplicatedNameException("Username or email already in use");
+            // TODO check if email is in use by rabbitmq message to auth service
         }
 
-        String passwordHash = securityService.HashPassword(user.getPassword());
         UserDTO userToStore = new UserDTO();
         userToStore.setUuid(UUID.randomUUID().toString());
         userToStore.setUsername(user.getUsername());
-        userToStore.setEmail(user.getEmail());
-        userToStore.setPassword(passwordHash);
         userToStore.setAccountRole(AccountRole.LargeScaleCustomer);
         userToStore.setLanguage(user.getLanguage());
 
@@ -42,26 +38,28 @@ public class UserService {
         if (StringUtils.isEmpty(uuid) && StringUtils.isEmpty(username) && StringUtils.isEmpty(email)) {
             throw new NullPointerException("uuid, username and or email was empty");
         }
+        // TODO add rabbitmq message to request data from the auth service
         return userRepo.getUserByUuidOrUsernameOrEmail(uuid, username, email);
     }
 
-    public void editUser(@NotNull UserDTO user) {
+    public void editUser(@NotNull User user) {
         var dbUser = userRepo.getUserByUuid(user.getUuid());
         if (dbUser == null) {
             throw new NullPointerException();
         }
 
         var userToStore = new UserDTO();
-        if (user.getPassword() != null) {
-            userToStore.setPassword(securityService.HashPassword(user.getPassword()));
-        } else {
-            userToStore.setPassword(dbUser.getPassword());
+        if (user.getNewPassword() != null) {
+            // TODO add rabbitmq message to update password on auth service
+        }
+
+        if (user.getEmail() != dbUser.getEmail()) {
+            // TODO add rabbitmq message to update email on auth service
         }
 
         userToStore.setUuid(user.getUuid());
         userToStore.setUsername(user.getUsername());
         userToStore.setAccountRole(user.getAccountRole());
-        userToStore.setEmail(user.getEmail());
         userToStore.setLanguage(user.getLanguage());
 
         userRepo.save(userToStore);
@@ -69,6 +67,7 @@ public class UserService {
 
     public void deleteUser(@NotNull String uuid) {
         UserDTO userToDelete = userRepo.getUserByUuid(uuid);
+        // TODO add rabbitmq message to delete the user data on auth service
         userRepo.delete(userToDelete);
     }
 }
