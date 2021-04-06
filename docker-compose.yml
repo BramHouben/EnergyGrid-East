@@ -55,7 +55,7 @@ services:
       RABBIT_HOST: rabbitmq
 
   userservice:
-    build: Userservice
+    build: UserService
     hostname: userservice
     container_name: userservice
     restart: always
