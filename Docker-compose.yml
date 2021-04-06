@@ -23,6 +23,16 @@ services:
     environment:
       ZUUL_ROUTES_SOLARPARK_URL: http://solarparkservice:8090/solarpark
 
+  simulationsolarparkservice:
+    container_name: simulationsolarparkservice
+    hostname: simulationsolarparkservice
+    build: simulationsolarparkservice
+    restart: always
+    ports:
+      - 8120:8120
+    environment:
+      RABBIT_HOST: rabbitmq
+
   solarparkservice:
     build: SolarParkService
     hostname: solarparkservice
@@ -51,6 +61,8 @@ services:
     restart: always
     ports:
       - 8110:8110
+    environment:
+      RABBIT_HOST: rabbitmq
 
   userservice:
     build: Userservice
