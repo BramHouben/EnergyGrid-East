@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class AuthenticationTests {
+class AuthenticationTests {
 
     @InjectMocks
     private UserService userService;
@@ -26,7 +26,7 @@ public class AuthenticationTests {
     private AuthenticationRepository authenticationRepository;
 
     @Test
-    public void userAlreadyExists() {
+    void userAlreadyExists() {
         //Arrange
         userService = new UserService();
         User user = new User("email@test.com", "password");
