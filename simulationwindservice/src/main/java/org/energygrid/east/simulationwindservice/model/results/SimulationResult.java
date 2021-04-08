@@ -1,4 +1,6 @@
-package org.energygrid.east.simulationwindservice.model;
+package org.energygrid.east.simulationwindservice.model.results;
+
+import org.energygrid.east.simulationwindservice.model.ProductionExpectation;
 
 import java.util.ArrayList;
 import java.util.List;

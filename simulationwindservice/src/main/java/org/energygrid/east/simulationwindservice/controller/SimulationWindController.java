@@ -1,6 +1,6 @@
 package org.energygrid.east.simulationwindservice.controller;
 
-import org.energygrid.east.simulationwindservice.model.SimulationExpectationResult;
+import org.energygrid.east.simulationwindservice.model.results.SimulationExpectationResult;
 import org.energygrid.east.simulationwindservice.service.ISimulationWindService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

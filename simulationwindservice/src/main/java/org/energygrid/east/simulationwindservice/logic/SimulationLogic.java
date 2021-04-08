@@ -1,10 +1,12 @@
 package org.energygrid.east.simulationwindservice.logic;
 
+import com.google.gson.JsonElement;
 import org.energygrid.east.simulationwindservice.model.Factor;
 import org.energygrid.east.simulationwindservice.model.ProductionExpectation;
-import org.energygrid.east.simulationwindservice.model.SimulationResult;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.TimeZone;
 
 public class SimulationLogic implements ISimulationLogic {
 
@@ -13,12 +15,20 @@ public class SimulationLogic implements ISimulationLogic {
         return new Factor(name, getWindSpeedFactor(windSpeed));
     }
 
-//    @Override
-//    public SimulationResult calculateSimulationResult(double factor, double typeTurbine, LocalDateTime dateTime) {
-//        SimulationResult simulationResult = new SimulationResult();
-//        simulationResult.setProductionExpectations(getProductionExpectationInKw(factor, typeTurbine, dateTime));
-//        return simulationResult;
-//    }
+    @Override
+    public ProductionExpectation getProductionExpectationInKw(double factor, double typeTurbine, LocalDateTime dateTime) {
+        var result = (factor * typeTurbine) * 1000;
+        return new ProductionExpectation(result, dateTime);
+    }
+
+    @Override
+    public ProductionExpectation createSimulationForWindTurbine(double type, JsonElement weather) {
+        double value = weather.getAsJsonObject().get("wind_speed").getAsDouble();
+        var factor = calculateFactor("Wind Speed", value);
+        var dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(weather.getAsJsonObject().get("dt").getAsInt()), TimeZone.getDefault().toZoneId());
+
+        return getProductionExpectationInKw(factor.getFactor(), type, dateTime);
+    }
 
     private double getWindSpeedFactor(double windSpeed) {
         double factor = 0;
@@ -32,11 +42,5 @@ public class SimulationLogic implements ISimulationLogic {
         }
 
         return factor;
-    }
-
-    @Override
-    public ProductionExpectation getProductionExpectationInKw(double factor, double typeTurbine, LocalDateTime dateTime) {
-        var result = (factor * typeTurbine) * 1000;
-        return new ProductionExpectation(result, dateTime);
     }
 }

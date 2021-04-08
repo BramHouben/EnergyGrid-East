@@ -6,9 +6,10 @@ import com.google.gson.JsonObject;
 import org.energygrid.east.simulationwindservice.logic.ISimulationLogic;
 import org.energygrid.east.simulationwindservice.logic.SimulationLogic;
 import org.energygrid.east.simulationwindservice.model.ProductionExpectation;
-import org.energygrid.east.simulationwindservice.model.SimulationResult;
-import org.energygrid.east.simulationwindservice.model.SimulationExpectationResult;
+import org.energygrid.east.simulationwindservice.model.results.SimulationResult;
+import org.energygrid.east.simulationwindservice.model.results.SimulationExpectationResult;
 import org.energygrid.east.simulationwindservice.model.WindTurbine;
+import org.energygrid.east.simulationwindservice.repository.SimulationWindRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -33,6 +33,9 @@ public class SimulationWindService implements ISimulationWindService {
     private final String url = "https://api.openweathermap.org/data/2.5/onecall?lat=52.23587&lon=6.19775&exclude=current,minutely,daily,alerts&appid=d43994b92b8caae6ee650e65194f0ad8";
     private final RestTemplate template;
     private final HttpHeaders headers;
+
+    @Autowired
+    private SimulationWindRepository simulationWindRepository;
 
     @Autowired
     public SimulationWindService() {
@@ -65,20 +68,14 @@ public class SimulationWindService implements ISimulationWindService {
             simulationResult.setTurbineId(turbine.getTurbineId());
 
             for (var weather : data) {
-                simulationResult.addProductionExpectation(createSimulationForWindTurbine(turbine.getType(), weather));
+                simulationResult.addProductionExpectation(simulationLogic.createSimulationForWindTurbine(turbine.getType(), weather));
             }
             results.add(simulationResult);
         }
 
         simulationExpectationResult.setSimulationResults(results);
+        simulationWindRepository.save(simulationExpectationResult);
+
         return simulationExpectationResult;
-    }
-
-    private ProductionExpectation createSimulationForWindTurbine(double type, JsonElement weather) {
-        double value = weather.getAsJsonObject().get("wind_speed").getAsDouble();
-        var factor = simulationLogic.calculateFactor("Wind Speed", value);
-        var dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(weather.getAsJsonObject().get("dt").getAsInt()), TimeZone.getDefault().toZoneId());
-
-        return simulationLogic.getProductionExpectationInKw(factor.getFactor(), type, dateTime);
     }
 }

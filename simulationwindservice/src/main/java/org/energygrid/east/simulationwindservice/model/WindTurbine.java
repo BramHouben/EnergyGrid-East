@@ -7,11 +7,11 @@ public class WindTurbine {
     private int turbineId;
     private String description;
     private Point coordinates;
-    private double type;
+    private Double type;
 
     public WindTurbine() {}
 
-    public WindTurbine(int turbineId, String description, Point coordinates, double type) {
+    public WindTurbine(int turbineId, String description, Point coordinates, Double type) {
         this.turbineId = turbineId;
         this.description = description;
         this.coordinates = coordinates;
@@ -42,11 +42,7 @@ public class WindTurbine {
         this.coordinates = coordinates;
     }
 
-    public double getType() {
-        return type;
-    }
+    public Double getType() { return type; }
 
-    public void setType(double type) {
-        this.type = type;
-    }
+    public void setType(Double type) { this.type = type; }
 }
