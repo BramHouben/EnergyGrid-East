@@ -5,6 +5,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,9 +35,10 @@ public class RabbitConfiguration {
         while(true) {
             try {
                 count++;
+                TimeUnit.MILLISECONDS.sleep(3000);
                 connection = connectionFactory.newConnection();
                 return connection;
-            } catch (IOException | TimeoutException e) {
+            } catch (IOException | TimeoutException | InterruptedException e) {
                 logger.log(Level.ALL, e.getMessage());
                 if(count == maxCount){
                     return null;
