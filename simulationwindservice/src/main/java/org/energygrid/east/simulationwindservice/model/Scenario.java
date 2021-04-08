@@ -11,15 +11,17 @@ public class Scenario {
     private String amount;
     private Double type;
     private Point coordinates;
+    private WindTurbine windTurbine;
 
     public Scenario() {}
 
-    public Scenario(String name, EScenarioType scenarioType, String amount, Double type, Point coordinates) {
+    public Scenario(String name, EScenarioType scenarioType, String amount, Double type, Point coordinates, WindTurbine windTurbine) {
         this.name = name;
         this.scenarioType = scenarioType;
         this.amount = amount;
         this.type = type;
         this.coordinates = coordinates;
+        this.windTurbine = windTurbine;
     }
 
     public String getName() { return name; }
@@ -47,4 +49,8 @@ public class Scenario {
     public Point getCoordinates() { return coordinates; }
 
     public void setCoordinates(Point coordinates) { this.coordinates = coordinates; }
+
+    public WindTurbine getWindTurbine() { return windTurbine; }
+
+    public void setWindTurbine(WindTurbine windTurbine) { this.windTurbine = windTurbine; }
 }

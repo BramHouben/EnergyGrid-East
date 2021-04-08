@@ -2,6 +2,7 @@ package org.energygrid.east.simulationwindservice.model.results;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +12,18 @@ public class SimulationExpectationResult {
 
     @Id
     private String simulationId;
+
+    @Field("created_at")
+    private String createdAt;
     private List<SimulationResult> simulationResults;
 
     public SimulationExpectationResult() {
         this.simulationResults = new ArrayList<>();
     }
 
-    public SimulationExpectationResult(String simulationId, List<SimulationResult> simulationResults) {
+    public SimulationExpectationResult(String simulationId, String createdAt, List<SimulationResult> simulationResults) {
         this.simulationId = simulationId;
+        this.createdAt = createdAt;
         this.simulationResults = simulationResults;
     }
 
@@ -26,11 +31,13 @@ public class SimulationExpectationResult {
 
     public void setSimulationId(String simulationId) { this.simulationId = simulationId; }
 
+    public String getCreatedAt() { return createdAt; }
+
+    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+
     public List<SimulationResult> getSimulationResults() {
         return simulationResults;
     }
 
-    public void setSimulationResults(List<SimulationResult> simulationResults) {
-        this.simulationResults = simulationResults;
-    }
+    public void setSimulationResults(List<SimulationResult> simulationResults) { this.simulationResults = simulationResults; }
 }

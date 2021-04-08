@@ -22,6 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -47,12 +48,12 @@ public class SimulationWindService implements ISimulationWindService {
     @Override
     public SimulationExpectationResult createSimulation() {
         SimulationExpectationResult simulationExpectationResult = new SimulationExpectationResult();
+        simulationExpectationResult.setCreatedAt(DateTimeFormatter.ISO_INSTANT.format(Instant.now()));
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
         HttpEntity<?> entity = new HttpEntity<>(headers);
         ResponseEntity<String> response = template.exchange(builder.toUriString(), HttpMethod.GET, entity, String.class);
         var weatherData = new Gson().fromJson(response.getBody(), JsonObject.class);
-
         var data = weatherData.getAsJsonObject().get("hourly").getAsJsonArray();
 
         //TODO
@@ -60,7 +61,6 @@ public class SimulationWindService implements ISimulationWindService {
         List<WindTurbine> turbines = new ArrayList<>();
         turbines.add(new WindTurbine(1, "WindTurbine 1", new Point(52.23587, 6.19775), 3.0));
         turbines.add(new WindTurbine(2, "WindTurbine 2", new Point(52.57085, 6.45386), 2.0));
-
         List results = new ArrayList<>();
 
         for (var turbine : turbines) {
@@ -72,10 +72,8 @@ public class SimulationWindService implements ISimulationWindService {
             }
             results.add(simulationResult);
         }
-
         simulationExpectationResult.setSimulationResults(results);
         simulationWindRepository.save(simulationExpectationResult);
-
         return simulationExpectationResult;
     }
 }
