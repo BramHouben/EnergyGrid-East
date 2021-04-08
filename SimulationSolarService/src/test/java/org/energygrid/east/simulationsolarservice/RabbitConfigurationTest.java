@@ -5,10 +5,10 @@ import org.energygrid.east.simulationsolarservice.rabbit.RabbitConfiguration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class RabbitConfigurationTest {
+class RabbitConfigurationTest {
 
     @Test
-    public void testRabbitConnection() {
+    void testRabbitConnection() {
 
         RabbitConfiguration rabbitConfiguration = RabbitConfiguration.getInstance();
 
