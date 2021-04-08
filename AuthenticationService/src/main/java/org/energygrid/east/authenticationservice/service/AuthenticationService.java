@@ -2,6 +2,7 @@ package org.energygrid.east.authenticationservice.service;
 
 import org.energygrid.east.authenticationservice.model.User;
 import org.energygrid.east.authenticationservice.repository.AuthenticationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.Map;
 @Service
 public class AuthenticationService implements IAuthenticationService {
 
+    @Autowired
     private AuthenticationRepository authenticationRepository;
 
     private final Map<String, String> users = new HashMap<>();
