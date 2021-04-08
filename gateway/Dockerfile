@@ -1,6 +1,6 @@
 FROM openjdk:11-jdk-slim
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+
+ADD ./target/gateway.jar /app/
+CMD ["java", "-Xmx200m", "-jar", "/app/gateway.jar"]
 
 EXPOSE 8081
