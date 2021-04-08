@@ -2,6 +2,7 @@ package org.energygrid.east.regionservice.controller;
 
 
 import org.energygrid.east.regionservice.model.House;
+import org.energygrid.east.regionservice.model.StreetRequest;
 import org.energygrid.east.regionservice.service.IRegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -46,14 +47,14 @@ public class RegionController {
     }
 
     @GetMapping("streetinfo")
-    public ResponseEntity<List<House>> getStreetInfo(@RequestParam(name = "streetname") String streetName, @RequestParam(name = "page") long page) {
+    public ResponseEntity<StreetRequest> getStreetInfo(@RequestParam(name = "streetname") String streetname, @RequestParam(name = "page") long page) {
 
-        if (streetName.isEmpty()) {
+        if (streetname.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        List<House> houses = regionService.getAllHousesStreet(streetName, page);
+        StreetRequest streetRequest = regionService.getAllHousesStreet(streetname, page);
 
-        return ResponseEntity.ok().body(houses);
+        return ResponseEntity.ok().body(streetRequest);
 
 
     }

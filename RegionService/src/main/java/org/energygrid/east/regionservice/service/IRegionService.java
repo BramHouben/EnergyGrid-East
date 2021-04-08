@@ -1,6 +1,7 @@
 package org.energygrid.east.regionservice.service;
 
 import org.energygrid.east.regionservice.model.House;
+import org.energygrid.east.regionservice.model.StreetRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -27,5 +28,5 @@ public interface IRegionService {
      * @param streetName name of the street
      * @return all houses in a street
      */
-    List<House> getAllHousesStreet(String streetName,long page);
+    StreetRequest getAllHousesStreet(String streetName, long page);
 }
