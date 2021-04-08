@@ -3,10 +3,8 @@ package org.energygrid.east.authenticationservice.rabbit.defaultconsumer;
 import com.google.gson.Gson;
 import com.rabbitmq.client.*;
 import org.energygrid.east.authenticationservice.model.User;
-import org.energygrid.east.authenticationservice.service.IAuthenticationService;
 import org.energygrid.east.authenticationservice.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
