@@ -1,14 +1,10 @@
 package org.energygrid.east.simulationsolarservice.rabbit.consumer;
 
-import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import org.energygrid.east.simulationsolarservice.rabbit.Consumer;
-import org.energygrid.east.simulationsolarservice.rabbit.RabbitConfig;
 import org.energygrid.east.simulationsolarservice.rabbit.defaultconsumer.DefaultRabbitConsumer;
-import org.energygrid.east.simulationsolarservice.rabbit.defaultconsumer.DefaultRabbitRPCConsumer;
 
 import java.io.IOException;
-import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
