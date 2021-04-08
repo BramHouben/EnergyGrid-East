@@ -40,9 +40,9 @@ public class RabbitConfiguration {
                 return connection;
             } catch (IOException | TimeoutException e) {
                 logger.log(Level.ALL, e.getMessage());
-//                if(count == maxCount){
-//                    return null;
-//                }
+                if(count == maxCount){
+                    return null;
+                }
             }
         }
     }
