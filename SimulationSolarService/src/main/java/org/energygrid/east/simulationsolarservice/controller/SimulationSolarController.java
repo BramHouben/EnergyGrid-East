@@ -28,16 +28,6 @@ public class SimulationSolarController {
         return ResponseEntity.status(200).body(simulationSolar);
     }
 
-    @GetMapping("/weather")
-    public ResponseEntity<String> getWeather() {
-        RabbitConsumer<String> rabbitConsumer = new RabbitConsumer<>();
-        WeatherConsumer weatherConsumer = new WeatherConsumer();
-
-        String weather = rabbitConsumer.consume(weatherConsumer);
-
-        return ResponseEntity.status(200).body(weather);
-    }
-
     @GetMapping("/solar")
     public ResponseEntity<String> getSolar() {
         RabbitConsumer<String> rabbitConsumer = new RabbitConsumer<>();

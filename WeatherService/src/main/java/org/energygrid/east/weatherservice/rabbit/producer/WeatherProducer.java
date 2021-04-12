@@ -27,7 +27,7 @@ public class WeatherProducer implements Producer {
             WeatherTimer weatherTimer = new WeatherTimer(channel, exchange_name);
 
             Timer timer = new Timer();
-            timer.scheduleAtFixedRate(weatherTimer, 0, 10000);
+            timer.scheduleAtFixedRate(weatherTimer, 1000, 600000);
 
             Monitor monitor = new Monitor();
             monitor.start();
