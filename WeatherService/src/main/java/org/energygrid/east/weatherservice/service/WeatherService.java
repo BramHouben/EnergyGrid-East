@@ -91,9 +91,10 @@ public class WeatherService implements IWeatherService {
             String date = formatDate(day.getAsJsonObject().get("dt").getAsLong());
 
             double windSpeed = day.getAsJsonObject().get("wind_speed").getAsDouble();
+            int windDirection = day.getAsJsonObject().get("wind_deg").getAsInt() + 90;
             int sunPercentage = 100 - day.getAsJsonObject().get("clouds").getAsInt();
 
-            weekForecast.add(new Forecast(minTemp, maxTemp, icon, date, windSpeed, sunPercentage));
+            weekForecast.add(new Forecast(minTemp, maxTemp, icon, date, windSpeed, windDirection, sunPercentage));
         }
 
         return weekForecast;

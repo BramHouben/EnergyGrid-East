@@ -6,14 +6,16 @@ public class Forecast {
     private String symbol;
     private String date;
     private double windSpeed;
+    private int windDirection;
     private int sunPercentage;
 
-    public Forecast(double minTemperature, double maxTemperature, String symbol, String date, double windSpeed, int sunPercentage) {
+    public Forecast(double minTemperature, double maxTemperature, String symbol, String date, double windSpeed, int windDirection, int sunPercentage) {
         this.minTemperature = minTemperature;
         this.maxTemperature = maxTemperature;
         this.symbol = symbol;
         this.date = date;
         this.windSpeed = windSpeed;
+        this.windDirection = windDirection;
         this.sunPercentage = sunPercentage;
     }
 
@@ -55,6 +57,14 @@ public class Forecast {
 
     public void setWindSpeed(double windSpeed) {
         this.windSpeed = windSpeed;
+    }
+
+    public int getWindDirection() {
+        return windDirection;
+    }
+
+    public void setWindDirection(int windDirection) {
+        this.windDirection = windDirection;
     }
 
     public int getSunPercentage() {
