@@ -43,19 +43,19 @@ public class WeatherService implements IWeatherService {
         return new Gson().fromJson(response.getBody(), JsonObject.class);
     }
 
-    private String currentWeatherStringBuilder(Point2D.Double coordinates){
+    public String currentWeatherStringBuilder(Point2D.Double coordinates){
         return url + "weather?lat=" + coordinates.getX() + "&lon=" + coordinates.getY()+ "&appid=" + apiKey;
     }
 
-    private String weatherForecastStringBuilder(Point2D.Double coordinates){
+    public String weatherForecastStringBuilder(Point2D.Double coordinates){
         return url + "onecall?lat=" + coordinates.getX() + "&lon=" + coordinates.getY() + "&exclude=current,minutely,hourly,alerts" + "&appid=" + apiKey;
     }
 
-    private double kelvinToCelsius(double kelvin){
+    public double kelvinToCelsius(double kelvin){
         return kelvin - 273.15;
     }
 
-    private String formatDate(long unix){
+    public String formatDate(long unix){
         Date date = new Date(unix*1000);
         SimpleDateFormat format = new SimpleDateFormat("dd-MM");
 
