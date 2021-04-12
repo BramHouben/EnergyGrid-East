@@ -5,12 +5,14 @@ on:
       - dev
   pull_request:
     types: [opened, synchronize, reopened]
+    
 jobs:
+
   build:
     name: Build
     runs-on: ubuntu-latest
     env:
-      RABBIT_HOST: rabbitmq
+      RABBIT_HOST: localhost
     
     steps:
       - uses: actions/checkout@v2
@@ -32,8 +34,32 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+          
+      - name: compile
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        run: mvn clean package -Dmaven.test.skip=true
+        
+      - name: install stack
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        run: docker-compose build
+        
+      - name: Build the stack
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        run: docker-compose up -d 
+    
+      - name: Sleep for 30 seconds
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '90s'
+    
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage
+        
