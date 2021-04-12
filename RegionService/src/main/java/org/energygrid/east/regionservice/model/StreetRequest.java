@@ -5,10 +5,10 @@ import java.util.List;
 
 public class StreetRequest implements Serializable {
 
-    private  int totalStreet;
-    private  List<House> houses;
+    private int totalStreet;
+    private List<House> houses;
 
-    public StreetRequest(){
+    public StreetRequest() {
 
     }
 
@@ -21,15 +21,15 @@ public class StreetRequest implements Serializable {
         return totalStreet;
     }
 
+    public void setTotalStreet(int totalStreet) {
+        this.totalStreet = totalStreet;
+    }
+
     public List<House> getHouses() {
         return houses;
     }
 
     public void setHouses(List<House> houses) {
         this.houses = houses;
-    }
-
-    public void setTotalStreet(int totalStreet) {
-        this.totalStreet = totalStreet;
     }
 }

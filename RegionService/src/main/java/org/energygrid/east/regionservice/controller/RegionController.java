@@ -48,7 +48,9 @@ public class RegionController {
 
     @GetMapping("streetinfo")
     public ResponseEntity<StreetRequest> getStreetInfo(@RequestParam(name = "streetname") String streetname, @RequestParam(name = "page") long page) {
-
+        if (page == 0) {
+            return ResponseEntity.badRequest().build();
+        }
         if (streetname.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
