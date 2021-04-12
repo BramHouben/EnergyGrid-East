@@ -1,6 +1,5 @@
 FROM openjdk:11-jdk-slim
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
 
+ADD ./target/weatherservice.jar /app/
+CMD ["java", "-Xmx200m", "-jar", "/app/weatherservice.jar"]
 EXPOSE 8110
