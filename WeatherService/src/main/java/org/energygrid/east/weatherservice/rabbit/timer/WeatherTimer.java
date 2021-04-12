@@ -48,8 +48,6 @@ public class WeatherTimer extends TimerTask {
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, httpEntity, String.class);
 
-        JsonObject jsonObject = new Gson().fromJson(responseEntity.getBody(), JsonObject.class);
-
-        return jsonObject;
+        return new Gson().fromJson(responseEntity.getBody(), JsonObject.class);
     }
 }
