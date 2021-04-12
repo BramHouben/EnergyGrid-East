@@ -1,6 +1,7 @@
 package org.energygrid.east.regionservice.controller;
 
 
+import org.energygrid.east.regionservice.model.CityInfoRequest;
 import org.energygrid.east.regionservice.model.House;
 import org.energygrid.east.regionservice.model.StreetRequest;
 import org.energygrid.east.regionservice.service.IRegionService;
@@ -18,7 +19,7 @@ import java.util.List;
 public class RegionController {
 
     @Autowired
-    IRegionService regionService;
+    private IRegionService regionService;
 
     @GetMapping("provinceinfo")
     public ResponseEntity<List<House>> getProvinceInfo(@RequestParam(name = "regionname") String regionName, @RequestParam(name = "page") long page) {
@@ -47,17 +48,40 @@ public class RegionController {
     }
 
     @GetMapping("streetinfo")
-    public ResponseEntity<StreetRequest> getStreetInfo(@RequestParam(name = "streetname") String streetname, @RequestParam(name = "page") long page) {
+    public ResponseEntity<StreetRequest> getStreetInfo(@RequestParam(name = "streetname") String streetname, @RequestParam(name = "city") String city, @RequestParam(name = "page") long page) {
         if (page == 0) {
             return ResponseEntity.badRequest().build();
         }
         if (streetname.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        StreetRequest streetRequest = regionService.getAllHousesStreet(streetname, page);
+        StreetRequest streetRequest = regionService.getAllHousesStreet(streetname, city, page);
 
         return ResponseEntity.ok().body(streetRequest);
 
 
     }
+
+    @GetMapping("citiesregion")
+    public ResponseEntity<List<String>> allCitiesRegion(@RequestParam(name = "region") String region) {
+        if (region.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        List<String> cities = regionService.getAllCitiesRegion(region);
+
+        return ResponseEntity.ok().body(cities);
+
+    }
+
+    @GetMapping("cityinfostats")
+    public ResponseEntity<CityInfoRequest> cityInfo(@RequestParam(name = "city") String city) {
+        if (city.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        CityInfoRequest cityInfo = regionService.getInfoCity(city);
+
+        return ResponseEntity.ok().body(cityInfo);
+
+    }
+
 }
