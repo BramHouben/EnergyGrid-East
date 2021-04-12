@@ -1,8 +1,12 @@
 package org.energygrid.east.simulationwindservice.model;
 
+import com.google.gson.JsonArray;
 import org.energygrid.east.simulationwindservice.model.enums.EScenarioType;
 import org.springframework.data.geo.Point;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class Scenario {
 
@@ -12,16 +16,20 @@ public class Scenario {
     private Double type;
     private Point coordinates;
     private WindTurbine windTurbine;
+    private List<String> windTurbineOffTimes;
 
-    public Scenario() {}
+    public Scenario() {
+        windTurbineOffTimes = new ArrayList<>();
+    }
 
-    public Scenario(String name, EScenarioType scenarioType, String amount, Double type, Point coordinates, WindTurbine windTurbine) {
+    public Scenario(String name, EScenarioType scenarioType, String amount, Double type, Point coordinates, WindTurbine windTurbine, List<String> windTurbineOffTimes) {
         this.name = name;
         this.scenarioType = scenarioType;
         this.amount = amount;
         this.type = type;
         this.coordinates = coordinates;
         this.windTurbine = windTurbine;
+        this.windTurbineOffTimes = windTurbineOffTimes;
     }
 
     public String getName() { return name; }
@@ -53,4 +61,8 @@ public class Scenario {
     public WindTurbine getWindTurbine() { return windTurbine; }
 
     public void setWindTurbine(WindTurbine windTurbine) { this.windTurbine = windTurbine; }
+
+    public List<String> getWindTurbineOffTimes() { return windTurbineOffTimes; }
+
+    public void setWindTurbineOffTimes(List<String> windTurbineOffTimes) { this.windTurbineOffTimes = windTurbineOffTimes; }
 }

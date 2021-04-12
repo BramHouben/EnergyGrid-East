@@ -5,5 +5,5 @@ public enum EScenarioType {
     ADD_WIND_PARK,
     REMOVE_WIND_TURBINE,
     UPDATE_WIND_TURBINE,
-    OFF_WIND_TURBINE
+    TURN_OFF_WIND_TURBINE
 }

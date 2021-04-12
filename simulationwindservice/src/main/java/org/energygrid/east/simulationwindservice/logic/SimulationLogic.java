@@ -3,9 +3,11 @@ package org.energygrid.east.simulationwindservice.logic;
 import com.google.gson.JsonElement;
 import org.energygrid.east.simulationwindservice.model.Factor;
 import org.energygrid.east.simulationwindservice.model.ProductionExpectation;
+import org.energygrid.east.simulationwindservice.model.results.SimulationResult;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.TimeZone;
 
 public class SimulationLogic implements ISimulationLogic {
@@ -28,6 +30,21 @@ public class SimulationLogic implements ISimulationLogic {
         var dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(weather.getAsJsonObject().get("dt").getAsInt()), TimeZone.getDefault().toZoneId());
 
         return getProductionExpectationInKw(factor.getFactor(), type, dateTime);
+    }
+
+    @Override
+    public Double calculateKwProduction(List<SimulationResult> simulationResults, Boolean isAdded) {
+        var kwTotal = 0.0;
+        for (var result : simulationResults) {
+            for (var production : result.getProductionExpectations()) {
+                if (result.getName() != null && result.getName().equals("Missed Production")) {
+                    kwTotal = kwTotal - production.getKw();
+                }
+                else { kwTotal = kwTotal + production.getKw(); }
+            }
+        }
+
+        return kwTotal;
     }
 
     private double getWindSpeedFactor(double windSpeed) {

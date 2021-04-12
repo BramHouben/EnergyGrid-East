@@ -1,7 +1,6 @@
 package org.energygrid.east.simulationwindservice.service;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import org.energygrid.east.simulationwindservice.factory.FactoryURL;
 import org.energygrid.east.simulationwindservice.logic.ISimulationLogic;
 import org.energygrid.east.simulationwindservice.logic.SimulationLogic;
 import org.energygrid.east.simulationwindservice.model.Scenario;
@@ -12,18 +11,17 @@ import org.energygrid.east.simulationwindservice.model.results.SimulationResult;
 import org.energygrid.east.simulationwindservice.repository.ScenarioWindRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.TimeZone;
 
 @Service
 public class ScenarioWindService implements IScenarioWindService {
@@ -54,8 +52,13 @@ public class ScenarioWindService implements IScenarioWindService {
                 scenarioExpectationResult.setSimulationExpectationResult(createScenarioAddWindPark(scenario.getAmount(), scenario.getCoordinates(), scenario.getType(), scenarioExpectationResult.getCreatedAt()));
                 break;
             case ADD_WIND_TURBINE:
+                scenarioExpectationResult.setSimulationExpectationResult(createScenarioWindTurbine(scenario.getWindTurbine(), scenarioExpectationResult.getCreatedAt(), true));
+                break;
             case REMOVE_WIND_TURBINE:
-                scenarioExpectationResult.setSimulationExpectationResult(createSimulationWindTurbine(scenario.getWindTurbine(),scenarioExpectationResult.getCreatedAt()));
+                scenarioExpectationResult.setSimulationExpectationResult(createScenarioWindTurbine(scenario.getWindTurbine(), scenarioExpectationResult.getCreatedAt(), false));
+                break;
+            case TURN_OFF_WIND_TURBINE:
+                scenarioExpectationResult.setSimulationExpectationResult(createScenarioTurnOffWindTurbine(scenario.getWindTurbine(), scenario.getWindTurbineOffTimes(), scenarioExpectationResult.getCreatedAt()));
                 break;
             default:
                 return null;
@@ -69,18 +72,14 @@ public class ScenarioWindService implements IScenarioWindService {
         simulationExpectationResult.setCreatedAt(createdAt);
 
         if (amount != null && coordinates != null && type != null) {
-            List results = new ArrayList<>();
+            List<SimulationResult> results = new ArrayList<>();
 
             for (var i = 1; i < Integer.parseInt(amount) + 1; i++) {
                 SimulationResult simulationResult = new SimulationResult();
                 simulationResult.setTurbineId(i);
                 //Call weather based on coordinates
                 var url = "https://api.openweathermap.org/data/2.5/onecall?lat="+coordinates.getX()+"&lon="+coordinates.getY()+"&exclude=current,minutely,daily,alerts&appid=da713c7b97d2a6f912d9266ec49a30d8";
-                UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-                HttpEntity<?> entity = new HttpEntity<>(headers);
-                ResponseEntity<String> response = template.exchange(builder.toUriString(), HttpMethod.GET, entity, String.class);
-                var weatherData = new Gson().fromJson(response.getBody(), JsonObject.class);
-                var data = weatherData.getAsJsonObject().get("hourly").getAsJsonArray();
+                var data = new FactoryURL().getWeatherData(headers, template, url);
 
                 for (var weather : data) {
                     simulationResult.addProductionExpectation(simulationLogic.createSimulationForWindTurbine(type, weather));
@@ -88,25 +87,23 @@ public class ScenarioWindService implements IScenarioWindService {
                 results.add(simulationResult);
             }
             simulationExpectationResult.setSimulationResults(results);
+            simulationExpectationResult.setKwTotalResult(simulationLogic.calculateKwProduction(results, true));
         }
         return simulationExpectationResult;
     }
 
-    private SimulationExpectationResult createSimulationWindTurbine(WindTurbine windTurbine, String createdAt) {
+    private SimulationExpectationResult createScenarioWindTurbine(WindTurbine windTurbine, String createdAt, Boolean isAdded) {
         SimulationExpectationResult simulationExpectationResult = new SimulationExpectationResult();
         simulationExpectationResult.setCreatedAt(createdAt);
-        List results = new ArrayList<>();
+        List<SimulationResult> results = new ArrayList<>();
 
         if (windTurbine != null) {
             SimulationResult simulationResult = new SimulationResult();
+            simulationResult.setName(isAdded ? "Production" : "Missed Production");
             simulationResult.setTurbineId(windTurbine.getTurbineId());
             //Call weather based on coordinates
             var url = "https://api.openweathermap.org/data/2.5/onecall?lat="+windTurbine.getCoordinates().getX()+"&lon="+windTurbine.getCoordinates().getY()+"&exclude=current,minutely,daily,alerts&appid=da713c7b97d2a6f912d9266ec49a30d8";
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-            HttpEntity<?> entity = new HttpEntity<>(headers);
-            ResponseEntity<String> response = template.exchange(builder.toUriString(), HttpMethod.GET, entity, String.class);
-            var weatherData = new Gson().fromJson(response.getBody(), JsonObject.class);
-            var data = weatherData.getAsJsonObject().get("hourly").getAsJsonArray();
+            var data = new FactoryURL().getWeatherData(headers, template, url);
 
             for (var weather : data) {
                 simulationResult.addProductionExpectation(simulationLogic.createSimulationForWindTurbine(windTurbine.getType(), weather));
@@ -114,6 +111,43 @@ public class ScenarioWindService implements IScenarioWindService {
             results.add(simulationResult);
         }
         simulationExpectationResult.setSimulationResults(results);
+        simulationExpectationResult.setKwTotalResult(simulationLogic.calculateKwProduction(results, isAdded));
+
+        return simulationExpectationResult;
+    }
+
+    private SimulationExpectationResult createScenarioTurnOffWindTurbine(WindTurbine windTurbine, List<String> dates, String createdAt) {
+        SimulationExpectationResult simulationExpectationResult = new SimulationExpectationResult();
+        simulationExpectationResult.setCreatedAt(createdAt);
+        List<SimulationResult> results = new ArrayList<>();
+
+        if (windTurbine != null) {
+            SimulationResult simulationResult = new SimulationResult();
+            simulationResult.setName("Production");
+            simulationResult.setTurbineId(windTurbine.getTurbineId());
+
+            SimulationResult simulationResultMissed = new SimulationResult();
+            simulationResultMissed.setName("Missed Production");
+            simulationResultMissed.setTurbineId(windTurbine.getTurbineId());
+            //Call weather based on coordinates
+            var url = "https://api.openweathermap.org/data/2.5/onecall?lat="+windTurbine.getCoordinates().getX()+"&lon="+windTurbine.getCoordinates().getY()+"&exclude=current,minutely,daily,alerts&appid=da713c7b97d2a6f912d9266ec49a30d8";
+            var data = new FactoryURL().getWeatherData(headers, template, url);
+
+            for (var weather : data) {
+                var dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(weather.getAsJsonObject().get("dt").getAsInt()), TimeZone.getDefault().toZoneId());
+
+                if (dates.stream().noneMatch(dateTime.toString()::equals)) {
+                    simulationResult.addProductionExpectation(simulationLogic.createSimulationForWindTurbine(windTurbine.getType(), weather));
+                }
+                else {
+                    simulationResultMissed.addProductionExpectation(simulationLogic.createSimulationForWindTurbine(windTurbine.getType(), weather));
+                }
+            }
+            results.add(simulationResult);
+            results.add(simulationResultMissed);
+        }
+        simulationExpectationResult.setSimulationResults(results);
+        simulationExpectationResult.setKwTotalResult(simulationLogic.calculateKwProduction(results, true));
 
         return simulationExpectationResult;
     }

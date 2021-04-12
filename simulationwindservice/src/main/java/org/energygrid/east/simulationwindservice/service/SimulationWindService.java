@@ -3,6 +3,7 @@ package org.energygrid.east.simulationwindservice.service;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.energygrid.east.simulationwindservice.factory.FactoryURL;
 import org.energygrid.east.simulationwindservice.logic.ISimulationLogic;
 import org.energygrid.east.simulationwindservice.logic.SimulationLogic;
 import org.energygrid.east.simulationwindservice.model.ProductionExpectation;
@@ -13,19 +14,13 @@ import org.energygrid.east.simulationwindservice.repository.SimulationWindReposi
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 @Service
 public class SimulationWindService implements ISimulationWindService {
@@ -49,30 +44,29 @@ public class SimulationWindService implements ISimulationWindService {
     public SimulationExpectationResult createSimulation() {
         SimulationExpectationResult simulationExpectationResult = new SimulationExpectationResult();
         simulationExpectationResult.setCreatedAt(DateTimeFormatter.ISO_INSTANT.format(Instant.now()));
+        List<SimulationResult> results = new ArrayList<>();
+        //Double kwTotalProduction = 0.0;
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-        ResponseEntity<String> response = template.exchange(builder.toUriString(), HttpMethod.GET, entity, String.class);
-        var weatherData = new Gson().fromJson(response.getBody(), JsonObject.class);
-        var data = weatherData.getAsJsonObject().get("hourly").getAsJsonArray();
-
+        var data = new FactoryURL().getWeatherData(headers, template, url);
         //TODO
         //Get All WindTurbines
         List<WindTurbine> turbines = new ArrayList<>();
         turbines.add(new WindTurbine(1, "WindTurbine 1", new Point(52.23587, 6.19775), 3.0));
         turbines.add(new WindTurbine(2, "WindTurbine 2", new Point(52.57085, 6.45386), 2.0));
-        List results = new ArrayList<>();
 
         for (var turbine : turbines) {
             SimulationResult simulationResult = new SimulationResult();
             simulationResult.setTurbineId(turbine.getTurbineId());
 
             for (var weather : data) {
-                simulationResult.addProductionExpectation(simulationLogic.createSimulationForWindTurbine(turbine.getType(), weather));
+                var productionExpectation = simulationLogic.createSimulationForWindTurbine(turbine.getType(), weather);
+                simulationResult.addProductionExpectation(productionExpectation);
+                //kwTotalProduction = simulationLogic.calculateTotalKw(kwTotalProduction, productionExpectation.getKw());
             }
             results.add(simulationResult);
         }
         simulationExpectationResult.setSimulationResults(results);
+        simulationExpectationResult.setKwTotalResult(simulationLogic.calculateKwProduction(results, true));
         simulationWindRepository.save(simulationExpectationResult);
         return simulationExpectationResult;
     }

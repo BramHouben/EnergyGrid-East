@@ -16,15 +16,17 @@ public class SimulationExpectationResult {
     @Field("created_at")
     private String createdAt;
     private List<SimulationResult> simulationResults;
+    private Double kwTotalResult;
 
     public SimulationExpectationResult() {
         this.simulationResults = new ArrayList<>();
     }
 
-    public SimulationExpectationResult(String simulationId, String createdAt, List<SimulationResult> simulationResults) {
+    public SimulationExpectationResult(String simulationId, String createdAt, List<SimulationResult> simulationResults, Double kwTotalResult) {
         this.simulationId = simulationId;
         this.createdAt = createdAt;
         this.simulationResults = simulationResults;
+        this.kwTotalResult = kwTotalResult;
     }
 
     public String getSimulationId() { return simulationId; }
@@ -40,4 +42,8 @@ public class SimulationExpectationResult {
     }
 
     public void setSimulationResults(List<SimulationResult> simulationResults) { this.simulationResults = simulationResults; }
+
+    public Double getKwTotalResult() { return kwTotalResult; }
+
+    public void setKwTotalResult(Double kwTotalResult) { this.kwTotalResult = kwTotalResult; }
 }
