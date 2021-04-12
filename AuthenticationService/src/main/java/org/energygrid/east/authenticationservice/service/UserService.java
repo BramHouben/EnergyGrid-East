@@ -19,8 +19,11 @@ public class UserService implements IUserService {
 
         if (authenticationRepository.findUserByEmail(email) == null) {
             var hashedPassword = securityService.hashPassword(password);
+            var user = new User();
+            user.setEmail(email);
+            user.setPassword(hashedPassword);
 
-            authenticationRepository.save(new User(email, hashedPassword));
+            authenticationRepository.save(user);
         }
     }
 }

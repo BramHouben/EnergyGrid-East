@@ -1,5 +1,4 @@
 package org.energygrid.east.userservice.rabbit;
-
 import com.rabbitmq.client.AMQP;
 
 public class RabbitConfig {

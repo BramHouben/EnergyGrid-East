@@ -10,17 +10,11 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer userId;
-
+    private String uuid;
     private String email;
     private String password;
 
     public User() {}
-
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
 
     public String getEmail() {
         return email;
@@ -38,11 +32,11 @@ public class User {
         this.password = password;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

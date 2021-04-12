@@ -20,4 +20,11 @@ public class AuthenticationService implements IAuthenticationService {
         User user = authenticationRepository.findUserByEmailAndPassword(email, password);
         return user != null;
     }
+
+    public void AddUser(String email, String password) {
+        var user = new User();
+        user.setEmail(email);
+        user.setPassword(password);
+        authenticationRepository.save(user);
+    }
 }

@@ -2,9 +2,9 @@ package org.energygrid.east.userservice.rabbit.consumer;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DeliverCallback;
-import org.energygrid.east.authenticationservice.rabbit.Consumer;
-import org.energygrid.east.authenticationservice.rabbit.Monitor;
-import org.energygrid.east.authenticationservice.rabbit.defaultconsumer.UserDeliverer;
+import org.energygrid.east.userservice.rabbit.Consumer;
+import org.energygrid.east.userservice.rabbit.Monitor;
+import org.energygrid.east.userservice.rabbit.defaultconsumer.UserDeliverer;
 
 import java.io.IOException;
 import java.util.logging.Level;

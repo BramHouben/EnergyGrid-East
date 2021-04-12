@@ -4,9 +4,14 @@ import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.enums.AccountRole;
 import org.energygrid.east.userservice.model.fromFrontend.User;
+
 import javax.validation.constraints.NotNull;
 
+import org.energygrid.east.userservice.model.rabbitMq.UserRabbitMq;
+import org.energygrid.east.userservice.rabbit.Producer.AddUserProducer;
+import org.energygrid.east.userservice.rabbit.RabbitProducer;
 import org.energygrid.east.userservice.repo.IUserRepo;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -17,28 +22,34 @@ import java.util.UUID;
 public class UserService {
     @Autowired
     private IUserRepo userRepo;
+    private final ModelMapper mapper = new ModelMapper();
 
     public void addUser(@NotNull User user) {
         UserDTO dbUser = userRepo.getUserByUuidOrUsernameOrEmail(null, user.getUsername(), user.getEmail());
         if (dbUser != null) {
             throw new DuplicatedNameException("Username or email already in use");
-            // TODO check if email is in use by rabbitmq message to auth service
+            // TODO check if email or username is in use
         }
 
-        UserDTO userToStore = new UserDTO();
+        UserDTO userToStore = mapper.map(user, UserDTO.class);
         userToStore.setUuid(UUID.randomUUID().toString());
-        userToStore.setUsername(user.getUsername());
         userToStore.setAccountRole(AccountRole.LargeScaleCustomer);
-        userToStore.setLanguage(user.getLanguage());
 
         userRepo.save(userToStore);
+        storeUserInAuthenticationService(mapper.map(userToStore, UserRabbitMq.class));
+    }
+
+    private void storeUserInAuthenticationService(UserRabbitMq user) {
+        RabbitProducer rabbitProducer = new RabbitProducer();
+        AddUserProducer userProducer = new AddUserProducer(user);
+        rabbitProducer.produce(userProducer);
     }
 
     public UserDTO getUserByUuidOrUsernameOrEmail(String uuid, String username, String email) {
         if (StringUtils.isEmpty(uuid) && StringUtils.isEmpty(username) && StringUtils.isEmpty(email)) {
             throw new NullPointerException("uuid, username and or email was empty");
         }
-        // TODO add rabbitmq message to request data from the auth service
+        // TODO check local
         return userRepo.getUserByUuidOrUsernameOrEmail(uuid, username, email);
     }
 
