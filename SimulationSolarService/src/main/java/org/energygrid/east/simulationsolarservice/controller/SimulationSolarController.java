@@ -5,7 +5,6 @@ import org.energygrid.east.simulationsolarservice.model.EnergyRegionSolarParksOu
 import org.energygrid.east.simulationsolarservice.model.SimulationSolar;
 import org.energygrid.east.simulationsolarservice.rabbit.RabbitConsumer;
 import org.energygrid.east.simulationsolarservice.rabbit.consumer.SolarParkConsumer;
-import org.energygrid.east.simulationsolarservice.rabbit.consumer.WeatherConsumer;
 import org.energygrid.east.simulationsolarservice.service.ISimulationSolarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
