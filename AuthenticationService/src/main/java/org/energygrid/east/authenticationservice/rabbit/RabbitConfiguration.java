@@ -1,4 +1,4 @@
-package org.energygrid.east.weatherservice.rabbit;
+package org.energygrid.east.authenticationservice.rabbit;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -19,7 +19,7 @@ public class RabbitConfiguration {
 
     private RabbitConfiguration() {
         connectionFactory = new ConnectionFactory();
-        connectionFactory.setHost(System.getenv("RABBIT_HOST"));
+        connectionFactory.setHost("localhost");
         connection = createConnection();
     }
 

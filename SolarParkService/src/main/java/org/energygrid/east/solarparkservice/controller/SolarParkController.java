@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -41,8 +42,8 @@ public class SolarParkController {
         solarParkPowerService.addSolarPark(solarPark);
 
         RabbitProducer rabbitProducer = new RabbitProducer();
-        SolarParkProducer solarParkConsumer = new SolarParkProducer(solarPark);
-        rabbitProducer.produce(solarParkConsumer);
+        SolarParkProducer solarParkProducer = new SolarParkProducer();
+        rabbitProducer.produce(solarParkProducer);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Solar park successfully made");
 

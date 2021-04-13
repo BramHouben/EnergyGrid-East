@@ -39,9 +39,9 @@ public class SimulationSolarController {
     }
 
     @GetMapping("/solar")
-    public ResponseEntity<String> getSolar(@NotNull @RequestParam(name = "name") String name) {
+    public ResponseEntity<String> getSolar() {
         RabbitConsumer<String> rabbitConsumer = new RabbitConsumer<>();
-        SolarParkConsumer solarParkConsumer = new SolarParkConsumer(name);
+        SolarParkConsumer solarParkConsumer = new SolarParkConsumer();
 
         String jsonSolar = rabbitConsumer.consume(solarParkConsumer);
 

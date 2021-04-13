@@ -34,6 +34,11 @@ public class SolarPowerService implements ISolarParkPower {
     }
 
     @Override
+    public List<SolarPark> getAll() {
+        return solarParkRepo.findAll();
+    }
+
+    @Override
     public boolean doesNameExist(String name) {
 
         if (solarParkRepo.existsBySolarParkName(name)) {

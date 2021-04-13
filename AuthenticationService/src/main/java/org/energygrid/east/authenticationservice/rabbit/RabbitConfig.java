@@ -1,4 +1,4 @@
-package org.energygrid.east.simulationsolarservice.rabbit;
+package org.energygrid.east.authenticationservice.rabbit;
 
 import com.rabbitmq.client.AMQP;
 
