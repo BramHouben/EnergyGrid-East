@@ -1,4 +1,4 @@
-package java.org.energygrid.east.weatherservice;
+package org.energygrid.east.weatherservice;
 
 import org.energygrid.east.weatherservice.service.WeatherService;
 import org.junit.Assert;
