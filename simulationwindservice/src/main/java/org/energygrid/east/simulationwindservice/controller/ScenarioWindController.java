@@ -9,6 +9,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("scenario/wind")
@@ -24,6 +25,12 @@ public class ScenarioWindController {
         }
         var result = scenarioWindService.createScenario(scenario);
 
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/latest")
+    public ResponseEntity<List<ScenarioExpectationResult>> getLatestScenarios() {
+        var result = scenarioWindService.getLatestScenarios();
         return ResponseEntity.ok().body(result);
     }
 }

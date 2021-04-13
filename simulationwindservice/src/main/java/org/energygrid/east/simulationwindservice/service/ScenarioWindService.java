@@ -19,7 +19,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -46,6 +45,8 @@ public class ScenarioWindService implements IScenarioWindService {
         scenarioExpectationResult.setName(scenario.getName());
         scenarioExpectationResult.setScenarioType(scenario.getScenarioType());
         scenarioExpectationResult.setCreatedAt(DateTimeFormatter.ISO_INSTANT.format(Instant.now()));
+        scenarioExpectationResult.setDescription(scenario.getDescription());
+        scenarioExpectationResult.setCoordinates(scenario.getCoordinates() != null ? scenario.getCoordinates() : scenario.getWindTurbine().getCoordinates());
 
         switch (scenario.getScenarioType()) {
             case ADD_WIND_PARK:
@@ -65,6 +66,11 @@ public class ScenarioWindService implements IScenarioWindService {
         }
         scenarioWindRepository.save(scenarioExpectationResult);
         return scenarioExpectationResult;
+    }
+
+    @Override
+    public List<ScenarioExpectationResult> getLatestScenarios() {
+        return scenarioWindRepository.findTop3ByOrderByCreatedAtDesc();
     }
 
     private SimulationExpectationResult createScenarioAddWindPark(String amount, Point coordinates, Double type, String createdAt) {

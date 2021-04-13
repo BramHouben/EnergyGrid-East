@@ -2,6 +2,7 @@ package org.energygrid.east.simulationwindservice.model.results;
 
 import org.energygrid.east.simulationwindservice.model.enums.EScenarioType;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -18,13 +19,18 @@ public class ScenarioExpectationResult {
     private String createdAt;
     private SimulationExpectationResult simulationExpectationResult;
 
+    private String description;
+    private Point coordinates;
+
     public ScenarioExpectationResult() {}
 
-    public ScenarioExpectationResult(String name, EScenarioType scenarioType, String createdAt, SimulationExpectationResult simulationExpectationResult) {
+    public ScenarioExpectationResult(String name, EScenarioType scenarioType, String createdAt, SimulationExpectationResult simulationExpectationResult, String description, Point coordinates) {
         this.name = name;
         this.scenarioType = scenarioType;
         this.createdAt = createdAt;
         this.simulationExpectationResult = simulationExpectationResult;
+        this.description = description;
+        this.coordinates = coordinates;
     }
 
     public String getScenarioId() {
@@ -60,4 +66,12 @@ public class ScenarioExpectationResult {
     }
 
     public void setSimulationExpectationResult(SimulationExpectationResult simulationExpectationResult) { this.simulationExpectationResult = simulationExpectationResult; }
+
+    public String getDescription() { return description; }
+
+    public void setDescription(String description) { this.description = description; }
+
+    public Point getCoordinates() { return coordinates; }
+
+    public void setCoordinates(Point coordinates) { this.coordinates = coordinates; }
 }

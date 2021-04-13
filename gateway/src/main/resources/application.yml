@@ -16,5 +16,7 @@ zuul:
       url: http://localhost:8110/weather
     simulation:
       url: http://localhost:8120/simulation
+    scenario:
+      url: http://localhost:8130/scenario
 server:
   port: 8081
