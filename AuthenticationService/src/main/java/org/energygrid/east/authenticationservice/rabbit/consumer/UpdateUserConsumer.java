@@ -10,16 +10,16 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class UserConsumer implements Consumer {
+public class UpdateUserConsumer implements Consumer {
 
-    private static final Logger logger = Logger.getLogger(UserConsumer.class.getName());
+    private static final Logger logger = Logger.getLogger(UpdateUserConsumer.class.getName());
 
     private final String queue_name;
     private final String exchange_name;
 
-    public UserConsumer() {
+    public UpdateUserConsumer() {
         queue_name = "register_user_queue";
-        exchange_name = "user_exchange";
+        exchange_name = "update_user_exchange";
     }
 
     @Override

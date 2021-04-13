@@ -1,6 +1,5 @@
 package org.energygrid.east.authenticationservice.controller;
 
-import org.energygrid.east.authenticationservice.model.User;
 import org.energygrid.east.authenticationservice.service.IAuthenticationService;
 import org.energygrid.east.authenticationservice.service.jwt.CreateJWTToken;
 import org.springframework.beans.factory.annotation.Autowired;

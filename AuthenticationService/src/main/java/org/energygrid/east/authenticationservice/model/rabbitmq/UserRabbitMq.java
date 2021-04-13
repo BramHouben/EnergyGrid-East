@@ -1,22 +1,11 @@
-package org.energygrid.east.authenticationservice.model;
+package org.energygrid.east.authenticationservice.model.rabbitmq;
 
-import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
-public class User {
-
-    @Id @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
+public class UserRabbitMq {
     private String uuid;
     private String email;
     private String password;
 
-    public User() {}
+    public UserRabbitMq() {}
 
     public String getEmail() {
         return email;

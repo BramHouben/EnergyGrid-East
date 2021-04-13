@@ -3,9 +3,8 @@ package org.energygrid.east.authenticationservice.rabbit.defaultconsumer;
 import com.google.gson.Gson;
 import com.rabbitmq.client.*;
 import org.energygrid.east.authenticationservice.controller.ApplicationContextUtils;
-import org.energygrid.east.authenticationservice.model.User;
+import org.energygrid.east.authenticationservice.model.rabbitmq.UserRabbitMq;
 import org.energygrid.east.authenticationservice.service.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +25,7 @@ public class UserDeliverer implements DeliverCallback {
     @Override
     public void handle(String s, Delivery delivery) {
         String json = new String(delivery.getBody(), StandardCharsets.UTF_8);
-        User user = gson.fromJson(json, User.class);
+        var user = gson.fromJson(json, UserRabbitMq.class);
         userService.addUser(user.getEmail(), user.getPassword());
     }
 }

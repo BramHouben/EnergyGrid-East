@@ -4,18 +4,17 @@ import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.enums.AccountRole;
 import org.energygrid.east.userservice.model.fromFrontend.User;
-
 import javax.validation.constraints.NotNull;
-
 import org.energygrid.east.userservice.model.rabbitMq.UserRabbitMq;
 import org.energygrid.east.userservice.rabbit.Producer.AddUserProducer;
+import org.energygrid.east.userservice.rabbit.Producer.DeleteUserProducer;
+import org.energygrid.east.userservice.rabbit.Producer.UpdateUserProducer;
 import org.energygrid.east.userservice.rabbit.RabbitProducer;
 import org.energygrid.east.userservice.repo.IUserRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import java.util.UUID;
 
 @Service
@@ -39,8 +38,8 @@ public class UserService {
     }
 
     private void storeUserInAuthenticationService(UserRabbitMq user) {
-        RabbitProducer rabbitProducer = new RabbitProducer();
-        AddUserProducer userProducer = new AddUserProducer(user);
+        var rabbitProducer = new RabbitProducer();
+        var userProducer = new AddUserProducer(user);
         rabbitProducer.produce(userProducer);
     }
 
@@ -48,7 +47,7 @@ public class UserService {
         if (StringUtils.isEmpty(uuid) && StringUtils.isEmpty(username) && StringUtils.isEmpty(email)) {
             throw new NullPointerException("uuid, username and or email was empty");
         }
-        // TODO check local
+
         return userRepo.getUserByUuidOrUsernameOrEmail(uuid, username, email);
     }
 
@@ -59,12 +58,8 @@ public class UserService {
         }
 
         var userToStore = new UserDTO();
-        if (user.getNewPassword() != null) {
-            // TODO add rabbitmq message to update password on auth service
-        }
-
-        if (!user.getEmail().equals(dbUser.getEmail())) {
-            // TODO add rabbitmq message to update email on auth service
+        if (user.getNewPassword() != null || !user.getEmail().equals(dbUser.getEmail())) {
+            UpdateUserInAuthenticationService(mapper.map(userToStore, UserRabbitMq.class));
         }
 
         userToStore.setUuid(user.getUuid());
@@ -75,9 +70,21 @@ public class UserService {
         userRepo.save(userToStore);
     }
 
+    private void UpdateUserInAuthenticationService(UserRabbitMq user) {
+        var rabbitProducer = new RabbitProducer();
+        var userProducer = new UpdateUserProducer(user);
+        rabbitProducer.produce(userProducer);
+    }
+
     public void deleteUser(@NotNull String uuid) {
         UserDTO userToDelete = userRepo.getUserByUuid(uuid);
-        // TODO add rabbitmq message to delete the user data on auth service
+        DeleteUserInAuthenticationService(mapper.map(userToDelete, UserRabbitMq.class));
         userRepo.delete(userToDelete);
+    }
+
+    private void DeleteUserInAuthenticationService(UserRabbitMq user) {
+        var rabbitProducer = new RabbitProducer();
+        var userProducer = new DeleteUserProducer(user);
+        rabbitProducer.produce(userProducer);
     }
 }

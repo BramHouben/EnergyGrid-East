@@ -1,7 +1,7 @@
 package org.energygrid.east.authenticationservice.controller;
 
 import org.energygrid.east.authenticationservice.rabbit.RabbitConsumer;
-import org.energygrid.east.authenticationservice.rabbit.consumer.UserConsumer;
+import org.energygrid.east.authenticationservice.rabbit.consumer.AddUserConsumer;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
@@ -17,6 +17,6 @@ public class Startup implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         RabbitConsumer rabbitConsumer = new RabbitConsumer();
-        rabbitConsumer.consume(new UserConsumer());
+        rabbitConsumer.consume(new AddUserConsumer());
     }
 }

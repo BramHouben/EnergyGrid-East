@@ -2,17 +2,15 @@ package org.energygrid.east.userservice.rabbit.Producer;
 
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
-import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.rabbitMq.UserRabbitMq;
 
 import java.io.IOException;
 
-public class AddUserProducer implements Producer {
-
+public class DeleteUserProducer implements Producer {
     private UserRabbitMq user;
-    private final String exchangeName = "add_user_exchange";
+    private final String exchangeName = "delete_user_exchange";
 
-    public AddUserProducer(UserRabbitMq user) {
+    public DeleteUserProducer(UserRabbitMq user) {
         this.user = user;
     }
 
