@@ -15,16 +15,12 @@ import java.util.List;
 @RequestMapping("weather")
 public class WeatherController {
 
-    private final IWeatherService weatherService;
-
     @Autowired
-    public WeatherController(IWeatherService weatherService) {
-        this.weatherService = weatherService;
-    }
+    private IWeatherService weatherService;
 
     @PostMapping("/current")
     public ResponseEntity<Weather> getCurrentWeather(@NotNull @RequestBody Coordinates coordinates){
-        Weather currentWeather = weatherService.getCurrentWeather(coordinates.getCoordinates());
+        Weather currentWeather = weatherService.getCurrentWeather(coordinates);
 
         if(currentWeather == null) return ResponseEntity.badRequest().build();
 
@@ -33,9 +29,9 @@ public class WeatherController {
 
     @PostMapping("/forecast")
     public ResponseEntity<List<Forecast>> getWeatherForecast(@NotNull @RequestBody Coordinates coordinates){
-        List<Forecast> weatherForecast = weatherService.getWeatherForecast(coordinates.getCoordinates());
+        List<Forecast> weatherForecast = weatherService.getWeatherForecast(coordinates);
 
-        if(weatherForecast == null) return ResponseEntity.badRequest().build();
+        if(weatherForecast.isEmpty()) return ResponseEntity.badRequest().build();
 
         return ResponseEntity.ok().body(weatherForecast);
     }
