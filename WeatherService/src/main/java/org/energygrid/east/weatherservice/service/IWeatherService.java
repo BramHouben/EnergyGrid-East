@@ -4,7 +4,6 @@ import org.energygrid.east.weatherservice.entity.Coordinates;
 import org.energygrid.east.weatherservice.models.Forecast;
 import org.energygrid.east.weatherservice.models.Weather;
 
-import java.awt.geom.Point2D;
 import java.util.List;
 
 public interface IWeatherService {
