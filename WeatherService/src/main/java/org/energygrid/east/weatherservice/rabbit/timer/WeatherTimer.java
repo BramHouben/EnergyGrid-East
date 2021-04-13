@@ -19,16 +19,19 @@ public class WeatherTimer extends TimerTask {
 
     private Logger logger = Logger.getLogger(WeatherTimer.class.getName());
 
+    private boolean started;
     private final Channel channel;
     private final String exchange_name;
 
     public WeatherTimer(Channel channel, String exchange_name) {
+        started = false;
         this.channel = channel;
         this.exchange_name = exchange_name;
     }
 
     @Override
     public void run() {
+        this.started = true;
         try {
             JsonObject jsonObject = getWeather();
 
@@ -39,7 +42,7 @@ public class WeatherTimer extends TimerTask {
         }
     }
 
-    private static JsonObject getWeather() {
+    private JsonObject getWeather() {
         final String url = "https://api.openweathermap.org/data/2.5/onecall?lat=51.441642&lon=5.4697225&units=metric&exlude=current,minutely,daily,alerts&appid=d43994b92b8caae6ee650e65194f0ad8";
         final RestTemplate restTemplate = new RestTemplate();
         final HttpHeaders headers = new HttpHeaders();
@@ -49,5 +52,9 @@ public class WeatherTimer extends TimerTask {
         ResponseEntity<String> responseEntity = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, httpEntity, String.class);
 
         return new Gson().fromJson(responseEntity.getBody(), JsonObject.class);
+    }
+
+    public boolean isStarted() {
+        return started;
     }
 }
