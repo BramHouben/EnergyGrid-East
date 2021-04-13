@@ -26,6 +26,11 @@ public class SimulationSolarService implements ISimulationSolarService {
         simulationSolars = new ArrayList<>();
     }
 
+    public SimulationSolarService(JsonObject weatherData) {
+        simulationSolars = new ArrayList<>();
+        this.weatherData = weatherData;
+    }
+
     @Override
     public SimulationSolar getSimulationById(String id) {
         return simulationSolars.stream().filter(s -> s.getId().equals(id)).findFirst().orElse(null);
