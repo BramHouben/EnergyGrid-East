@@ -52,7 +52,7 @@ public class RegionService implements IRegionService {
         streetRequest.setTotalStreet(regionRepo.getAllByStreetAndCity(streetName, city).size());
 
         Pageable pageable = PageRequest.of((int) page, 10);
-        List<House> houses = regionRepo.getAllByStreetOrderByNumberAsc(streetName, pageable).toList();
+        List<House> houses = regionRepo.getAllByStreetAndCityOrderByNumberAsc(streetName, city, pageable).toList();
         streetRequest.setHouses(houses);
 
         logger.log(Level.INFO, "street request made by user");
