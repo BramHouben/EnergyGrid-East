@@ -55,8 +55,10 @@ public class SimulationSolarServiceTest {
     @Test
     void testSimulation() {
         SimulationSolarService simulationSolarService = new SimulationSolarService(getWeather());
+        
         List<EnergyRegionSolarParksInput> energyRegionSolarParksInputs = new ArrayList<>();
         Point point = new Point(23, 34);
+        
         energyRegionSolarParksInputs.add(new EnergyRegionSolarParksInput("test", 23, point));
         EnergyRegionSolarParksOutput energyRegionSolarParksOutput = simulationSolarService.simulateEnergyGrid(energyRegionSolarParksInputs);
 
