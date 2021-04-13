@@ -18,16 +18,6 @@ services:
         timeout: 10s
         retries: 5
 
-  gateway:
-    container_name: gateway
-    hostname: gateway
-    build: gateway
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      ZUUL_ROUTES_SOLARPARK_URL: http://solarparkservice:8090/solarpark
-
   solarparkservice:
     build: SolarParkService
     hostname: solarparkservice
