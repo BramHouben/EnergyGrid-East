@@ -3,6 +3,7 @@ package org.energygrid.east.weatherservice.service;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.energygrid.east.weatherservice.entity.Coordinates;
 import org.energygrid.east.weatherservice.models.Forecast;
 import org.energygrid.east.weatherservice.models.Weather;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,8 +64,8 @@ public class WeatherService implements IWeatherService {
     }
 
     @Override
-    public Weather getCurrentWeather(Point2D.Double coordinates) {
-        var fullWeather = getWeatherData(currentWeatherStringBuilder(coordinates)).getAsJsonObject();
+    public Weather getCurrentWeather(Coordinates coordinates) {
+        var fullWeather = getWeatherData(currentWeatherStringBuilder(coordinates.getCoordinates())).getAsJsonObject();
 
         var symbol = fullWeather.get("weather").getAsJsonArray().get(0).getAsJsonObject().get("icon").getAsString();
         var tempKelvin = fullWeather.get("main").getAsJsonObject().getAsJsonObject().get("temp").getAsDouble();
@@ -75,8 +76,8 @@ public class WeatherService implements IWeatherService {
     }
 
     @Override
-    public List<Forecast> getWeatherForecast(Point2D.Double coordinates) {
-        var fullWeatherForecast = getWeatherData(weatherForecastStringBuilder(coordinates)).getAsJsonObject();
+    public List<Forecast> getWeatherForecast(Coordinates coordinates) {
+        var fullWeatherForecast = getWeatherData(weatherForecastStringBuilder(coordinates.getCoordinates())).getAsJsonObject();
 
         var forecastData = fullWeatherForecast.get("daily").getAsJsonArray();
         forecastData.remove(forecastData.size() - 1);
