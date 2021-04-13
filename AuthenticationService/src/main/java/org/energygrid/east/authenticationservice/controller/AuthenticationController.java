@@ -20,7 +20,7 @@ import java.util.Map;
 public class AuthenticationController {
 
     @Autowired
-    public IAuthenticationService authenticationService;
+    private IAuthenticationService authenticationService;
 
     @PostMapping("/login")
     public ResponseEntity<String> LoginUser(@NotNull @RequestParam(name = "email") String email, @NotNull @RequestParam(name = "password") String password) {

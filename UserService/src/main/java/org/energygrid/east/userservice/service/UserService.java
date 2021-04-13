@@ -28,7 +28,6 @@ public class UserService {
         UserDTO dbUser = userRepo.getUserByUuidOrUsernameOrEmail(null, user.getUsername(), user.getEmail());
         if (dbUser != null) {
             throw new DuplicatedNameException("Username or email already in use");
-            // TODO check if email or username is in use
         }
 
         UserDTO userToStore = mapper.map(user, UserDTO.class);
@@ -36,7 +35,7 @@ public class UserService {
         userToStore.setAccountRole(AccountRole.LargeScaleCustomer);
 
         userRepo.save(userToStore);
-        storeUserInAuthenticationService(mapper.map(userToStore, UserRabbitMq.class));
+        storeUserInAuthenticationService(mapper.map(user, UserRabbitMq.class));
     }
 
     private void storeUserInAuthenticationService(UserRabbitMq user) {
