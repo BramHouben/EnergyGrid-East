@@ -20,10 +20,15 @@ import java.util.TimeZone;
 public class SimulationSolarService implements ISimulationSolarService {
 
     private final List<SimulationSolar> simulationSolars;
-    private static JsonObject weatherData;
+    private JsonObject weatherData;
 
     public SimulationSolarService() {
         simulationSolars = new ArrayList<>();
+    }
+
+    public SimulationSolarService(JsonObject weatherData) {
+        simulationSolars = new ArrayList<>();
+        this.weatherData = weatherData;
     }
 
     @Override
