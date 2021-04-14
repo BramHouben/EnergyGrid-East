@@ -3,6 +3,7 @@ package org.energygrid.east.simulationwindservice.service;
 import org.energygrid.east.simulationwindservice.factory.FactoryURL;
 import org.energygrid.east.simulationwindservice.logic.ISimulationLogic;
 import org.energygrid.east.simulationwindservice.logic.SimulationLogic;
+import org.energygrid.east.simulationwindservice.model.ProductionExpectation;
 import org.energygrid.east.simulationwindservice.model.Scenario;
 import org.energygrid.east.simulationwindservice.model.results.ScenarioExpectationResult;
 import org.energygrid.east.simulationwindservice.model.WindTurbine;
@@ -144,8 +145,10 @@ public class ScenarioWindService implements IScenarioWindService {
 
                 if (dates.stream().noneMatch(dateTime.toString()::equals)) {
                     simulationResult.addProductionExpectation(simulationLogic.createSimulationForWindTurbine(windTurbine.getType(), weather));
+                    simulationResultMissed.addProductionExpectation(new ProductionExpectation(0, dateTime));
                 }
                 else {
+                    simulationResult.addProductionExpectation(new ProductionExpectation(0, dateTime));
                     simulationResultMissed.addProductionExpectation(simulationLogic.createSimulationForWindTurbine(windTurbine.getType(), weather));
                 }
             }
