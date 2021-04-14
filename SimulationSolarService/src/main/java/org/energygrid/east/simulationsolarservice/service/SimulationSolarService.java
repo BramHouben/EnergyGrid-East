@@ -6,13 +6,9 @@ import org.energygrid.east.simulationsolarservice.model.EnergyRegionSolarParksIn
 import org.energygrid.east.simulationsolarservice.model.EnergyRegionSolarParksOutput;
 import org.energygrid.east.simulationsolarservice.model.Kwh;
 import org.energygrid.east.simulationsolarservice.model.SimulationSolar;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.energygrid.east.simulationsolarservice.rabbit.RabbitConsumer;
+import org.energygrid.east.simulationsolarservice.rabbit.consumer.WeatherConsumer;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -24,14 +20,15 @@ import java.util.TimeZone;
 public class SimulationSolarService implements ISimulationSolarService {
 
     private final List<SimulationSolar> simulationSolars;
-    private final String url = "https://api.openweathermap.org/data/2.5/onecall?lat=51.441642&lon=5.4697225&units=metric&exlude=current,minutely,daily,alerts&appid=d43994b92b8caae6ee650e65194f0ad8";
-    private final RestTemplate template;
-    private final HttpHeaders headers;
+    private JsonObject weatherData;
 
     public SimulationSolarService() {
         simulationSolars = new ArrayList<>();
-        this.template = new RestTemplate();
-        this.headers = new HttpHeaders();
+    }
+
+    public SimulationSolarService(JsonObject weatherData) {
+        simulationSolars = new ArrayList<>();
+        this.weatherData = weatherData;
     }
 
     @Override
@@ -53,10 +50,14 @@ public class SimulationSolarService implements ISimulationSolarService {
     @Override
     public EnergyRegionSolarParksOutput simulateEnergyGrid(List<EnergyRegionSolarParksInput> energyRegionSolarParksInput) {
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-        ResponseEntity<String> response = template.exchange(builder.toUriString(), HttpMethod.GET, entity, String.class);
-        var weatherData =  new Gson().fromJson(response.getBody(), JsonObject.class);
+        RabbitConsumer<String> rabbitConsumer = new RabbitConsumer<>();
+        WeatherConsumer weatherConsumer = new WeatherConsumer();
+
+        String weather = rabbitConsumer.consume(weatherConsumer);
+        if(weather != null) {
+            JsonObject newWeatherData = new Gson().fromJson(weather, JsonObject.class);
+            weatherData = newWeatherData;
+        }
 
         var hours = weatherData.getAsJsonObject().get("hourly").getAsJsonArray();
         double correctionFactor = 0.85;
@@ -68,7 +69,8 @@ public class SimulationSolarService implements ISimulationSolarService {
             double kwh = 0;
             LocalDateTime triggerTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(hour.getAsJsonObject().get("dt").getAsInt()), TimeZone.getDefault().toZoneId());
 
-            if(hour.getAsJsonObject().get("uvi").getAsDouble() == 0) {
+            double uvi = hour.getAsJsonObject().get("uvi").getAsDouble();
+            if(uvi == 0) {
                 energyRegionSolarParksOutput.addKwh(new Kwh(0.0, triggerTime));
                 continue;
             }
