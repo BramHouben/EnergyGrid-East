@@ -21,7 +21,7 @@ public class RegionController {
     @Autowired
     private IRegionService regionService;
 
-    @GetMapping("provinceinfo")
+    @GetMapping("province/info")
     public ResponseEntity<List<House>> getProvinceInfo(@RequestParam(name = "regionname") String regionName, @RequestParam(name = "page") long page) {
 
         if (regionName.isEmpty()) {
@@ -31,10 +31,9 @@ public class RegionController {
 
         return ResponseEntity.ok().body(houses);
 
-
     }
 
-    @GetMapping("cityinfo")
+    @GetMapping("city/info")
     public ResponseEntity<List<House>> getCityInfo(@RequestParam(name = "cityname") String cityName, @RequestParam(name = "page") long page) {
 
         if (cityName.isEmpty()) {
@@ -44,10 +43,9 @@ public class RegionController {
 
         return ResponseEntity.ok().body(houses);
 
-
     }
 
-    @GetMapping("streetinfo")
+    @GetMapping("street/info")
     public ResponseEntity<StreetRequest> getStreetInfo(@RequestParam(name = "streetname") String streetname, @RequestParam(name = "city") String city, @RequestParam(name = "page") long page) {
         if (page == 0) {
             return ResponseEntity.badRequest().build();
@@ -59,10 +57,9 @@ public class RegionController {
 
         return ResponseEntity.ok().body(streetRequest);
 
-
     }
 
-    @GetMapping("citiesregion")
+    @GetMapping("cities/region")
     public ResponseEntity<List<String>> allCitiesRegion(@RequestParam(name = "region") String region) {
         if (region.isEmpty()) {
             return ResponseEntity.badRequest().build();
@@ -73,7 +70,7 @@ public class RegionController {
 
     }
 
-    @GetMapping("cityinfostats")
+    @GetMapping("city/stats")
     public ResponseEntity<CityInfoRequest> cityInfo(@RequestParam(name = "city") String city) {
         if (city.isEmpty()) {
             return ResponseEntity.badRequest().build();

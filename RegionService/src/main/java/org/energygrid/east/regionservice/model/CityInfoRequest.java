@@ -20,22 +20,16 @@ public class CityInfoRequest {
         return countHouses;
     }
 
-
     public int getCountSolarPanelHouses() {
         return countSolarPanelHouses;
     }
-
 
     public int getAverageUsageEnergyRegion() {
         return averageUsageEnergyRegion;
     }
 
-
     public List<String> getStreetsCity() {
         return streetsCity;
     }
 
-
 }
-
-

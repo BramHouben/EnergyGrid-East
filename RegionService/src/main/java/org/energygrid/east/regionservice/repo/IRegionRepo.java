@@ -13,11 +13,12 @@ import java.util.List;
 public interface IRegionRepo extends MongoRepository<House, String> {
 
     List<House> getAllByRegion(String provinceName);
+
     List<House> getAllByCity(String city);
+
     List<House> getAllByStreetAndCity(String street, String city);
-    Page<House> getAllByStreetAndCityOrderByNumberAsc(String street,String city,  Pageable pageable);
-    List<House> getHouseByRegion (String region);
-    List<House> findDistinctByRegionOrderByCity(String region);
+
+    Page<House> getAllByStreetAndCityOrderByNumberAsc(String street, String city, Pageable pageable);
 
     int countAllByCity(String city);
 
