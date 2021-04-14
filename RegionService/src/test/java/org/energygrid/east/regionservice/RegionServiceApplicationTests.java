@@ -2,6 +2,7 @@ package org.energygrid.east.regionservice;
 
 import org.energygrid.east.regionservice.repo.IRegionRepo;
 import org.energygrid.east.regionservice.service.RegionService;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -12,7 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-class RegionserviceApplicationTests {
+class RegionServiceApplicationTests {
 
 
     @InjectMocks
@@ -22,4 +23,8 @@ class RegionserviceApplicationTests {
     private IRegionRepo regionRepo;
 
 
+    @Test
+    void getAllHousesProvince() {
+
+    }
 }
