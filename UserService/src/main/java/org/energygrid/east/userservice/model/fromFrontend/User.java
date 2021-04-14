@@ -5,7 +5,7 @@ import org.energygrid.east.userservice.model.enums.AccountRole;
 import java.util.UUID;
 
 public class User {
-    private String uuid;
+    private UUID uuid;
     private String username;
     private String email;
     private String password;
@@ -15,11 +15,11 @@ public class User {
 
     public User() {}
 
-    public String getUuid() {
+    public UUID getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 

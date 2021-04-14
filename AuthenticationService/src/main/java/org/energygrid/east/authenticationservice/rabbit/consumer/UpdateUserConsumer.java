@@ -4,7 +4,9 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DeliverCallback;
 import org.energygrid.east.authenticationservice.rabbit.Consumer;
 import org.energygrid.east.authenticationservice.rabbit.Monitor;
-import org.energygrid.east.authenticationservice.rabbit.defaultconsumer.UserDeliverer;
+import org.energygrid.east.authenticationservice.rabbit.defaultconsumer.AddUserDeliverer;
+import org.energygrid.east.authenticationservice.rabbit.defaultconsumer.DeleteUserDeliverer;
+import org.energygrid.east.authenticationservice.rabbit.defaultconsumer.UpdateUserDeliverer;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -18,7 +20,7 @@ public class UpdateUserConsumer implements Consumer {
     private final String exchange_name;
 
     public UpdateUserConsumer() {
-        queue_name = "register_user_queue";
+        queue_name = "update_user_queue";
         exchange_name = "update_user_exchange";
     }
 
@@ -29,8 +31,7 @@ public class UpdateUserConsumer implements Consumer {
             channel.exchangeDeclare(exchange_name, "direct", true);
             channel.queueBind(queue_name, exchange_name, "");
 
-            DeliverCallback deliverCallback = new UserDeliverer();
-
+            DeliverCallback deliverCallback = new UpdateUserDeliverer();
             channel.basicConsume(queue_name, true, deliverCallback, s -> {});
 
             Monitor monitor = new Monitor();

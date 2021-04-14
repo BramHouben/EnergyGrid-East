@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 
 @Component
-public class UserDeliverer implements DeliverCallback {
+public class AddUserDeliverer implements DeliverCallback {
 
     private ApplicationContext applicationContext;
     private IUserService userService;
     private final Gson gson = new Gson();
 
-    public UserDeliverer() {
+    public AddUserDeliverer() {
         applicationContext = ApplicationContextUtils.getCtx();
         userService = applicationContext.getBean(IUserService.class);
     }
@@ -26,6 +26,6 @@ public class UserDeliverer implements DeliverCallback {
     public void handle(String s, Delivery delivery) {
         String json = new String(delivery.getBody(), StandardCharsets.UTF_8);
         var user = gson.fromJson(json, UserRabbitMq.class);
-        userService.addUser(user.getEmail(), user.getPassword());
+        userService.addUser(user);
     }
 }

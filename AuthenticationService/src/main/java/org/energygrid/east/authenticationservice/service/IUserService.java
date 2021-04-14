@@ -2,8 +2,10 @@ package org.energygrid.east.authenticationservice.service;
 
 import org.energygrid.east.authenticationservice.model.rabbitmq.UserRabbitMq;
 
+import java.util.UUID;
+
 public interface IUserService {
-    void addUser(String username, String password);
+    void addUser(UserRabbitMq user);
     void updateUser(UserRabbitMq user);
-    void deleteUser(String uuid);
+    void deleteUser(UUID uuid);
 }

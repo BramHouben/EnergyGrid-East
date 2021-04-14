@@ -1,16 +1,20 @@
 package org.energygrid.east.authenticationservice.model.dto;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.UUID;
 
 @Entity
+@Table(name = "user")
 public class UserDto {
-    @Id @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
-    private String uuid;
+    @Id
+    @Type(type="uuid-char")
+    private UUID uuid;
     private String email;
     private String password;
 
@@ -32,11 +36,11 @@ public class UserDto {
         this.password = password;
     }
 
-    public String getUuid() {
+    public UUID getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 }

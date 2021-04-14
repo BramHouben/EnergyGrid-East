@@ -1,5 +1,6 @@
 package org.energygrid.east.userservice.controller;
 
+import javassist.NotFoundException;
 import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.fromFrontend.User;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("user")
@@ -23,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity AddUser(@NotNull @RequestBody User user) {
+    public ResponseEntity AddUser(@NotNull @ModelAttribute User user) {
         try {
             userService.addUser(user);
             return ResponseEntity.status(201).body(null);
@@ -35,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<UserViewModel> GetUserByUuidOrUsernameOrEmail(@RequestParam(required = false) String uuid, @RequestParam(required = false) String username, @RequestParam(required = false) String email) {
+    public ResponseEntity<UserViewModel> GetUserByUuidOrUsernameOrEmail(@RequestParam(required = false) UUID uuid, @RequestParam(required = false) String username, @RequestParam(required = false) String email) {
         try {
             UserDTO user = userService.getUserByUuidOrUsernameOrEmail(uuid, username, email);
             if (user == null) {
@@ -64,10 +66,12 @@ public class UserController {
     }
 
     @DeleteMapping("{uuid}")
-    public ResponseEntity DeleteUser(@NotNull @PathVariable String uuid) {
+    public ResponseEntity DeleteUser(@NotNull @PathVariable UUID uuid) {
         try {
             userService.deleteUser(uuid);
             return ResponseEntity.ok(null);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(404).body(null);
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }

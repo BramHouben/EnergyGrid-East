@@ -1,5 +1,6 @@
 package org.energygrid.east.userservice.service;
 
+import javassist.NotFoundException;
 import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.enums.AccountRole;
@@ -15,6 +16,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
 import java.util.UUID;
 
 @Service
@@ -30,11 +32,13 @@ public class UserService {
         }
 
         UserDTO userToStore = mapper.map(user, UserDTO.class);
-        userToStore.setUuid(UUID.randomUUID().toString());
+        userToStore.setUuid(UUID.randomUUID());
         userToStore.setAccountRole(AccountRole.LargeScaleCustomer);
 
         userRepo.save(userToStore);
-        storeUserInAuthenticationService(mapper.map(user, UserRabbitMq.class));
+        var rabbitMqUser = mapper.map(user, UserRabbitMq.class);
+        rabbitMqUser.setUuid(userToStore.getUuid());
+        storeUserInAuthenticationService(rabbitMqUser);
     }
 
     private void storeUserInAuthenticationService(UserRabbitMq user) {
@@ -43,7 +47,7 @@ public class UserService {
         rabbitProducer.produce(userProducer);
     }
 
-    public UserDTO getUserByUuidOrUsernameOrEmail(String uuid, String username, String email) {
+    public UserDTO getUserByUuidOrUsernameOrEmail(UUID uuid, String username, String email) {
         if (StringUtils.isEmpty(uuid) && StringUtils.isEmpty(username) && StringUtils.isEmpty(email)) {
             throw new NullPointerException("uuid, username and or email was empty");
         }
@@ -52,7 +56,7 @@ public class UserService {
     }
 
     public void editUser(@NotNull User user) {
-        var dbUser = userRepo.getUserByUuid(user.getUuid());
+        var dbUser = userRepo.getUserByUuidOrUsernameOrEmail(user.getUuid(), null, null);
         if (dbUser == null) {
             throw new NullPointerException();
         }
@@ -76,8 +80,12 @@ public class UserService {
         rabbitProducer.produce(userProducer);
     }
 
-    public void deleteUser(@NotNull String uuid) {
-        UserDTO userToDelete = userRepo.getUserByUuid(uuid);
+    public void deleteUser(@NotNull UUID uuid) throws NotFoundException {
+        UserDTO userToDelete = userRepo.getByUuid(uuid);
+        if (userToDelete == null) {
+            throw new NotFoundException("Not found");
+        }
+
         DeleteUserInAuthenticationService(mapper.map(userToDelete, UserRabbitMq.class));
         userRepo.delete(userToDelete);
     }

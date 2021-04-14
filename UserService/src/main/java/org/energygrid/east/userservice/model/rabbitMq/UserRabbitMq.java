@@ -1,15 +1,17 @@
 package org.energygrid.east.userservice.model.rabbitMq;
 
+import java.util.UUID;
+
 public class UserRabbitMq {
-    private String uuid;
+    private UUID uuid;
     private String password;
     private String email;
 
-    public String getUuid() {
+    public UUID getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 

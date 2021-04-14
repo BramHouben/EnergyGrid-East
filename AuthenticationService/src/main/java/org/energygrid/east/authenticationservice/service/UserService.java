@@ -5,27 +5,33 @@ import org.energygrid.east.authenticationservice.model.rabbitmq.UserRabbitMq;
 import org.energygrid.east.authenticationservice.repository.AuthenticationRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class UserService implements IUserService {
 
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final ModelMapper mapper = new ModelMapper();
+
+    @Autowired
+    private ISecurityService securityService;
 
     @Autowired
     private final AuthenticationRepository authenticationRepository;
 
-    @Override
-    public void addUser(String email, String password) {
-        if (authenticationRepository.findUserByEmail(email) == null) {
-            var hashedPassword = passwordEncoder.encode(password);
-            var user = new UserDto();
-            user.setEmail(email);
-            user.setPassword(hashedPassword);
+    public UserService(AuthenticationRepository authenticationRepository) {
+        this.authenticationRepository = authenticationRepository;
+    }
 
-            authenticationRepository.save(user);
+    @Override
+    public void addUser(UserRabbitMq user) {
+        if (authenticationRepository.findByEmail(user.getEmail()) == null) {
+            var hashedPassword = securityService.HashPassword(user.getPassword());
+            var userToStore = mapper.map(user, UserDto.class);
+            userToStore.setPassword(hashedPassword);
+
+            authenticationRepository.save(userToStore);
         }
     }
 
@@ -35,8 +41,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void deleteUser(String uuid) {
-        UserDto userToDelete = authenticationRepository.findUserByUuid(uuid);
+    public void deleteUser(UUID uuid) {
+        UserDto userToDelete = authenticationRepository.findByUuid(uuid);
         authenticationRepository.delete(userToDelete);
     }
 }
