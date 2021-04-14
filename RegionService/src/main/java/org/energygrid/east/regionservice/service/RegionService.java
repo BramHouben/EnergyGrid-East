@@ -21,10 +21,15 @@ import java.util.stream.Collectors;
 public class RegionService implements IRegionService {
 
     private static final java.util.logging.Logger logger = Logger.getLogger(RegionService.class.getName());
+
     @Autowired
     private MongoTemplate mongoTemplate;
     @Autowired
     private IRegionRepo regionRepo;
+
+    private List<String> cities;
+
+    private List<String> regions;
 
     @Override
     public List<House> getAllHousesProvince(String regionName, long page) {
@@ -61,11 +66,11 @@ public class RegionService implements IRegionService {
 
     @Override
     public List<String> getAllCitiesRegion(String region) {
-
-        logger.log(Level.INFO, "getAllCitiesRegion method called" + region);
-        if (!region.equals("Flevoland") && !region.equals("Gelderland") && !region.equals("Overijssel")) {
+        if (!regions.contains(region)) {
             throw new IllegalArgumentException();
         }
+        logger.log(Level.INFO, "getAllCitiesRegion method called" + region);
+
         Criteria criteria = new Criteria("Region").is(region);
         Query query = new Query();
         query.addCriteria(criteria);
@@ -75,6 +80,12 @@ public class RegionService implements IRegionService {
 
     @Override
     public CityInfoRequest getInfoCity(String city) {
+
+        if (!cities.contains(city)) {
+            throw new IllegalArgumentException();
+        }
+
+
         logger.log(Level.INFO, "CityInfoRequest method called" + city);
 
         Criteria criteria = new Criteria("city").is(city);
@@ -89,6 +100,17 @@ public class RegionService implements IRegionService {
 
         return new CityInfoRequest(totalCountHouses, totalWithSonarPanels, 2832, streets);
 
+    }
+
+    @Autowired
+    private void fillListWithCities() {
+        cities = mongoTemplate.findDistinct("city", House.class, String.class).stream().collect(Collectors.toUnmodifiableList());
+    }
+
+    @Autowired
+    private void fillListWithRegions() {
+
+        regions = mongoTemplate.findDistinct("region", House.class, String.class).stream().collect(Collectors.toUnmodifiableList());
     }
 
 }
