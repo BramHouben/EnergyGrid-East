@@ -30,8 +30,6 @@ public class WeatherProducerTest {
         weatherTimer.run();
         WeatherTimer w = (WeatherTimer) weatherTimer;
 
-        channel.close();
-
         Assertions.assertTrue(w.isStarted());
     }
 
@@ -44,8 +42,6 @@ public class WeatherProducerTest {
         timer.schedule(weatherTimer, 0);
 
         Thread.sleep(1000);
-
-        channel.close();
 
         Assertions.assertTrue(weatherTimer.isStarted());
     }
