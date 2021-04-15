@@ -37,7 +37,7 @@ public class userServiceTest {
 
     @Test
     public void EditUserNullPointerExceptionTest() {
-        Assert.assertThrows(NullPointerException.class, () -> userService.editUser(null));
+        Assert.assertThrows(NullPointerException.class, () -> userService.editUser(null, null));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package org.energygrid.east.userservice.service;
 
+import io.jsonwebtoken.Claims;
 import javassist.NotFoundException;
 import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
@@ -23,6 +24,10 @@ import java.util.UUID;
 public class UserService {
     @Autowired
     private IUserRepo userRepo;
+
+    @Autowired
+    private IJwtService jwtService;
+
     private final ModelMapper mapper = new ModelMapper();
 
     public void addUser(@NotNull User user) {
@@ -55,21 +60,31 @@ public class UserService {
         return userRepo.getUserByUuidOrUsernameOrEmail(uuid, username, email);
     }
 
-    public void editUser(@NotNull User user) {
-        var dbUser = userRepo.getUserByUuidOrUsernameOrEmail(user.getUuid(), null, null);
-        if (dbUser == null) {
+    public void editUser(@NotNull User user, @NotNull String jwt) throws IllegalAccessException {
+        Claims jwtClaims = jwtService.getClaims(jwt);
+        UUID userUuid = UUID.fromString(jwtClaims.get("uuid").toString());
+        var dbUser = userRepo.getUserByUuidOrUsernameOrEmail(userUuid, null, null);
+
+        if (!userUuid.equals(dbUser.getUuid())) {
+            throw new IllegalAccessException();
+        }
+
+        if (dbUser == null || jwt.isEmpty()) {
             throw new NullPointerException();
         }
 
-        var userToStore = new UserDTO();
-        if (user.getNewPassword() != null || !user.getEmail().equals(dbUser.getEmail())) {
-            UpdateUserInAuthenticationService(mapper.map(userToStore, UserRabbitMq.class));
+        var userToStore = mapper.map(user, UserDTO.class);
+        userToStore.setUuid(userUuid);
+
+        if (user.getNewPassword() != null) {
+            var userRabbitMq = mapper.map(userToStore, UserRabbitMq.class);
+            userRabbitMq.setPassword(user.getNewPassword());
+            UpdateUserInAuthenticationService(userRabbitMq);
         }
 
-        userToStore.setUuid(user.getUuid());
-        userToStore.setUsername(user.getUsername());
-        userToStore.setAccountRole(user.getAccountRole());
-        userToStore.setLanguage(user.getLanguage());
+        if (!user.getEmail().equals(dbUser.getEmail())) {
+            UpdateUserInAuthenticationService(mapper.map(userToStore, UserRabbitMq.class));
+        }
 
         userRepo.save(userToStore);
     }
@@ -80,10 +95,16 @@ public class UserService {
         rabbitProducer.produce(userProducer);
     }
 
-    public void deleteUser(@NotNull UUID uuid) throws NotFoundException {
+    public void deleteUser(@NotNull String jwt) throws NotFoundException, IllegalAccessException {
+        Claims claims = jwtService.getClaims(jwt);
+        UUID uuid = UUID.fromString(claims.get("uuid").toString());
         UserDTO userToDelete = userRepo.getByUuid(uuid);
         if (userToDelete == null) {
             throw new NotFoundException("Not found");
+        }
+
+        if (!uuid.equals(userToDelete.getUuid())) {
+            throw new IllegalAccessException();
         }
 
         DeleteUserInAuthenticationService(mapper.map(userToDelete, UserRabbitMq.class));

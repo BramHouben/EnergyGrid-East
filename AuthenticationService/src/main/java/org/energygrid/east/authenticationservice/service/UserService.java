@@ -1,5 +1,6 @@
 package org.energygrid.east.authenticationservice.service;
 
+import io.jsonwebtoken.Claims;
 import org.energygrid.east.authenticationservice.model.dto.UserDto;
 import org.energygrid.east.authenticationservice.model.rabbitmq.UserRabbitMq;
 import org.energygrid.east.authenticationservice.repository.AuthenticationRepository;
@@ -27,7 +28,7 @@ public class UserService implements IUserService {
     @Override
     public void addUser(UserRabbitMq user) {
         if (authenticationRepository.findByEmail(user.getEmail()) == null) {
-            var hashedPassword = securityService.HashPassword(user.getPassword());
+            var hashedPassword = securityService.hashPassword(user.getPassword());
             var userToStore = mapper.map(user, UserDto.class);
             userToStore.setPassword(hashedPassword);
 
@@ -37,12 +38,26 @@ public class UserService implements IUserService {
 
     @Override
     public void updateUser(UserRabbitMq user) {
-       authenticationRepository.save(mapper.map(user, UserDto.class));
+        var dbUser = authenticationRepository.findByUuid(user.getUuid());
+        if (user.getPassword() != null) {
+            String passwordHash = securityService.hashPassword(user.getPassword());
+            dbUser.setPassword(passwordHash);
+        }
+
+        if (user.getEmail() != null) {
+            dbUser.setEmail(user.getEmail());
+        }
+
+        authenticationRepository.save(dbUser);
     }
 
     @Override
-    public void deleteUser(UUID uuid) {
+    public void deleteUser(UUID uuid) throws IllegalAccessException {
         UserDto userToDelete = authenticationRepository.findByUuid(uuid);
+        if (userToDelete == null) {
+            throw new IllegalAccessException();
+        }
+
         authenticationRepository.delete(userToDelete);
     }
 }

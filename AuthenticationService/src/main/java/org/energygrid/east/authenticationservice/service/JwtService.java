@@ -1,9 +1,6 @@
 package org.energygrid.east.authenticationservice.service;
 
-import io.jsonwebtoken.Header;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.energygrid.east.authenticationservice.model.dto.UserDto;
 import org.springframework.stereotype.Service;
@@ -23,7 +20,7 @@ public class JwtService implements IJwtService {
     }
 
     @Override
-    public String create(UserDto user){
+    public String create(UserDto user) {
         Map<String, String> claims = new HashMap<>();
         claims.put("uuid", user.getUuid().toString());
         claims.put("email", user.getEmail());
@@ -41,33 +38,25 @@ public class JwtService implements IJwtService {
                 .compact();
     }
 
-    private Date getIssuedAt(){
+    private Date getIssuedAt() {
         Calendar now = Calendar.getInstance();
         return now.getTime();
     }
 
-    private Date getExpiration(){
+    private Date getExpiration() {
         Calendar now = Calendar.getInstance();
         now.add(Calendar.MINUTE, 60);
         return now.getTime();
     }
 
-    @Override
-    public boolean validate(String jwtToken){
-        try{
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(jwtToken);
-            return true;
-        }
-        catch (JwtException e) {
-            return false;
-        }
+    public Claims getClaims(String jwt) {
+        return Jwts.parser()
+                .parseClaimsJws(jwt)
+                .getBody();
     }
 
     private Key getKey() {
-        if(key == null){
+        if (key == null) {
             key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
             return key;
         }

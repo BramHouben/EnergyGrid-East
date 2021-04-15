@@ -7,5 +7,5 @@ import java.util.UUID;
 public interface IUserService {
     void addUser(UserRabbitMq user);
     void updateUser(UserRabbitMq user);
-    void deleteUser(UUID uuid);
+    void deleteUser(UUID uuid) throws IllegalAccessException;
 }

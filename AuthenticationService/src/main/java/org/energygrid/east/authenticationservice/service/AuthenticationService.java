@@ -24,7 +24,7 @@ public class AuthenticationService implements IAuthenticationService {
     @Override
     public String login(User user) throws IllegalAccessException {
         UserDto dbUser = authenticationRepository.findByEmail(user.getEmail());
-        if (dbUser == null || securityService.VerifyHash(dbUser.getPassword(), user.getPassword())) {
+        if (dbUser == null || !securityService.verifyHash(dbUser.getPassword(), user.getPassword())) {
             throw new IllegalAccessException();
         }
 

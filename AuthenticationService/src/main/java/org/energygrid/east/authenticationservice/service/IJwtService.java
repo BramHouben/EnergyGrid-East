@@ -1,10 +1,9 @@
 package org.energygrid.east.authenticationservice.service;
 
+import io.jsonwebtoken.Claims;
 import org.energygrid.east.authenticationservice.model.dto.UserDto;
-
-import java.util.Map;
 
 public interface IJwtService {
     String create(UserDto user);
-    boolean validate(String jwtToken);
+    Claims getClaims(String jwt);
 }

@@ -10,6 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -19,6 +21,9 @@ public class UserController {
     @Autowired
     UserService userService;
     ModelMapper modelMapper;
+
+    @Autowired
+    private HttpServletRequest request;
 
     public UserController() {
         this.modelMapper = new ModelMapper();
@@ -54,9 +59,10 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity EditUser(@NotNull @RequestBody User user) {
+    public ResponseEntity EditUser(@NotNull @ModelAttribute User user) {
         try {
-            userService.editUser(user);
+            String jwt = request.getHeader("bearer");
+            userService.editUser(user, jwt);
             return ResponseEntity.ok(null);
         } catch (NullPointerException e) {
             return ResponseEntity.status(404).body(null);
@@ -65,10 +71,11 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("{uuid}")
-    public ResponseEntity DeleteUser(@NotNull @PathVariable UUID uuid) {
+    @DeleteMapping()
+    public ResponseEntity DeleteUser() {
         try {
-            userService.deleteUser(uuid);
+            String jwt = request.getHeader("bearer");
+            userService.deleteUser(jwt);
             return ResponseEntity.ok(null);
         } catch (NotFoundException e) {
             return ResponseEntity.status(404).body(null);

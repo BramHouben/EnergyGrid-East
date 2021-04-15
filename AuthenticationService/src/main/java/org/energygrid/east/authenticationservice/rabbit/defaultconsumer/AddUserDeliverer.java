@@ -24,8 +24,13 @@ public class AddUserDeliverer implements DeliverCallback {
 
     @Override
     public void handle(String s, Delivery delivery) {
-        String json = new String(delivery.getBody(), StandardCharsets.UTF_8);
-        var user = gson.fromJson(json, UserRabbitMq.class);
-        userService.addUser(user);
+        try {
+            String json = new String(delivery.getBody(), StandardCharsets.UTF_8);
+            var user = gson.fromJson(json, UserRabbitMq.class);
+            userService.addUser(user);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

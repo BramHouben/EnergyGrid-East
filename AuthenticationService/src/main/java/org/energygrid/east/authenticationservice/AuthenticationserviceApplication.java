@@ -16,17 +16,6 @@ import java.util.concurrent.Executors;
 public class AuthenticationserviceApplication {
 
 	public static void main(String[] args) {
-		Executor executor = Executors.newScheduledThreadPool(2);
-
-		var addUserThread = new RabbitMqAddUserThread();
-		executor.execute(addUserThread);
-
-		var updateUserThread = new RabbitMqUpdateUserThread();
-		executor.execute(updateUserThread);
-
-		var deleteUserThread = new RabbitMqDeleteUserThread();
-		executor.execute(deleteUserThread);
-
 		SpringApplication.run(AuthenticationserviceApplication.class, args);
 	}
 

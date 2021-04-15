@@ -1,7 +1,8 @@
 package org.energygrid.east.authenticationservice.service;
 
-public interface ISecurityService {
-    String HashPassword(String password);
+import com.sun.istack.NotNull;
 
-    boolean VerifyHash(String hash, String password);
+public interface ISecurityService {
+    String hashPassword(@NotNull String password);
+    boolean verifyHash(@NotNull String password, @NotNull String passwordHash);
 }
