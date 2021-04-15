@@ -22,7 +22,7 @@ import java.util.List;
 public class SimulationWindService implements ISimulationWindService {
 
     private ISimulationLogic simulationLogic;
-    private final String url = "https://api.openweathermap.org/data/2.5/onecall?lat=52.23587&lon=6.19775&exclude=current,minutely,daily,alerts&appid=d43994b92b8caae6ee650e65194f0ad8";
+    private static final String url = "https://api.openweathermap.org/data/2.5/onecall?lat=52.23587&lon=6.19775&exclude=current,minutely,daily,alerts&appid=d43994b92b8caae6ee650e65194f0ad8";
     private final RestTemplate template;
     private final HttpHeaders headers;
 
