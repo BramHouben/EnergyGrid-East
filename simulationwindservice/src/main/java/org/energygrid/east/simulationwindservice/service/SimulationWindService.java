@@ -45,11 +45,8 @@ public class SimulationWindService implements ISimulationWindService {
         SimulationExpectationResult simulationExpectationResult = new SimulationExpectationResult();
         simulationExpectationResult.setCreatedAt(DateTimeFormatter.ISO_INSTANT.format(Instant.now()));
         List<SimulationResult> results = new ArrayList<>();
-        //Double kwTotalProduction = 0.0;
 
         var data = new FactoryURL().getWeatherData(headers, template, url);
-        //TODO
-        //Get All WindTurbines
         List<WindTurbine> turbines = new ArrayList<>();
         turbines.add(new WindTurbine(1, "WindTurbine 1", new Point(52.23587, 6.19775), 3.0));
         turbines.add(new WindTurbine(2, "WindTurbine 2", new Point(52.57085, 6.45386), 2.0));
@@ -61,7 +58,6 @@ public class SimulationWindService implements ISimulationWindService {
             for (var weather : data) {
                 var productionExpectation = simulationLogic.createSimulationForWindTurbine(turbine.getType(), weather);
                 simulationResult.addProductionExpectation(productionExpectation);
-                //kwTotalProduction = simulationLogic.calculateTotalKw(kwTotalProduction, productionExpectation.getKw());
             }
             results.add(simulationResult);
         }

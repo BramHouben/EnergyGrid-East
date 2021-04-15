@@ -84,7 +84,6 @@ public class ScenarioWindService implements IScenarioWindService {
             for (var i = 1; i < Integer.parseInt(amount) + 1; i++) {
                 SimulationResult simulationResult = new SimulationResult();
                 simulationResult.setTurbineId(i);
-                //Call weather based on coordinates
                 var url = "https://api.openweathermap.org/data/2.5/onecall?lat="+coordinates.getX()+"&lon="+coordinates.getY()+"&exclude=current,minutely,daily,alerts&appid=da713c7b97d2a6f912d9266ec49a30d8";
                 var data = new FactoryURL().getWeatherData(headers, template, url);
 
