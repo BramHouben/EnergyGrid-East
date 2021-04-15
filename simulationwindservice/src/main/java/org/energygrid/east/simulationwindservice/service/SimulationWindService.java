@@ -1,12 +1,8 @@
 package org.energygrid.east.simulationwindservice.service;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import org.energygrid.east.simulationwindservice.factory.FactoryURL;
 import org.energygrid.east.simulationwindservice.logic.ISimulationLogic;
 import org.energygrid.east.simulationwindservice.logic.SimulationLogic;
-import org.energygrid.east.simulationwindservice.model.ProductionExpectation;
 import org.energygrid.east.simulationwindservice.model.results.SimulationResult;
 import org.energygrid.east.simulationwindservice.model.results.SimulationExpectationResult;
 import org.energygrid.east.simulationwindservice.model.WindTurbine;
