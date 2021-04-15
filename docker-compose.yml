@@ -12,16 +12,11 @@ services:
       - 5672:5672
       - 15672:15672
     restart: always
-
-  gateway:
-    container_name: gateway
-    hostname: gateway
-    build: gateway
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      ZUUL_ROUTES_SOLARPARK_URL: http://solarparkservice:8090/solarpark
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://rabbitmq:15672"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
 
   solarparkservice:
     build: SolarParkService
@@ -51,14 +46,20 @@ services:
     restart: always
     ports:
       - 8110:8110
+    environment:
+      RABBIT_HOST: rabbitmq
+    depends_on:
+      - rabbitmq
 
   userservice:
-    build: Userservice
+    build: UserService
     hostname: userservice
     container_name: userservice
     restart: always
     ports:
       - 8130:8130
+    environment:
+      MYSQL_DB_HOST: mysql_userservice
 
   authenticationservice:
     build: AuthenticationService
@@ -67,3 +68,25 @@ services:
     restart: always
     ports:
       - 8100:8100
+    environment:
+      MYSQL_DB_HOST: mysql_authservice
+
+  mysql_authservice:
+    container_name: mysql_authservice
+    hostname: mysql_authservice
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+
+  mysql_userservice:
+    container_name: mysql_userservice
+    hostname: mysql_userservice
+    image: mysql:latest
+    ports:
+      - 3307:3307
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
