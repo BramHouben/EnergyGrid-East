@@ -21,17 +21,6 @@ public class Scenario {
         windTurbineOffTimes = new ArrayList<>();
     }
 
-    public Scenario(String name, EScenarioType scenarioType, String amount, Double type, Point coordinates, WindTurbine windTurbine, List<String> windTurbineOffTimes, String description) {
-        this.name = name;
-        this.scenarioType = scenarioType;
-        this.amount = amount;
-        this.type = type;
-        this.coordinates = coordinates;
-        this.windTurbine = windTurbine;
-        this.windTurbineOffTimes = windTurbineOffTimes;
-        this.description = description;
-    }
-
     public String getName() { return name; }
 
     public void setName(String name) { this.name = name; }

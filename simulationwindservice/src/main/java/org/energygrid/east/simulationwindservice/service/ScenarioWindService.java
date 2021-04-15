@@ -84,8 +84,8 @@ public class ScenarioWindService implements IScenarioWindService {
             for (var i = 1; i < Integer.parseInt(amount) + 1; i++) {
                 SimulationResult simulationResult = new SimulationResult();
                 simulationResult.setTurbineId(i);
-                var url = "https://api.openweathermap.org/data/2.5/onecall?lat="+coordinates.getX()+"&lon="+coordinates.getY()+"&exclude=current,minutely,daily,alerts&appid=da713c7b97d2a6f912d9266ec49a30d8";
-                var data = new FactoryURL().getWeatherData(headers, template, url);
+
+                var data = new FactoryURL().getWeatherData(headers, template, getUrl(coordinates.getX(), coordinates.getY()));
 
                 for (var weather : data) {
                     simulationResult.addProductionExpectation(simulationLogic.createSimulationForWindTurbine(type, weather));
@@ -107,9 +107,8 @@ public class ScenarioWindService implements IScenarioWindService {
             SimulationResult simulationResult = new SimulationResult();
             simulationResult.setName(isAdded ? "Production" : "Missed Production");
             simulationResult.setTurbineId(windTurbine.getTurbineId());
-            //Call weather based on coordinates
-            var url = "https://api.openweathermap.org/data/2.5/onecall?lat="+windTurbine.getCoordinates().getX()+"&lon="+windTurbine.getCoordinates().getY()+"&exclude=current,minutely,daily,alerts&appid=da713c7b97d2a6f912d9266ec49a30d8";
-            var data = new FactoryURL().getWeatherData(headers, template, url);
+
+            var data = new FactoryURL().getWeatherData(headers, template, getUrl(windTurbine.getCoordinates().getX(), windTurbine.getCoordinates().getY()));
 
             for (var weather : data) {
                 simulationResult.addProductionExpectation(simulationLogic.createSimulationForWindTurbine(windTurbine.getType(), weather));
@@ -135,9 +134,8 @@ public class ScenarioWindService implements IScenarioWindService {
             SimulationResult simulationResultMissed = new SimulationResult();
             simulationResultMissed.setName("Missed Production");
             simulationResultMissed.setTurbineId(windTurbine.getTurbineId());
-            //Call weather based on coordinates
-            var url = "https://api.openweathermap.org/data/2.5/onecall?lat="+windTurbine.getCoordinates().getX()+"&lon="+windTurbine.getCoordinates().getY()+"&exclude=current,minutely,daily,alerts&appid=da713c7b97d2a6f912d9266ec49a30d8";
-            var data = new FactoryURL().getWeatherData(headers, template, url);
+
+            var data = new FactoryURL().getWeatherData(headers, template, getUrl(windTurbine.getCoordinates().getX(), windTurbine.getCoordinates().getY()));
 
             for (var weather : data) {
                 var dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(weather.getAsJsonObject().get("dt").getAsInt()), TimeZone.getDefault().toZoneId());
@@ -158,5 +156,9 @@ public class ScenarioWindService implements IScenarioWindService {
         simulationExpectationResult.setKwTotalResult(simulationLogic.calculateKwProduction(results, true));
 
         return simulationExpectationResult;
+    }
+
+    private String getUrl(double x, double y) {
+        return "https://api.openweathermap.org/data/2.5/onecall?lat="+x+"&lon="+y+"&exclude=current,minutely,daily,alerts&appid=da713c7b97d2a6f912d9266ec49a30d8";
     }
 }

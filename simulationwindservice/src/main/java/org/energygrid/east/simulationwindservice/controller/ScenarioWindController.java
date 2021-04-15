@@ -18,7 +18,7 @@ public class ScenarioWindController {
     @Autowired
     private IScenarioWindService scenarioWindService;
 
-    @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = "application/json")
+    @PostMapping("/create")
     public ResponseEntity<ScenarioExpectationResult> createScenario(@RequestBody Scenario scenario, @Nullable @RequestParam(name = "times") String[] times) {
         if (times != null) {
             scenario.setWindTurbineOffTimes(Arrays.asList(times));
