@@ -21,3 +21,27 @@ steps:
       effectivePomSkip: false
       sonarQubeRunAnalysis: false
       checkStyleRunAnalysis: true
+
+  - task: DockerInstaller@0
+    inputs:
+      dockerVersion: '17.09.0-ce'
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'energygrideast'
+      command: 'login'
+      addPipelineData: false
+
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'energygrideast'
+      repository: 'energygrideast/simulationwindservice'
+      command: 'buildAndPush'
+      Dockerfile: 'simulationwindservice/Dockerfile'
+      tags: 'latest'
+      addPipelineData: false
+  
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'energygrideast'
+      command: 'logout'
+      addPipelineData: false
