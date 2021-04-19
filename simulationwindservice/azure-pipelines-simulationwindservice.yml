@@ -1,0 +1,23 @@
+trigger:
+  branches:
+    include:
+      - dev
+  paths:
+    include:
+      - simulationwindservice/*
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'simulationwindservice/pom.xml'
+      goals: 'clean package'
+      publishJUnitResults: false
+      javaHomeOption: 'JDKVersion'
+      mavenVersionOption: 'Default'
+      mavenAuthenticateFeed: false
+      effectivePomSkip: false
+      sonarQubeRunAnalysis: false
+      checkStyleRunAnalysis: true
