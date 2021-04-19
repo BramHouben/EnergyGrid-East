@@ -27,6 +27,7 @@ public class SimulationSolarController {
         return ResponseEntity.status(200).body(simulationSolar);
     }
 
+    //test
     @GetMapping("/solar")
     public ResponseEntity<String> getSolar() {
         RabbitConsumer<String> rabbitConsumer = new RabbitConsumer<>();
