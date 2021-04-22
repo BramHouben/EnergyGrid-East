@@ -12,7 +12,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -24,10 +23,10 @@ import java.util.List;
 
 @Service
 public class WeatherService implements IWeatherService {
-    private String url = "https://api.openweathermap.org/data/2.5/";
-    private String apiKey = "d43994b92b8caae6ee650e65194f0ad8";
-    private RestTemplate template;
-    private HttpHeaders headers;
+    private final String url = "https://api.openweathermap.org/data/2.5/";
+    private final String apiKey = "d43994b92b8caae6ee650e65194f0ad8";
+    private final RestTemplate template;
+    private final HttpHeaders headers;
 
     @Autowired
     public WeatherService() {
@@ -35,7 +34,7 @@ public class WeatherService implements IWeatherService {
         this.headers = new HttpHeaders();
     }
 
-    private JsonObject getWeatherData(String url){
+    private JsonObject getWeatherData(String url) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
@@ -44,20 +43,20 @@ public class WeatherService implements IWeatherService {
         return new Gson().fromJson(response.getBody(), JsonObject.class);
     }
 
-    public String currentWeatherStringBuilder(Point2D.Double coordinates){
-        return url + "weather?lat=" + coordinates.getX() + "&lon=" + coordinates.getY()+ "&appid=" + apiKey;
+    public String currentWeatherStringBuilder(Point2D.Double coordinates) {
+        return url + "weather?lat=" + coordinates.getX() + "&lon=" + coordinates.getY() + "&appid=" + apiKey;
     }
 
-    public String weatherForecastStringBuilder(Point2D.Double coordinates){
+    public String weatherForecastStringBuilder(Point2D.Double coordinates) {
         return url + "onecall?lat=" + coordinates.getX() + "&lon=" + coordinates.getY() + "&exclude=current,minutely,hourly,alerts" + "&appid=" + apiKey;
     }
 
-    public double kelvinToCelsius(double kelvin){
+    public double kelvinToCelsius(double kelvin) {
         return kelvin - 273.15;
     }
 
-    public String formatDate(long unix){
-        Date date = new Date(unix*1000);
+    public String formatDate(long unix) {
+        Date date = new Date(unix * 1000);
         SimpleDateFormat format = new SimpleDateFormat("dd-MM");
 
         return format.format(date);

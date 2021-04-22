@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 public class DefaultRabbitConsumer extends DefaultConsumer {
 
-    private final static Logger logger = Logger.getLogger(DefaultRabbitConsumer.class.getName());
+    private static final Logger logger = Logger.getLogger(DefaultRabbitConsumer.class.getName());
 
     private final BlockingQueue<String> blockingQueue;
 
@@ -25,7 +25,7 @@ public class DefaultRabbitConsumer extends DefaultConsumer {
     @Override
     public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
         String message = new String(body, StandardCharsets.UTF_8);
-        if(!blockingQueue.offer(message)) {
+        if (!blockingQueue.offer(message)) {
             logger.log(Level.ALL, "unable to offer message to blockingqueue");
         }
     }

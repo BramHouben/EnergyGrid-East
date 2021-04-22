@@ -5,17 +5,17 @@ import java.util.List;
 
 public class EnergyRegionSolarParksOutput {
 
-    List<Kwh> Kwh = new ArrayList<>();
-
-    public List<Kwh> getKwh() {
-        return Kwh;
-    }
-
-    public void addKwh(Kwh kwh) {
-        this.Kwh.add(kwh);
-    }
+    List<Kwh> kwhList = new ArrayList<>();
 
     public EnergyRegionSolarParksOutput() {
 
+    }
+
+    public List<Kwh> getKwhList() {
+        return kwhList;
+    }
+
+    public void addKwh(Kwh kwh) {
+        this.kwhList.add(kwh);
     }
 }

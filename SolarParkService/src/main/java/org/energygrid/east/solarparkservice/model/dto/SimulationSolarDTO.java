@@ -4,9 +4,9 @@ import org.springframework.data.geo.Point;
 
 public class SimulationSolarDTO {
 
-    private String solarParkName;
-    private int countSonarPanels;
-    private Point coordinates;
+    private final String solarParkName;
+    private final int countSonarPanels;
+    private final Point coordinates;
 
     public SimulationSolarDTO(String solarParkName, int countSonarPanels, Point coordinates) {
         this.solarParkName = solarParkName;

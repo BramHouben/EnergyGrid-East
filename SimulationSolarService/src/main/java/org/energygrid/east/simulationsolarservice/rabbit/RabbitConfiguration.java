@@ -31,14 +31,14 @@ public class RabbitConfiguration {
         int count = 0;
         int maxCount = 3;
 
-        while(true) {
+        while (true) {
             try {
                 count++;
                 connection = connectionFactory.newConnection();
                 return connection;
             } catch (IOException | TimeoutException e) {
                 logger.log(Level.ALL, e.getMessage());
-                if(count == maxCount){
+                if (count == maxCount) {
                     return null;
                 }
             }

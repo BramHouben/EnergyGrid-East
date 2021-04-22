@@ -3,14 +3,14 @@ package org.energygrid.east.simulationwindservice.service;
 import org.energygrid.east.simulationwindservice.factory.FactoryURL;
 import org.energygrid.east.simulationwindservice.logic.ISimulationLogic;
 import org.energygrid.east.simulationwindservice.logic.SimulationLogic;
-import org.energygrid.east.simulationwindservice.model.results.SimulationResult;
-import org.energygrid.east.simulationwindservice.model.results.SimulationExpectationResult;
 import org.energygrid.east.simulationwindservice.model.WindTurbine;
+import org.energygrid.east.simulationwindservice.model.results.SimulationExpectationResult;
+import org.energygrid.east.simulationwindservice.model.results.SimulationResult;
 import org.energygrid.east.simulationwindservice.repository.SimulationWindRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
-import org.springframework.stereotype.Service;
 import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
@@ -21,11 +21,10 @@ import java.util.List;
 @Service
 public class SimulationWindService implements ISimulationWindService {
 
-    private ISimulationLogic simulationLogic;
     private static final String url = "https://api.openweathermap.org/data/2.5/onecall?lat=52.23587&lon=6.19775&exclude=current,minutely,daily,alerts&appid=d43994b92b8caae6ee650e65194f0ad8";
     private final RestTemplate template;
     private final HttpHeaders headers;
-
+    private ISimulationLogic simulationLogic;
     @Autowired
     private SimulationWindRepository simulationWindRepository;
 

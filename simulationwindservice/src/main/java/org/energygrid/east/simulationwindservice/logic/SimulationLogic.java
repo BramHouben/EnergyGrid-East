@@ -39,8 +39,9 @@ public class SimulationLogic implements ISimulationLogic {
             for (var production : result.getProductionExpectations()) {
                 if (result.getName() != null && result.getName().equals("Missed Production")) {
                     kwTotal = kwTotal - production.getKw();
+                } else {
+                    kwTotal = kwTotal + production.getKw();
                 }
-                else { kwTotal = kwTotal + production.getKw(); }
             }
         }
 

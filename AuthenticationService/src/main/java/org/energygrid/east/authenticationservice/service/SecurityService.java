@@ -15,7 +15,7 @@ public class SecurityService {
     );
 
     public String hashPassword(@NotNull String password) {
-        return argon2.hash(22, 65536,1, password);
+        return argon2.hash(22, 65536, 1, password);
     }
 
     public boolean verify(@NotNull String password, @NotNull String passwordHash) {

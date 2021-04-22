@@ -16,12 +16,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WeatherTimer extends TimerTask {
+    private static final Logger logger = Logger.getLogger(WeatherTimer.class.getName());
 
-    private Logger logger = Logger.getLogger(WeatherTimer.class.getName());
-
-    private boolean started;
     private final Channel channel;
     private final String exchange_name;
+
+    private boolean started;
 
     public WeatherTimer(Channel channel, String exchange_name) {
         started = false;

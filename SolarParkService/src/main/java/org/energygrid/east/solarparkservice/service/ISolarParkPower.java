@@ -20,7 +20,7 @@ public interface ISolarParkPower {
     /**
      * Checks if solarpark exist by searching the id
      *
-     * @param name
+     * @param name name of park
      * @return true if solarpark exist false if doesnt
      */
     boolean doesNameExist(String name);
@@ -35,7 +35,7 @@ public interface ISolarParkPower {
     /**
      * @param solarPark
      */
-    void addSolarPark(AddSolarParkDTO solarPark );
+    void addSolarPark(AddSolarParkDTO solarPark);
 
     /**
      * Remove solarPark based on name

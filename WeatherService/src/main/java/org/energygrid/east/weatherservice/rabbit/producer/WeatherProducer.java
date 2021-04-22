@@ -4,6 +4,7 @@ import com.rabbitmq.client.Channel;
 import org.energygrid.east.weatherservice.rabbit.Monitor;
 import org.energygrid.east.weatherservice.rabbit.Producer;
 import org.energygrid.east.weatherservice.rabbit.timer.WeatherTimer;
+
 import java.io.IOException;
 import java.util.Timer;
 import java.util.logging.Level;

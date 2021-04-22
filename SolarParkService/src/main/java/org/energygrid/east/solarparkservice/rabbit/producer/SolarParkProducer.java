@@ -2,11 +2,11 @@ package org.energygrid.east.solarparkservice.rabbit.producer;
 
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
+import org.energygrid.east.solarparkservice.controller.ApplicationContextUtils;
 import org.energygrid.east.solarparkservice.model.SolarPark;
+import org.energygrid.east.solarparkservice.rabbit.Producer;
 import org.energygrid.east.solarparkservice.service.ISolarParkPower;
 import org.springframework.context.ApplicationContext;
-import org.energygrid.east.solarparkservice.controller.ApplicationContextUtils;
-import org.energygrid.east.solarparkservice.rabbit.Producer;
 
 import java.io.IOException;
 import java.util.List;

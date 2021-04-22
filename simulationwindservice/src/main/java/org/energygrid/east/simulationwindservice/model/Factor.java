@@ -5,7 +5,8 @@ public class Factor {
     private String name;
     private double factor;
 
-    public Factor() {}
+    public Factor() {
+    }
 
     public Factor(String name, double factor) {
         this.name = name;

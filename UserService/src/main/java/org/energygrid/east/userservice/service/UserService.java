@@ -4,13 +4,12 @@ import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.enums.AccountRole;
 import org.energygrid.east.userservice.model.fromFrontend.User;
-import javax.validation.constraints.NotNull;
-
 import org.energygrid.east.userservice.repo.IUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Service
@@ -49,7 +48,7 @@ public class UserService {
         }
 
         var userToStore = new UserDTO();
-        if (user.getNewPassword() != null) {
+        if (!user.getNewPassword().isEmpty()) {
             // TODO add rabbitmq message to update password on auth service
         }
 

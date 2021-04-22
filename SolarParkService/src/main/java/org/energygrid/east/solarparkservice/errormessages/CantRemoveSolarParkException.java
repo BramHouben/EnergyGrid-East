@@ -2,7 +2,7 @@ package org.energygrid.east.solarparkservice.errormessages;
 
 public class CantRemoveSolarParkException extends RuntimeException {
 
-    public CantRemoveSolarParkException(){
+    public CantRemoveSolarParkException() {
         super("Cant remove Solar park");
     }
 }

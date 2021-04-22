@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface IScenarioWindService {
     ScenarioExpectationResult createScenario(Scenario scenario);
+
     List<ScenarioExpectationResult> getLatestScenarios();
 }

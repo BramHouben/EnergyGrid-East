@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.UUID;
 
 
@@ -25,7 +24,7 @@ public class SolarParkController {
 
     @GetMapping()
     public ResponseEntity<SolarPark> getSolarParkByName(@NotNull @RequestParam(name = "name") String name) {
-        //Todo something with spring security
+
         boolean doesIdExist = solarParkPowerService.doesNameExist(name);
         if (!doesIdExist) {
             return ResponseEntity.badRequest().build();
@@ -37,7 +36,7 @@ public class SolarParkController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> addSolarPark(@NotNull @RequestBody AddSolarParkDTO solarPark ) {
+    public ResponseEntity<String> addSolarPark(@NotNull @RequestBody AddSolarParkDTO solarPark) {
 
         solarParkPowerService.addSolarPark(solarPark);
 
