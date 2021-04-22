@@ -24,7 +24,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<String> LoginUser(@NotNull @RequestParam(name = "email") String email, @NotNull @RequestParam(name = "password") String password) {
-        if (authenticationService.Login(email, password)) {
+        if (authenticationService.login(email, password)) {
             Map<String, String> claims = new HashMap<>();
             claims.put("email", email);
 
