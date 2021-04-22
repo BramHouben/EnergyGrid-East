@@ -8,6 +8,6 @@
 
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=BramHouben_EnergyGrid-East&metric=bugs)](https://sonarcloud.io/dashboard?id=BramHouben_EnergyGrid-East)
 
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=BramHouben_EnergyGrid-East2&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=BramHouben_EnergyGrid-East)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=BramHouben_EnergyGrid-East&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=BramHouben_EnergyGrid-East)
 
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=BramHouben_EnergyGrid-East2&metric=security_rating)](https://sonarcloud.io/dashboard?id=BramHouben_EnergyGrid-East)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=BramHouben_EnergyGrid-East&metric=security_rating)](https://sonarcloud.io/dashboard?id=BramHouben_EnergyGrid-East)
