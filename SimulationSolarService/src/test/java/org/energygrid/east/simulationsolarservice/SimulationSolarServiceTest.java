@@ -62,7 +62,7 @@ public class SimulationSolarServiceTest {
         energyRegionSolarParksInputs.add(new EnergyRegionSolarParksInput("test", 23, point));
         EnergyRegionSolarParksOutput energyRegionSolarParksOutput = simulationSolarService.simulateEnergyGrid(energyRegionSolarParksInputs);
 
-        Assertions.assertNotEquals(0, energyRegionSolarParksOutput.getKwh().size());
+        Assertions.assertNotEquals(0, energyRegionSolarParksOutput.getKwhList().size());
     }
 
     private JsonObject getWeather() {
