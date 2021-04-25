@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
     <artifactId>weatherservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>WeatherService</name>
+    <name>weatherservice</name>
     <description>WeatherService for energygrid</description>
     <properties>
         <java.version>11</java.version>
@@ -59,6 +59,12 @@
             <version>2.0.1.Final</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -67,7 +73,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <finalName>WeatherService</finalName>
+                    <finalName>weatherservice</finalName>
                 </configuration>
             </plugin>
         </plugins>
