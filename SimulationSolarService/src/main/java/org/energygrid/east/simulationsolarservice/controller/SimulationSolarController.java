@@ -5,7 +5,6 @@ import org.energygrid.east.simulationsolarservice.model.EnergyRegionSolarParksOu
 import org.energygrid.east.simulationsolarservice.model.SimulationSolar;
 import org.energygrid.east.simulationsolarservice.rabbit.RabbitConsumer;
 import org.energygrid.east.simulationsolarservice.rabbit.consumer.SolarParkConsumer;
-import org.energygrid.east.simulationsolarservice.rabbit.consumer.WeatherConsumer;
 import org.energygrid.east.simulationsolarservice.service.ISimulationSolarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,16 +27,7 @@ public class SimulationSolarController {
         return ResponseEntity.status(200).body(simulationSolar);
     }
 
-    @GetMapping("/weather")
-    public ResponseEntity<String> getWeather() {
-        RabbitConsumer<String> rabbitConsumer = new RabbitConsumer<>();
-        WeatherConsumer weatherConsumer = new WeatherConsumer();
-
-        String weather = rabbitConsumer.consume(weatherConsumer);
-
-        return ResponseEntity.status(200).body(weather);
-    }
-
+    //test
     @GetMapping("/solar")
     public ResponseEntity<String> getSolar() {
         RabbitConsumer<String> rabbitConsumer = new RabbitConsumer<>();
@@ -45,7 +35,7 @@ public class SimulationSolarController {
 
         String jsonSolar = rabbitConsumer.consume(solarParkConsumer);
 
-        if(jsonSolar == null){
+        if (jsonSolar == null) {
             return ResponseEntity.badRequest().build();
         }
 

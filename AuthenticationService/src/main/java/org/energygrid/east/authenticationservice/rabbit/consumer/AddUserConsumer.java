@@ -23,7 +23,7 @@ public class AddUserConsumer implements Consumer {
     }
 
     @Override
-    public void consume(Channel channel) {
+    public String consume(Channel channel) {
         try {
             channel.queueDeclare(queue_name, false, false, false, null);
             channel.exchangeDeclare(exchange_name, "direct", true);
@@ -39,6 +39,6 @@ public class AddUserConsumer implements Consumer {
             logger.log(Level.ALL, e.getMessage());
             Thread.currentThread().interrupt();
         }
-
+        return null;
     }
 }

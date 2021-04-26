@@ -4,6 +4,7 @@ import com.rabbitmq.client.Channel;
 import org.energygrid.east.weatherservice.rabbit.Monitor;
 import org.energygrid.east.weatherservice.rabbit.Producer;
 import org.energygrid.east.weatherservice.rabbit.timer.WeatherTimer;
+
 import java.io.IOException;
 import java.util.Timer;
 import java.util.logging.Level;
@@ -27,7 +28,7 @@ public class WeatherProducer implements Producer {
             WeatherTimer weatherTimer = new WeatherTimer(channel, exchange_name);
 
             Timer timer = new Timer();
-            timer.scheduleAtFixedRate(weatherTimer, 0, 10000);
+            timer.scheduleAtFixedRate(weatherTimer, 1000, 600000);
 
             Monitor monitor = new Monitor();
             monitor.start();

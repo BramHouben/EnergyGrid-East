@@ -19,8 +19,9 @@ import java.util.UUID;
 @RequestMapping("user")
 public class UserController {
     @Autowired
-    UserService userService;
-    ModelMapper modelMapper;
+    private UserService userService;
+
+    private final ModelMapper modelMapper;
 
     @Autowired
     private HttpServletRequest request;
@@ -71,14 +72,11 @@ public class UserController {
         }
     }
 
-    @DeleteMapping()
-    public ResponseEntity DeleteUser() {
+    @DeleteMapping("{uuid}")
+    public ResponseEntity<?> deleteUser(@NotNull @PathVariable String uuid) {
         try {
-            String jwt = request.getHeader("bearer");
-            userService.deleteUser(jwt);
-            return ResponseEntity.ok(null);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(404).body(null);
+            userService.deleteUser(uuid);
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }

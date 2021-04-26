@@ -12,13 +12,11 @@ public class RabbitProducer extends ChannelHelper {
     }
 
     public void produce(Producer producer) {
-        try{
+        try {
             producer.produce(getChannel());
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             logger.log(Level.ALL, e.getMessage());
-        }
-        finally {
+        } finally {
             closeChannel();
         }
     }

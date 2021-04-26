@@ -1,6 +1,0 @@
-FROM openjdk:11-jdk-slim
-
-ADD ./target/gateway.jar /app/
-CMD ["java", "-Xmx200m", "-jar", "/app/gateway.jar"]
-
-EXPOSE 8081

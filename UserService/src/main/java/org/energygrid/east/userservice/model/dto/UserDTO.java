@@ -12,8 +12,9 @@ import java.util.UUID;
 @Table(name = "user")
 public class UserDTO {
     @Id
-    @Type(type="uuid-char")
-    private UUID uuid;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    private String uuid;
     private String username;
     private String email;
     private AccountRole accountRole;

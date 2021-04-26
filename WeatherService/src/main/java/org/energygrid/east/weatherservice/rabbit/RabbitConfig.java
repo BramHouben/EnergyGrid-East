@@ -1,10 +1,6 @@
 package org.energygrid.east.weatherservice.rabbit;
 
 import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.DeliverCallback;
-
-import java.io.IOException;
 
 public class RabbitConfig {
 
