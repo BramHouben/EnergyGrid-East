@@ -95,6 +95,14 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
 
+  gateway_service:
+    container_name: gateway
+    hostname: gateway
+    image: vincentdarwinkel/gateway
+    ports:
+    - 8081:8081
+    restart: always
+
 #  regionservice:
 #    build: RegionService
 #    hostname: regionservice
