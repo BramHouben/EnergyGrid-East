@@ -10,11 +10,7 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Autowired
     private AuthenticationRepository authenticationRepository;
-
-    public AuthenticationService(AuthenticationRepository authenticationRepository) {
-        this.authenticationRepository = authenticationRepository;
-    }
-
+    
     @Override
     public boolean login(String email, String password) {
         User user = authenticationRepository.findUserByEmailAndPassword(email, password);

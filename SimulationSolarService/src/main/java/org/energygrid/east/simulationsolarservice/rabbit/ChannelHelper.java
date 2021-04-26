@@ -23,7 +23,7 @@ public abstract class ChannelHelper {
 
     protected void closeChannel() {
         try {
-            if(channel != null && channel.isOpen()) {
+            if (channel != null && channel.isOpen()) {
                 channel.close();
             }
         } catch (IOException | TimeoutException e) {

@@ -17,13 +17,10 @@ public class SolarPark {
 
     @Indexed(unique = true)
     private String solarParkName;
-    //
 
     private int countSonarPanels;
-    //
 
     private Point coordinates;
-    //
 
     private String applicant;
 
@@ -48,9 +45,9 @@ public class SolarPark {
         this.coordinates = coordinates;
         this.units = units;
         this.countSonarPanels = countSonarPanels;
-        this.applicant= applicant;
+        this.applicant = applicant;
         this.zipCode = zipCode;
-        this.province= province;
+        this.province = province;
         this.power = power;
         this.max = max;
         this.solarParkName = solarParkName;
@@ -65,12 +62,12 @@ public class SolarPark {
         this.solarParkName = solarParkName;
     }
 
-    public void setUnits(List<SolarParkUnit> units) {
-        this.units = units;
-    }
-
     public List<SolarParkUnit> getUnits() {
         return units;
+    }
+
+    public void setUnits(List<SolarParkUnit> units) {
+        this.units = units;
     }
 
     public int getCountSonarPanels() {
@@ -161,7 +158,6 @@ public class SolarPark {
     public void setYearOfRealised(int yearOfRealised) {
         this.yearOfRealised = yearOfRealised;
     }
-
 
 
 }

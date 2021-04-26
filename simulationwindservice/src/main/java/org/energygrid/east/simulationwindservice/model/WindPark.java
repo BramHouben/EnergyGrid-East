@@ -11,7 +11,8 @@ public class WindPark {
     private Point coordinates;
     private List<WindTurbine> windTurbines;
 
-    public WindPark() {}
+    public WindPark() {
+    }
 
     public WindPark(String windParkId, String description, Point coordinates, List<WindTurbine> windTurbines) {
         this.windParkId = windParkId;
@@ -32,7 +33,9 @@ public class WindPark {
         return coordinates;
     }
 
-    public void setCoordinates(Point coordinates) { this.coordinates = coordinates; }
+    public void setCoordinates(Point coordinates) {
+        this.coordinates = coordinates;
+    }
 
     public String getDescription() {
         return description;

@@ -9,8 +9,9 @@ import javax.persistence.Id;
 
 @Entity
 public class UserDTO {
-    @Id @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String uuid;
     private String username;
     private String email;

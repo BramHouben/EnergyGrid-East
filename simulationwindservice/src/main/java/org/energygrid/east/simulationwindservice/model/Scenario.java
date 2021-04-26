@@ -21,11 +21,17 @@ public class Scenario {
         windTurbineOffTimes = new ArrayList<>();
     }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
-    public void setName(String name) { this.name = name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public EScenarioType getScenarioType() { return scenarioType; }
+    public EScenarioType getScenarioType() {
+        return scenarioType;
+    }
 
     public void setScenarioType(EScenarioType scenarioType) {
         this.scenarioType = scenarioType;
@@ -39,23 +45,43 @@ public class Scenario {
         this.amount = amount;
     }
 
-    public Double getType() { return type; }
+    public Double getType() {
+        return type;
+    }
 
-    public void setType(Double type) { this.type = type; }
+    public void setType(Double type) {
+        this.type = type;
+    }
 
-    public Point getCoordinates() { return coordinates; }
+    public Point getCoordinates() {
+        return coordinates;
+    }
 
-    public void setCoordinates(Point coordinates) { this.coordinates = coordinates; }
+    public void setCoordinates(Point coordinates) {
+        this.coordinates = coordinates;
+    }
 
-    public WindTurbine getWindTurbine() { return windTurbine; }
+    public WindTurbine getWindTurbine() {
+        return windTurbine;
+    }
 
-    public void setWindTurbine(WindTurbine windTurbine) { this.windTurbine = windTurbine; }
+    public void setWindTurbine(WindTurbine windTurbine) {
+        this.windTurbine = windTurbine;
+    }
 
-    public List<String> getWindTurbineOffTimes() { return windTurbineOffTimes; }
+    public List<String> getWindTurbineOffTimes() {
+        return windTurbineOffTimes;
+    }
 
-    public void setWindTurbineOffTimes(List<String> windTurbineOffTimes) { this.windTurbineOffTimes = windTurbineOffTimes; }
+    public void setWindTurbineOffTimes(List<String> windTurbineOffTimes) {
+        this.windTurbineOffTimes = windTurbineOffTimes;
+    }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

@@ -22,7 +22,8 @@ public class ScenarioExpectationResult {
     private String description;
     private Point coordinates;
 
-    public ScenarioExpectationResult() {}
+    public ScenarioExpectationResult() {
+    }
 
     public ScenarioExpectationResult(String name, EScenarioType scenarioType, String createdAt, SimulationExpectationResult simulationExpectationResult, String description, Point coordinates) {
         this.name = name;
@@ -57,21 +58,35 @@ public class ScenarioExpectationResult {
         this.scenarioType = scenarioType;
     }
 
-    public String getCreatedAt() { return createdAt; }
+    public String getCreatedAt() {
+        return createdAt;
+    }
 
-    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public SimulationExpectationResult getSimulationExpectationResult() {
         return simulationExpectationResult;
     }
 
-    public void setSimulationExpectationResult(SimulationExpectationResult simulationExpectationResult) { this.simulationExpectationResult = simulationExpectationResult; }
+    public void setSimulationExpectationResult(SimulationExpectationResult simulationExpectationResult) {
+        this.simulationExpectationResult = simulationExpectationResult;
+    }
 
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public void setDescription(String description) { this.description = description; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public Point getCoordinates() { return coordinates; }
+    public Point getCoordinates() {
+        return coordinates;
+    }
 
-    public void setCoordinates(Point coordinates) { this.coordinates = coordinates; }
+    public void setCoordinates(Point coordinates) {
+        this.coordinates = coordinates;
+    }
 }

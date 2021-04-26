@@ -35,7 +35,7 @@ public class SimulationSolarController {
 
         String jsonSolar = rabbitConsumer.consume(solarParkConsumer);
 
-        if(jsonSolar == null){
+        if (jsonSolar == null) {
             return ResponseEntity.badRequest().build();
         }
 
