@@ -48,7 +48,7 @@ public class RegionService implements IRegionService {
 
     @Override
     public StreetRequest getAllHousesStreet(String streetName, String city, long page) {
-        logger.log(Level.INFO, "getAllHousesStreet method called" + page);
+        logger.log(Level.INFO, "getAllHousesStreet method called");
         if (page > 0) {
             page--;
         }

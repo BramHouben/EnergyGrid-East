@@ -9,21 +9,23 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("user")
 public class UserController {
     @Autowired
-    UserService userService;
-    ModelMapper modelMapper;
+    private UserService userService;
+
+    private final ModelMapper modelMapper;
 
     public UserController() {
         this.modelMapper = new ModelMapper();
     }
 
     @PostMapping()
-    public ResponseEntity AddUser(@NotNull @RequestBody User user) {
+    public ResponseEntity<?> addUser(@NotNull @RequestBody User user) {
         try {
             userService.addUser(user);
             return ResponseEntity.status(201).body(null);
@@ -35,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<UserViewModel> GetUserByUuidOrUsernameOrEmail(@RequestParam(required = false) String uuid, @RequestParam(required = false) String username, @RequestParam(required = false) String email) {
+    public ResponseEntity<UserViewModel> getUserByUuidOrUsernameOrEmail(@RequestParam(required = false) String uuid, @RequestParam(required = false) String username, @RequestParam(required = false) String email) {
         try {
             UserDTO user = userService.getUserByUuidOrUsernameOrEmail(uuid, username, email);
             if (user == null) {
@@ -52,10 +54,10 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity EditUser(@NotNull @RequestBody User user) {
+    public ResponseEntity<?> editUser(@NotNull @RequestBody User user) {
         try {
             userService.editUser(user);
-            return ResponseEntity.ok(null);
+            return ResponseEntity.ok().build();
         } catch (NullPointerException e) {
             return ResponseEntity.status(404).body(null);
         } catch (Exception e) {
@@ -64,10 +66,10 @@ public class UserController {
     }
 
     @DeleteMapping("{uuid}")
-    public ResponseEntity DeleteUser(@NotNull @PathVariable String uuid) {
+    public ResponseEntity<?> deleteUser(@NotNull @PathVariable String uuid) {
         try {
             userService.deleteUser(uuid);
-            return ResponseEntity.ok(null);
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);
         }

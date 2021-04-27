@@ -2,7 +2,8 @@ package org.energygrid.east.authenticationservice.rabbit;
 
 import com.rabbitmq.client.Channel;
 
-public interface Consumer {
+public interface Consumer<T> {
 
-    void consume(Channel channel);
+    T consume(Channel channel);
 }
+

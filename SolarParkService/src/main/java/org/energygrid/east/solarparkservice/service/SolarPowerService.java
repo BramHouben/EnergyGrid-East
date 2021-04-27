@@ -3,8 +3,8 @@ package org.energygrid.east.solarparkservice.service;
 import org.energygrid.east.solarparkservice.errormessages.CantAddSolarParkException;
 import org.energygrid.east.solarparkservice.errormessages.CantRemoveSolarParkException;
 import org.energygrid.east.solarparkservice.errormessages.SolarParkNotFoundException;
-import org.energygrid.east.solarparkservice.model.SolarParkUnit;
 import org.energygrid.east.solarparkservice.model.SolarPark;
+import org.energygrid.east.solarparkservice.model.SolarParkUnit;
 import org.energygrid.east.solarparkservice.model.dto.AddSolarParkDTO;
 import org.energygrid.east.solarparkservice.repo.ISolarParkRepo;
 import org.springframework.beans.factory.annotation.Autowire;
@@ -51,7 +51,7 @@ public class SolarPowerService implements ISolarParkPower {
     @Override
     public void addSolarPark(AddSolarParkDTO solarParkDto) {
 
-        if (solarParkDto.getSolarParkName() == null || solarParkDto.getCountSonarPanels() == 0|| solarParkDto.getCoordinates() == null) {
+        if (solarParkDto.getSolarParkName() == null || solarParkDto.getCountSonarPanels() == 0 || solarParkDto.getCoordinates() == null) {
             throw new CantAddSolarParkException();
         }
 
@@ -77,10 +77,10 @@ public class SolarPowerService implements ISolarParkPower {
     }
 
     private List<SolarParkUnit> makeSolarParkUnits(double count) {
-        double TotalSonarUnits = count/20;
+        double TotalSonarUnits = count / 20;
 
         List<SolarParkUnit> solarParkUnits = new ArrayList<>();
-        for (int i = 0; i <=TotalSonarUnits; i++) {
+        for (int i = 0; i <= TotalSonarUnits; i++) {
 
             SolarParkUnit solarParkUnit = new SolarParkUnit(UUID.randomUUID(), false);
             solarParkUnits.add(solarParkUnit);

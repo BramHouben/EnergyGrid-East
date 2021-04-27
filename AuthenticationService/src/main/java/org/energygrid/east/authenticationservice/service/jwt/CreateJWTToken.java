@@ -1,12 +1,10 @@
 package org.energygrid.east.authenticationservice.service.jwt;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
-import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,15 +15,15 @@ public class CreateJWTToken {
     private static CreateJWTToken createJWTToken = new CreateJWTToken();
     private Key key;
 
-    private CreateJWTToken(){
+    private CreateJWTToken() {
         key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
 
-    public static CreateJWTToken getInstance(){
+    public static CreateJWTToken getInstance() {
         return createJWTToken;
     }
 
-    public String create(Map<String, String> claims){
+    public String create(Map<String, String> claims) {
         Header header = Jwts.header();
         header.setType("JWT");
 
@@ -39,12 +37,12 @@ public class CreateJWTToken {
                 .compact();
     }
 
-    private Date getIssuedAt(){
+    private Date getIssuedAt() {
         Calendar now = Calendar.getInstance();
         return now.getTime();
     }
 
-    private Date getExpiration(){
+    private Date getExpiration() {
         Calendar now = Calendar.getInstance();
         now.add(Calendar.HOUR, 24);
         return now.getTime();

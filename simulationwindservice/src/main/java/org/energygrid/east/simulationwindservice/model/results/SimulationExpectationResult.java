@@ -29,21 +29,35 @@ public class SimulationExpectationResult {
         this.kwTotalResult = kwTotalResult;
     }
 
-    public String getSimulationId() { return simulationId; }
+    public String getSimulationId() {
+        return simulationId;
+    }
 
-    public void setSimulationId(String simulationId) { this.simulationId = simulationId; }
+    public void setSimulationId(String simulationId) {
+        this.simulationId = simulationId;
+    }
 
-    public String getCreatedAt() { return createdAt; }
+    public String getCreatedAt() {
+        return createdAt;
+    }
 
-    public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public List<SimulationResult> getSimulationResults() {
         return simulationResults;
     }
 
-    public void setSimulationResults(List<SimulationResult> simulationResults) { this.simulationResults = simulationResults; }
+    public void setSimulationResults(List<SimulationResult> simulationResults) {
+        this.simulationResults = simulationResults;
+    }
 
-    public Double getKwTotalResult() { return kwTotalResult; }
+    public Double getKwTotalResult() {
+        return kwTotalResult;
+    }
 
-    public void setKwTotalResult(Double kwTotalResult) { this.kwTotalResult = kwTotalResult; }
+    public void setKwTotalResult(Double kwTotalResult) {
+        this.kwTotalResult = kwTotalResult;
+    }
 }

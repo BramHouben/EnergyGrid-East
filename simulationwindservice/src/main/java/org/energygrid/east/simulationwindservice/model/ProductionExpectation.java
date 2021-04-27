@@ -7,7 +7,8 @@ public class ProductionExpectation {
     private double kw;
     private LocalDateTime localDateTime;
 
-    public ProductionExpectation() {}
+    public ProductionExpectation() {
+    }
 
     public ProductionExpectation(double kw, LocalDateTime localDateTime) {
         this.kw = kw;

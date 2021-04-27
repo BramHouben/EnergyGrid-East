@@ -14,7 +14,7 @@ public class Monitor {
     }
 
     public void start() {
-        while(true) {
+        while (true) {
             synchronized (monitor) {
                 try {
                     monitor.wait();

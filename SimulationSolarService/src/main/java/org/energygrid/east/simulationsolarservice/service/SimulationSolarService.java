@@ -54,7 +54,7 @@ public class SimulationSolarService implements ISimulationSolarService {
         WeatherConsumer weatherConsumer = new WeatherConsumer();
 
         String weather = rabbitConsumer.consume(weatherConsumer);
-        if(weather != null) {
+        if (weather != null) {
             JsonObject newWeatherData = new Gson().fromJson(weather, JsonObject.class);
             weatherData = newWeatherData;
         }
@@ -65,12 +65,12 @@ public class SimulationSolarService implements ISimulationSolarService {
 
         EnergyRegionSolarParksOutput energyRegionSolarParksOutput = new EnergyRegionSolarParksOutput();
 
-        for (var hour: hours) {
+        for (var hour : hours) {
             double kwh = 0;
             LocalDateTime triggerTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(hour.getAsJsonObject().get("dt").getAsInt()), TimeZone.getDefault().toZoneId());
 
             double uvi = hour.getAsJsonObject().get("uvi").getAsDouble();
-            if(uvi == 0) {
+            if (uvi == 0) {
                 energyRegionSolarParksOutput.addKwh(new Kwh(0.0, triggerTime));
                 continue;
             }
@@ -84,7 +84,8 @@ public class SimulationSolarService implements ISimulationSolarService {
                 if (temperature > 25) {
                     var temperatureCorrection = (temperature - 25) * 0.4;
                     finalKwh = finalKwh * (1 - (temperatureCorrection / 100));
-                };
+                }
+                ;
                 kwh += finalKwh;
             }
             energyRegionSolarParksOutput.addKwh(new Kwh(kwh, triggerTime));

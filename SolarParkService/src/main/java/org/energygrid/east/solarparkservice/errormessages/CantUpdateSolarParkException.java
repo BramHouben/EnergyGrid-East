@@ -1,8 +1,8 @@
 package org.energygrid.east.solarparkservice.errormessages;
 
-public class CantUpdateSolarParkException extends RuntimeException{
+public class CantUpdateSolarParkException extends RuntimeException {
 
-    public CantUpdateSolarParkException(){
+    public CantUpdateSolarParkException() {
         super("Cant update solar park");
     }
 }

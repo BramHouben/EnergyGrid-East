@@ -13,7 +13,8 @@ public class SimulationWindPark {
     private double kwhTotal;
     private Point coordinates;
 
-    public SimulationWindPark() {}
+    public SimulationWindPark() {
+    }
 
     public SimulationWindPark(String id, String description, String city, List<WindTurbine> turbines, double kwhTotal, Point coordinates) {
         this.id = id;
