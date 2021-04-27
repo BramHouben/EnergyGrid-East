@@ -1,0 +1,142 @@
+# mvn clean package -Dmaven.test.skip=true
+# Eerst docker-compose build
+# daarna docker-compose up
+
+version: '3'
+services:
+
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: rabbitmq
+    image: rabbitmq:management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    restart: always
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://rabbitmq:15672" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  solarparkservice:
+    build: SolarParkService
+    hostname: solarparkservice
+    container_name: solarparkservice
+    restart: always
+    ports:
+      - 8090:8090
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongosolarpark:27017/solarpark
+
+  mongosolarpark:
+    hostname: mongosolarpark
+    container_name: mongosolarpark
+    image: mongo
+    volumes:
+      - ./database:/datasolarpark
+    ports:
+      - 27017:27017
+
+  weatherservice:
+    build: WeatherService
+    hostname: weatherservice
+    container_name: weatherservice
+    restart: always
+    ports:
+      - 8110:8110
+    environment:
+      RABBIT_HOST: rabbitmq
+    depends_on:
+      - rabbitmq
+
+  userservice:
+    build: UserService
+    hostname: userservice
+    container_name: userservice
+    restart: always
+    ports:
+      - 8130:8130
+    environment:
+      MYSQL_DB_HOST: mysql_userservice
+
+  authenticationservice:
+    build: AuthenticationService
+    hostname: authenticationservice
+    container_name: authenticationservice
+    restart: always
+    ports:
+      - 8100:8100
+    environment:
+      RABBIT_HOST: rabbitmq
+      MYSQL_DB_HOST: mysql_authservice
+
+  mysql_authservice:
+    container_name: mysql_authservice
+    hostname: mysql_authservice
+    image: mysql:latest
+    cap_add:
+      - SYS_NICE
+    ports:
+      - 3306:3306
+    restart: always
+    expose:
+      - 3306
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+
+  mysql_userservice:
+    container_name: mysql_userservice
+    hostname: mysql_userservice
+    image: mysql:latest
+    ports:
+      - 3307:3307
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+
+  gateway_service:
+    container_name: gateway
+    hostname: gateway
+    image: vincentdarwinkel/gateway
+    ports:
+    - 8081:8081
+    restart: always
+
+#  regionservice:
+#    build: RegionService
+#    hostname: regionservice
+#    container_name: regionservice
+#    restart: always
+#    ports:
+#      - 8150:8150
+#    environment:
+#      SPRING_DATA_MONGODB_URI: mongodb://mongoregion:27018/region
+
+#  mongoregion:
+#    hostname: mongoregion
+#    container_name: mongoregion
+#    image: mongo
+#    volumes:
+#      - ./database:/mongoregion
+#    ports:
+#      - 27018:27018
+
+  simulationwindservice:
+    build: simulationwindservice
+    hostname: simulationwindservice
+    container_name: simulationwindservice
+    restart: always
+    ports:
+      - 8140:8140
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongosimulationwindservice:27019/simulation_wind
+
+  mongosimulationwindservice:
+    hostname: mongosimulationwindservice
+    container_name: mongosimulationwindservice
+    image: mongo
+    volumes:
+      - ./database:/mongosimulationwindservice
+    ports:
+      - 27019:27019

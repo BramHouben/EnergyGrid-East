@@ -1,10 +1,6 @@
 package org.energygrid.east.weatherservice.rabbit;
 
 import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.DeliverCallback;
-
-import java.io.IOException;
 
 public class RabbitConfig {
 
@@ -18,16 +14,10 @@ public class RabbitConfig {
         return rabbitConfig;
     }
 
-    public void startConsumer(Channel channel, DeliverCallback deliverCallback, String queueName) throws IOException {
-        channel.basicConsume(queueName, true, deliverCallback, s -> {});
-    }
-
-    public AMQP.BasicProperties getProperties(String corrId, String replyName) {
+    public AMQP.BasicProperties getProperties(String corrId) {
         return new AMQP.BasicProperties()
                 .builder()
                 .correlationId(corrId)
-                .replyTo(replyName)
                 .build();
     }
-
 }

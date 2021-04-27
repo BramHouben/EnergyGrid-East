@@ -9,40 +9,52 @@ import javax.persistence.Id;
 
 @Entity
 public class UserDTO {
-    @Id @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    @Id
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String uuid;
     private String username;
-    private String password;
     private String email;
     private AccountRole accountRole;
+    private String language;
 
-    public UserDTO() {}
-
-    public String GetUsername() { return this.username; }
-    public void SetUsername(String username) { this.username = username; }
-
-    public String GetEmail() {
-        return email;
-    }
-    public void SetEmail(String email) {
-        this.email = email;
-    }
-
-    public String GetPassword() {
-        return password;
-    }
-    public void SetPassword(String password) {
-        this.password = password;
-    }
-
-    public String GetUuid() {
+    public String getUuid() {
         return uuid;
     }
-    public void SetUuid(String userId) {
-        this.uuid = userId;
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
-    public AccountRole GetAccountRole() { return accountRole; }
-    public void SetAccountRole(AccountRole accountRole) { this.accountRole = accountRole; }
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public AccountRole getAccountRole() {
+        return accountRole;
+    }
+
+    public void setAccountRole(AccountRole accountRole) {
+        this.accountRole = accountRole;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

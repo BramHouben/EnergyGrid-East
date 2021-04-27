@@ -3,6 +3,7 @@ package org.energygrid.east.solarparkservice.service;
 import org.energygrid.east.solarparkservice.model.SolarPark;
 import org.energygrid.east.solarparkservice.model.dto.AddSolarParkDTO;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ISolarParkPower {
@@ -19,16 +20,22 @@ public interface ISolarParkPower {
     /**
      * Checks if solarpark exist by searching the id
      *
-     * @param name
+     * @param name name of park
      * @return true if solarpark exist false if doesnt
      */
     boolean doesNameExist(String name);
 
 
+    /*
+     * @return all solarparks
+     */
+    List<SolarPark> getAll();
+
+
     /**
      * @param solarPark
      */
-    void addSolarPark(AddSolarParkDTO solarPark );
+    void addSolarPark(AddSolarParkDTO solarPark);
 
     /**
      * Remove solarPark based on name

@@ -3,6 +3,8 @@ package org.energygrid.east.solarparkservice.controller;
 
 import org.energygrid.east.solarparkservice.model.SolarPark;
 import org.energygrid.east.solarparkservice.model.dto.AddSolarParkDTO;
+import org.energygrid.east.solarparkservice.rabbit.RabbitProducer;
+import org.energygrid.east.solarparkservice.rabbit.producer.SolarParkProducer;
 import org.energygrid.east.solarparkservice.service.ISolarParkPower;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +24,7 @@ public class SolarParkController {
 
     @GetMapping()
     public ResponseEntity<SolarPark> getSolarParkByName(@NotNull @RequestParam(name = "name") String name) {
-        //Todo something with spring security
+
         boolean doesIdExist = solarParkPowerService.doesNameExist(name);
         if (!doesIdExist) {
             return ResponseEntity.badRequest().build();
@@ -34,9 +36,13 @@ public class SolarParkController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> addSolarPark(@NotNull @RequestBody AddSolarParkDTO solarPark ) {
+    public ResponseEntity<String> addSolarPark(@NotNull @RequestBody AddSolarParkDTO solarPark) {
 
         solarParkPowerService.addSolarPark(solarPark);
+
+        RabbitProducer rabbitProducer = new RabbitProducer();
+        SolarParkProducer solarParkProducer = new SolarParkProducer();
+        rabbitProducer.produce(solarParkProducer);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Solar park successfully made");
 
