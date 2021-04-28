@@ -4,7 +4,6 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DeliverCallback;
 import org.energygrid.east.authenticationservice.rabbit.Consumer;
 import org.energygrid.east.authenticationservice.rabbit.Monitor;
-import org.energygrid.east.authenticationservice.rabbit.defaultconsumer.AddUserDeliverer;
 import org.energygrid.east.authenticationservice.rabbit.defaultconsumer.DeleteUserDeliverer;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class DeleteUserConsumer implements Consumer {
     }
 
     @Override
-    public void consume(Channel channel) {
+    public Object consume(Channel channel) {
         try {
             channel.queueDeclare(queue_name, false, false, false, null);
             channel.exchangeDeclare(exchange_name, "direct", true);
@@ -41,5 +40,6 @@ public class DeleteUserConsumer implements Consumer {
             Thread.currentThread().interrupt();
         }
 
+        return null;
     }
 }

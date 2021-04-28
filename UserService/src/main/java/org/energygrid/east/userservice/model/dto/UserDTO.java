@@ -1,9 +1,11 @@
 package org.energygrid.east.userservice.model.dto;
 
 import org.energygrid.east.userservice.model.enums.AccountRole;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.UUID;
@@ -12,9 +14,8 @@ import java.util.UUID;
 @Table(name = "user")
 public class UserDTO {
     @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    private String uuid;
+    @Type(type="uuid-char")
+    private UUID uuid;
     private String username;
     private String email;
     private AccountRole accountRole;

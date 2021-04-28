@@ -96,10 +96,10 @@ public class UserService {
         rabbitProducer.produce(userProducer);
     }
 
-    public void deleteUser(@NotNull String jwt) throws NotFoundException, IllegalAccessException {
+    public void deleteUser(@NotNull String jwt, UUID userToRemoveUuid) throws NotFoundException, IllegalAccessException {
         Claims claims = jwtService.getClaims(jwt);
         UUID uuid = UUID.fromString(claims.get("uuid").toString());
-        UserDTO userToDelete = userRepo.getByUuid(uuid);
+        UserDTO userToDelete = userRepo.getByUuid(userToRemoveUuid);
         if (userToDelete == null) {
             throw new NotFoundException("Not found");
         }

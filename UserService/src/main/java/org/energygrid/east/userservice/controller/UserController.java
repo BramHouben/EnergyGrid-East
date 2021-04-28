@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("userservice/user")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -73,9 +73,10 @@ public class UserController {
     }
 
     @DeleteMapping("{uuid}")
-    public ResponseEntity<?> deleteUser(@NotNull @PathVariable String uuid) {
+    public ResponseEntity<?> deleteUser(@NotNull @PathVariable UUID uuid) {
         try {
-            userService.deleteUser(uuid);
+            String jwt = request.getHeader("bearer");
+            userService.deleteUser(jwt, uuid);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.status(500).body(null);

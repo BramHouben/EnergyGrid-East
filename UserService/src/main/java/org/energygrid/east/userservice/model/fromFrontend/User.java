@@ -2,6 +2,8 @@ package org.energygrid.east.userservice.model.fromFrontend;
 
 import org.energygrid.east.userservice.model.enums.AccountRole;
 
+import java.util.UUID;
+
 public class User {
     private UUID uuid;
     private String username;

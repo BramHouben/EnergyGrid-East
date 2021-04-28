@@ -13,9 +13,6 @@ public class AuthenticationService implements IAuthenticationService {
     private AuthenticationRepository authenticationRepository;
 
     @Autowired
-    private IAuthenticationService authenticationService;
-
-    @Autowired
     private IJwtService jwtService;
 
     @Autowired

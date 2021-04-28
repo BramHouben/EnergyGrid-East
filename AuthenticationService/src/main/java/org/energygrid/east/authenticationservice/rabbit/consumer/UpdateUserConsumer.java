@@ -25,7 +25,7 @@ public class UpdateUserConsumer implements Consumer {
     }
 
     @Override
-    public void consume(Channel channel) {
+    public Object consume(Channel channel) {
         try {
             channel.queueDeclare(queue_name, false, false, false, null);
             channel.exchangeDeclare(exchange_name, "direct", true);
@@ -42,5 +42,6 @@ public class UpdateUserConsumer implements Consumer {
             Thread.currentThread().interrupt();
         }
 
+        return null;
     }
 }
