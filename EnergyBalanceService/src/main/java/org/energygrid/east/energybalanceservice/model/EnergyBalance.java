@@ -1,5 +1,6 @@
 package org.energygrid.east.energybalanceservice.model;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -7,6 +8,7 @@ import java.util.UUID;
 
 @Document(collection = "energybalancedetails")
 public class EnergyBalance {
+    @Id
     private UUID uuid;
     private long consume;
     private long production;

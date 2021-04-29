@@ -4,18 +4,17 @@ import org.energygrid.east.energybalanceservice.model.EnergyBalance;
 import org.energygrid.east.energybalanceservice.service.IEnergyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/energybalance")
+@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("energybalance")
 @RestController
 public class EnergyBalanceController {
 
     @Autowired
     private IEnergyService energyService;
 
-    @GetMapping()
+    @GetMapping("/currentbalance")
     public ResponseEntity<EnergyBalance> getCurrentBalance(){
 
         EnergyBalance energyBalance = energyService.getLatestBalance();
@@ -26,8 +25,12 @@ public class EnergyBalanceController {
         return ResponseEntity.ok(energyBalance);
     }
 
-
-
+//
+//    @PutMapping
+//    public ResponseEntity<String> updateCurrencyBalance(){
+//
+//
+//    }
 
 
 

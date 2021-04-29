@@ -28,14 +28,16 @@ public class EnergyBalanceServiceApplication {
     @Bean
     void test() throws InterruptedException {
         repo.deleteAll();
-        var energyBalance = new EnergyBalance(UUID.randomUUID(), 100000000000L, 100000000000L, 100, LocalDateTime.now(ZoneOffset.UTC));
+        var energyBalance = new EnergyBalance(UUID.randomUUID(), 100000000000L, 102000000000L, 102, LocalDateTime.now(ZoneOffset.UTC));
+
         TimeUnit.SECONDS.sleep(1);
         var energyBalance2 = new EnergyBalance(UUID.randomUUID(), 100000000000L, 98000000000L, 98, LocalDateTime.now(ZoneOffset.UTC));
-        TimeUnit.SECONDS.sleep(1);
-        var energyBalance3 = new EnergyBalance(UUID.randomUUID(), 100000000000L, 102000000000L, 102, LocalDateTime.now(ZoneOffset.UTC));
+//        TimeUnit.SECONDS.sleep(1);
+//        var energyBalance3 = new EnergyBalance(UUID.randomUUID(), 100000000000L, 100000000000L, 100, LocalDateTime.now(ZoneOffset.UTC));
+
         repo.insert(energyBalance);
         repo.insert(energyBalance2);
-        repo.insert(energyBalance3);
+//        repo.insert(energyBalance3);
     }
 
 
