@@ -1,6 +1,5 @@
 package org.energygrid.east.userservice.controller;
 
-import javassist.NotFoundException;
 import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.fromFrontend.User;

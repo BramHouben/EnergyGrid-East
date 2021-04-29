@@ -100,7 +100,7 @@ services:
     hostname: gateway
     image: vincentdarwinkel/gateway
     ports:
-    - 8081:8081
+    - 8081:80
     restart: always
 
 #  regionservice:
