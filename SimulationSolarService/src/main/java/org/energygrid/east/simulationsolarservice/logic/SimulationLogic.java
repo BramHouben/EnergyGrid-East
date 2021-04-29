@@ -33,7 +33,18 @@ public class SimulationLogic implements ISimulationLogic {
 
     @Override
     public Double calculateKwProduction(List<SimulationResult> simulationResults, Boolean isAdded) {
-        return null;
+        var kwTotal = 0.0;
+        for (var result : simulationResults) {
+            for (var production : result.getProductionExpectations()) {
+                if (result.getName() != null && result.getName().equals("Missed Production")) {
+                    kwTotal = kwTotal - production.getKw();
+                } else {
+                    kwTotal = kwTotal + production.getKw();
+                }
+            }
+        }
+
+        return kwTotal;
     }
 
     private double getSolarPanelFactor(JsonElement weather, SolarUnit solarUnit) {
@@ -54,11 +65,8 @@ public class SimulationLogic implements ISimulationLogic {
     }
 
     private double calculateFactor(JsonElement weather, double coefficient, SolarUnit solarUnit) {
-        //per 1 graad boven de 25 graden, gaat er 0.4% van de opwekking ervan af.
-        //MONO 270WP tot 330WP (16% tot 20%) warmte coeff 0.4
-        //POLY 220WP tot 270WP (12% tot 16%) warmte coeff 0.5
         double result = 0;
-        double temperature = weather.getAsJsonObject().get("temp").getAsDouble() + 30;
+        double temperature = weather.getAsJsonObject().get("temp").getAsDouble();
         var uvi = weather.getAsJsonObject().get("uvi").getAsDouble();
         var correction = 0.85;
 
@@ -72,10 +80,16 @@ public class SimulationLogic implements ISimulationLogic {
             result = result * uvi;
         }
 
-        if (temperature > 25) {
+        var temp = kelvinToCelsius(temperature);
+
+        if (temp > 25) {
             result = result * (1 - ((temperature - 25) * coefficient) / 100);
         }
 
-        return result * correction;
+        return (result * correction) * solarUnit.getNumberOfPanels();
+    }
+
+    public double kelvinToCelsius(double kelvin) {
+        return kelvin - 273.15;
     }
 }

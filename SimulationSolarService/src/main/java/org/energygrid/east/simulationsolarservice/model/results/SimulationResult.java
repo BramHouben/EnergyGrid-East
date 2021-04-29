@@ -8,16 +8,14 @@ import java.util.List;
 public class SimulationResult {
 
     private String name;
-    private int turbineId;
     private List<ProductionExpectation> productionExpectations;
 
     public SimulationResult() {
         this.productionExpectations = new ArrayList<>();
     }
 
-    public SimulationResult(String name, int turbineId, List<ProductionExpectation> productionExpectations) {
+    public SimulationResult(String name, List<ProductionExpectation> productionExpectations) {
         this.name = name;
-        this.turbineId = turbineId;
         this.productionExpectations = productionExpectations;
     }
 
@@ -27,14 +25,6 @@ public class SimulationResult {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getTurbineId() {
-        return turbineId;
-    }
-
-    public void setTurbineId(int turbineId) {
-        this.turbineId = turbineId;
     }
 
     public List<ProductionExpectation> getProductionExpectations() {
