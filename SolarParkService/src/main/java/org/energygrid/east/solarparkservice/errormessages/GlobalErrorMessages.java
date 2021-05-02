@@ -13,7 +13,7 @@ public class GlobalErrorMessages extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(SolarParkNotFoundException.class)
     public ResponseEntity<String> solarParkNotFound(SolarParkNotFoundException e) {
-        //Todo some logging
+
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
@@ -22,7 +22,7 @@ public class GlobalErrorMessages extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CantAddSolarParkException.class)
     public ResponseEntity<String> cantAddSolarPark(CantAddSolarParkException e) {
-        //Todo some logging
+
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -31,7 +31,7 @@ public class GlobalErrorMessages extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CantRemoveSolarParkException.class)
     public ResponseEntity<String> cantRemoveSolarPark(CantRemoveSolarParkException e) {
-        //Todo some logging
+
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -40,7 +40,7 @@ public class GlobalErrorMessages extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(CantUpdateSolarParkException.class)
     public ResponseEntity<String> cantRemoveSolarPark(CantUpdateSolarParkException e) {
-        //Todo some logging
+
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

@@ -1,6 +1,5 @@
 package org.energygrid.east.authenticationservice.controller;
 
-import org.energygrid.east.authenticationservice.model.User;
 import org.energygrid.east.authenticationservice.service.IAuthenticationService;
 import org.energygrid.east.authenticationservice.service.jwt.CreateJWTToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +22,8 @@ public class AuthenticationController {
     public IAuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> LoginUser(@NotNull @RequestParam(name = "email") String email, @NotNull @RequestParam(name = "password") String password) {
-        if (authenticationService.Login(email, password)) {
+    public ResponseEntity<String> loginUser(@NotNull @RequestParam(name = "email") String email, @NotNull @RequestParam(name = "password") String password) {
+        if (authenticationService.login(email, password)) {
             Map<String, String> claims = new HashMap<>();
             claims.put("email", email);
 
