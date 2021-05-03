@@ -31,14 +31,8 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity AddUser(@NotNull @ModelAttribute User user) {
-        try {
             userService.addUser(user);
             return ResponseEntity.status(201).body(null);
-        } catch (DuplicatedNameException e) {
-            return ResponseEntity.status(409).body(null);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(null);
-        }
     }
 
     @GetMapping()

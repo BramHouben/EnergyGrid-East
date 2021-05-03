@@ -19,7 +19,7 @@ public class RabbitConfiguration {
 
     private RabbitConfiguration() {
         connectionFactory = new ConnectionFactory();
-        connectionFactory.setHost("localhost");
+        connectionFactory.setHost("RABBIT_HOST");
         connection = createConnection();
     }
 
