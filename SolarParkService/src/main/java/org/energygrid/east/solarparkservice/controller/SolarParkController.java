@@ -16,7 +16,7 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping("solarparkservice/solarpark")
+@RequestMapping("solarpark")
 public class SolarParkController {
 
     @Autowired
