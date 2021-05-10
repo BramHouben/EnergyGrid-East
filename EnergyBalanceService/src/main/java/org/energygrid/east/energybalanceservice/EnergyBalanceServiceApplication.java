@@ -2,6 +2,7 @@ package org.energygrid.east.energybalanceservice;
 
 import org.energygrid.east.energybalanceservice.model.EnergyBalance;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceRepo;
+import org.energygrid.east.energybalanceservice.repo.EnergyBalanceStoreRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,6 +22,9 @@ public class EnergyBalanceServiceApplication {
     @Autowired
     private EnergyBalanceRepo repo;
 
+    @Autowired
+    private EnergyBalanceStoreRepo storeRepo;
+
     public static void main(String[] args) {
         SpringApplication.run(EnergyBalanceServiceApplication.class, args);
     }
@@ -28,6 +32,7 @@ public class EnergyBalanceServiceApplication {
     @Bean
     void test() throws InterruptedException {
         repo.deleteAll();
+        storeRepo.deleteAll();
         var energyBalance = new EnergyBalance(UUID.randomUUID(), 100000000000L, 102000000000L, 102, LocalDateTime.now(ZoneOffset.UTC));
 
         TimeUnit.SECONDS.sleep(1);

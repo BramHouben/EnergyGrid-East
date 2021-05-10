@@ -1,45 +1,94 @@
 package org.energygrid.east.energybalanceservice.rabbit;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 
 @Component
 public class RabbitConfig {
-    static final String fanoutExchangeName = "EnergyBalance";
-    static final String queueName = "energy-balance-queue";
+
+    static final String topicExchangeName = "EnergyBalance";
+    static final String queueNameWind = "energy-balance-wind";
+    static final String queueNameSolar = "energy-balance-solar";
+    static final String queueNameNuclear = "energy-balance-nuclear";
+
 
     @Bean
-    Queue queue() {
-        return new Queue(queueName, false);
+    @Qualifier("queueNameWind")
+    Queue queueWind() {
+        return new Queue(queueNameWind, false);
     }
 
     @Bean
-    FanoutExchange exchange() {
-        return new FanoutExchange(fanoutExchangeName);
+    @Qualifier("queueNameSolar")
+    Queue queueSolar() {
+        return new Queue(queueNameSolar, false);
     }
 
     @Bean
-    Binding binding(Queue queue, FanoutExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange);
+    @Qualifier("queueNameNuclear")
+    Queue queueNuclear() {
+        return new Queue(queueNameNuclear, false);
+    }
+
+    @Bean
+    TopicExchange exchange() {
+        return new TopicExchange(topicExchangeName);
+    }
+
+    @Bean
+    Binding bindingSolar(@Qualifier("queueNameSolar") Queue queueNameSolar, TopicExchange exchange) {
+        return BindingBuilder.bind(queueNameSolar).to(exchange).with("balance.create.solar");
+    }
+
+    @Bean
+    Binding bindingNuclear(@Qualifier("queueNameNuclear") Queue queueNameNuclear, TopicExchange exchange) {
+        return BindingBuilder.bind(queueNameNuclear).to(exchange).with("balance.create.nuclear");
+    }
+
+    @Bean
+    Binding bindingWind(@Qualifier("queueNameWind") Queue queueNameWind, TopicExchange exchange) {
+        return BindingBuilder.bind(queueNameWind).to(exchange).with("balance.create.wind");
     }
 
     @Bean
     SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
-                                             MessageListenerAdapter listenerAdapter) {
+                                             @Qualifier("listenerAdapterWind") MessageListenerAdapter listenerAdapter) {
         var container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueName);
+        container.setQueueNames(queueNameWind);
         container.setMessageListener(listenerAdapter);
         return container;
     }
 
     @Bean
+    SimpleMessageListenerContainer containerSolar(ConnectionFactory connectionFactory,
+                                                  @Qualifier("listenerAdapterSolar") MessageListenerAdapter listenerAdapterSolar) {
+        var container = new SimpleMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.setQueueNames(queueNameSolar);
+        container.setMessageListener(listenerAdapterSolar);
+        return container;
+    }
+
+
+    @Bean
+    @Qualifier("listenerAdapterWind")
     MessageListenerAdapter listenerAdapter(Receiver receiver) {
-        return new MessageListenerAdapter(receiver, "receiveMessage");
+        return new MessageListenerAdapter(receiver, "receiveMessageWind");
+    }
+
+    @Bean
+    @Qualifier("listenerAdapterSolar")
+    MessageListenerAdapter listenerAdapterSolar(Receiver receiver) {
+        return new MessageListenerAdapter(receiver, "receiveMessageSolar");
     }
 }
