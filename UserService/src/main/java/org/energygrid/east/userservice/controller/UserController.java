@@ -1,6 +1,5 @@
 package org.energygrid.east.userservice.controller;
 
-import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.fromFrontend.User;
 import org.energygrid.east.userservice.model.viewmodel.UserViewModel;
@@ -31,13 +30,22 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity AddUser(@NotNull @ModelAttribute User user) {
+        try {
             userService.addUser(user);
             return ResponseEntity.status(201).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     @GetMapping()
     public ResponseEntity<UserViewModel> GetUserByUuidOrUsernameOrEmail(@RequestParam(required = false) UUID uuid, @RequestParam(required = false) String username, @RequestParam(required = false) String email) {
         try {
+            String jwt = request.getHeader("jwt");
+            if(jwt == null || jwt.isEmpty()) {
+                throw new IllegalAccessException();
+            }
+
             UserDTO user = userService.getUserByUuidOrUsernameOrEmail(uuid, username, email);
             if (user == null) {
                 return ResponseEntity.status(404).body(null);
@@ -45,6 +53,8 @@ public class UserController {
 
             var userViewmodel = modelMapper.map(user, UserViewModel.class);
             return ResponseEntity.ok(userViewmodel);
+        } catch (IllegalAccessException e){
+            return ResponseEntity.status(401).body(null);
         } catch (NullPointerException e) {
             return ResponseEntity.status(404).body(null);
         } catch (Exception e) {
@@ -55,9 +65,15 @@ public class UserController {
     @PutMapping()
     public ResponseEntity EditUser(@NotNull @ModelAttribute User user) {
         try {
-            String jwt = request.getHeader("bearer");
+            String jwt = request.getHeader("jwt");
+            if(jwt == null || jwt.isEmpty()) {
+                throw new IllegalAccessException();
+            }
+
             userService.editUser(user, jwt);
             return ResponseEntity.ok(null);
+        } catch (IllegalAccessException e){
+          return ResponseEntity.status(401).body(null);
         } catch (NullPointerException e) {
             return ResponseEntity.status(404).body(null);
         } catch (Exception e) {
@@ -65,13 +81,20 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("{uuid}")
-    public ResponseEntity<?> deleteUser(@NotNull @PathVariable UUID uuid) {
+    @DeleteMapping()
+    public ResponseEntity<?> deleteUser() {
         try {
-            String jwt = request.getHeader("bearer");
-            userService.deleteUser(jwt, uuid);
+            String jwt = request.getHeader("jwt");
+            if(jwt == null || jwt.isEmpty()) {
+                throw new IllegalAccessException();
+            }
+
+            userService.deleteUser(jwt);
             return ResponseEntity.ok().build();
+        } catch (IllegalAccessException e) {
+            return ResponseEntity.status(401).body(null);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body(null);
         }
     }

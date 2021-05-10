@@ -1,8 +1,6 @@
 package org.energygrid.east.userservice.rabbit;
 
 import org.energygrid.east.userservice.rabbit.Producer.Producer;
-
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RabbitProducer extends ChannelHelper {

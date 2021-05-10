@@ -1,6 +1,7 @@
-# mvn clean package -Dmaven.test.skip=true
-# Eerst docker-compose build
-# daarna docker-compose up
+# voer de onderstaande commando's uit om docker compose te runnen
+# 1. mvn clean package -Dmaven.test.skip=true
+# 2. docker-compose build
+# 3. docker-compose up
 
 version: '3'
 services:
@@ -91,8 +92,6 @@ services:
     container_name: mysql_authservice
     hostname: mysql_authservice
     image: mysql:latest
-    cap_add:
-      - SYS_NICE
     ports:
       - 3306:3306
     restart: always
@@ -106,8 +105,10 @@ services:
     hostname: mysql_userservice
     image: mysql:latest
     ports:
-      - 3307:3307
+      - 3307:3306
     restart: always
+    expose:
+      - 3307
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
 
