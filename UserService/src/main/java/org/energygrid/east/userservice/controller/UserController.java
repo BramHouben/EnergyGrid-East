@@ -3,6 +3,7 @@ package org.energygrid.east.userservice.controller;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.fromFrontend.User;
 import org.energygrid.east.userservice.model.viewmodel.UserViewModel;
+import org.energygrid.east.userservice.rabbit.RabbitProducer;
 import org.energygrid.east.userservice.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("userservice/user")
@@ -23,6 +26,7 @@ public class UserController {
 
     @Autowired
     private HttpServletRequest request;
+    private static final Logger logger = Logger.getLogger(RabbitProducer.class.getName());
 
     public UserController() {
         this.modelMapper = new ModelMapper();
@@ -34,6 +38,7 @@ public class UserController {
             userService.addUser(user);
             return ResponseEntity.status(201).body(null);
         } catch (Exception e) {
+            logger.log(Level.ALL, e.getMessage());
             return ResponseEntity.status(500).body(null);
         }
     }
@@ -58,6 +63,7 @@ public class UserController {
         } catch (NullPointerException e) {
             return ResponseEntity.status(404).body(null);
         } catch (Exception e) {
+            logger.log(Level.ALL, e.getMessage());
             return ResponseEntity.status(500).body(null);
         }
     }
@@ -77,7 +83,7 @@ public class UserController {
         } catch (NullPointerException e) {
             return ResponseEntity.status(404).body(null);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.ALL, e.getMessage());
             return ResponseEntity.status(500).body(null);
         }
     }
@@ -95,7 +101,7 @@ public class UserController {
         } catch (IllegalAccessException e) {
             return ResponseEntity.status(401).body(null);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.ALL, e.getMessage());
             return ResponseEntity.status(500).body(null);
         }
     }
