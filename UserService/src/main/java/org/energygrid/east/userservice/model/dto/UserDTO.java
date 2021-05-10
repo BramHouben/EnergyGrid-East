@@ -18,7 +18,6 @@ public class UserDTO {
     private UUID uuid;
     private String username;
     private String email;
-    private AccountRole accountRole;
     private String language;
 
     public UUID getUuid() {
@@ -35,14 +34,6 @@ public class UserDTO {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public AccountRole getAccountRole() {
-        return accountRole;
-    }
-
-    public void setAccountRole(AccountRole accountRole) {
-        this.accountRole = accountRole;
     }
 
     public String getLanguage() {

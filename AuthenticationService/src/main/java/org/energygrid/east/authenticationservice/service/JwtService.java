@@ -23,7 +23,7 @@ public class JwtService implements IJwtService {
     public String create(UserDto user) {
         Map<String, String> claims = new HashMap<>();
         claims.put("uuid", user.getUuid().toString());
-        claims.put("email", user.getEmail());
+        claims.put("role", user.getAccountRole().toString());
 
         Header<?> header = Jwts.header();
         header.setType("JWT");

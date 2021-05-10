@@ -1,5 +1,6 @@
 package org.energygrid.east.authenticationservice.model.dto;
 
+import org.energygrid.east.authenticationservice.model.enums.AccountRole;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
@@ -17,6 +18,7 @@ public class UserDto {
     private UUID uuid;
     private String email;
     private String password;
+    private AccountRole accountRole;
 
     public UserDto() {}
 
@@ -42,5 +44,12 @@ public class UserDto {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+    public AccountRole getAccountRole() {
+        return accountRole;
+    }
+
+    public void setAccountRole(AccountRole accountRole) {
+        this.accountRole = accountRole;
     }
 }

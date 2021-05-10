@@ -17,8 +17,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Service
@@ -39,11 +37,11 @@ public class UserService {
 
         UserDTO userToStore = mapper.map(user, UserDTO.class);
         userToStore.setUuid(UUID.randomUUID());
-        userToStore.setAccountRole(AccountRole.LargeScaleCustomer);
 
         userRepo.save(userToStore);
         var rabbitMqUser = mapper.map(user, UserRabbitMq.class);
         rabbitMqUser.setUuid(userToStore.getUuid());
+        rabbitMqUser.setAccountRole(AccountRole.LargeScaleCustomer);
         storeUserInAuthenticationService(rabbitMqUser);
     }
 
@@ -74,20 +72,21 @@ public class UserService {
             throw new NullPointerException();
         }
 
-        var userToStore = mapper.map(user, UserDTO.class);
-        userToStore.setUuid(userUuid);
-
         if (user.getNewPassword() != null) {
-            var userRabbitMq = mapper.map(userToStore, UserRabbitMq.class);
+            var userRabbitMq = mapper.map(dbUser, UserRabbitMq.class);
             userRabbitMq.setPassword(user.getNewPassword());
             UpdateUserInAuthenticationService(userRabbitMq);
         }
 
         if (!user.getEmail().equals(dbUser.getEmail())) {
-            UpdateUserInAuthenticationService(mapper.map(userToStore, UserRabbitMq.class));
+            dbUser.setEmail(user.getEmail());
+            UpdateUserInAuthenticationService(mapper.map(dbUser, UserRabbitMq.class));
         }
 
-        userRepo.save(userToStore);
+        dbUser.setUsername(user.getUsername());
+        dbUser.setLanguage(user.getLanguage());
+
+        userRepo.save(dbUser);
     }
 
     private void UpdateUserInAuthenticationService(UserRabbitMq user) {

@@ -77,6 +77,7 @@ public class UserController {
         } catch (NullPointerException e) {
             return ResponseEntity.status(404).body(null);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body(null);
         }
     }
