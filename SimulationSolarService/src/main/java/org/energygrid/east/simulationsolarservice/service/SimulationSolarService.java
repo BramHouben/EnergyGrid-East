@@ -85,7 +85,6 @@ public class SimulationSolarService implements ISimulationSolarService {
                     var temperatureCorrection = (temperature - 25) * 0.4;
                     finalKwh = finalKwh * (1 - (temperatureCorrection / 100));
                 }
-                ;
                 kwh += finalKwh;
             }
             energyRegionSolarParksOutput.addKwh(new Kwh(kwh, triggerTime));

@@ -36,8 +36,9 @@ public interface ISimulationLogic {
 
     /**
      * @param simulationResults result of simulations
+     * @param amount number of solar units
      * @param isAdded is the simulation added
      * @return the total kw production
      */
-    Double calculateKwProduction(List<SimulationResult> simulationResults, Boolean isAdded);
+    Double calculateKwProduction(List<SimulationResult> simulationResults, int amount, Boolean isAdded);
 }

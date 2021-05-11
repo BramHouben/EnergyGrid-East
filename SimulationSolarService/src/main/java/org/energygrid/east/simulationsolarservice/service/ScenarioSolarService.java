@@ -3,7 +3,9 @@ package org.energygrid.east.simulationsolarservice.service;
 import org.energygrid.east.simulationsolarservice.factory.FactoryURL;
 import org.energygrid.east.simulationsolarservice.logic.ISimulationLogic;
 import org.energygrid.east.simulationsolarservice.logic.SimulationLogic;
+import org.energygrid.east.simulationsolarservice.model.ProductionExpectation;
 import org.energygrid.east.simulationsolarservice.model.Scenario;
+import org.energygrid.east.simulationsolarservice.model.SolarPark;
 import org.energygrid.east.simulationsolarservice.model.SolarUnit;
 import org.energygrid.east.simulationsolarservice.model.enums.SolarPanelType;
 import org.energygrid.east.simulationsolarservice.model.results.ScenarioExpectationResult;
@@ -17,9 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 @Service
 public class ScenarioSolarService implements IScenarioSolarScenario {
@@ -44,21 +48,24 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
         scenarioExpectationResult.setName(scenario.getName());
         scenarioExpectationResult.setScenarioType(scenario.getScenarioType());
         scenarioExpectationResult.setCreatedAt(DateTimeFormatter.ISO_INSTANT.format(Instant.now()));
-        scenarioExpectationResult.setDescription(scenario.getDescription());
+        scenarioExpectationResult.setDescription(scenario.getDescription() != null ? scenario.getDescription() : scenario.getSolarUnit().getDescription());
         scenarioExpectationResult.setCoordinates(scenario.getCoordinates() != null ? scenario.getCoordinates() : scenario.getSolarUnit().getCoordinates());
 
         switch (scenario.getScenarioType()) {
             case ADD_SOLAR_PARK:
-                scenarioExpectationResult.setSimulationExpectationResult(createScenarioAddSolarPark(scenario.getAmount(), scenarioExpectationResult.getCoordinates(), scenario.getSolarUnit(), scenarioExpectationResult.getCreatedAt()));
+                scenarioExpectationResult.setSimulationExpectationResult(createScenarioSolarPark(scenario.getAmount(), scenarioExpectationResult.getCoordinates(), scenario.getSolarUnit(), scenarioExpectationResult.getCreatedAt(), true));
                 break;
             case REMOVE_SOLAR_PARK:
+                scenarioExpectationResult.setSimulationExpectationResult(createScenarioSolarPark(scenario.getAmount(), scenarioExpectationResult.getCoordinates(), scenario.getSolarUnit(), scenarioExpectationResult.getCreatedAt(), false));
+                break;
             case TURN_OFF_SOLAR_PARK:
+                scenarioExpectationResult.setSimulationExpectationResult(scenarioTurnOffSolarPark(scenario.getAmount(), scenario.getSolarUnit(), scenario.getTurnOffTimes(), scenarioExpectationResult.getCreatedAt()));
             case TURN_OFF_UNIT:
                 break;
             default:
                 return null;
         }
-       // scenarioSolarRepository.save(scenarioExpectationResult);
+        scenarioSolarRepository.save(scenarioExpectationResult);
         return scenarioExpectationResult;
     }
 
@@ -67,15 +74,17 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
         return scenarioSolarRepository.findTop3ByOrderByCreatedAtDesc();
     }
 
-    private SimulationExpectationResult createScenarioAddSolarPark(int amount, Point coordinates, SolarUnit solarUnit, String createdAt) {
-        SimulationExpectationResult simulationExpectationResult = new SimulationExpectationResult();
+    private SimulationExpectationResult createScenarioSolarPark(int amount, Point coordinates, SolarUnit solarUnit, String createdAt, Boolean isAdded) {
+        var simulationExpectationResult = new SimulationExpectationResult();
         simulationExpectationResult.setCreatedAt(createdAt);
 
         if (coordinates != null && solarUnit != null && amount >= 0 && solarUnit.getNumberOfPanels() > 0) {
             List<SimulationResult> results = new ArrayList<>();
 
-            for (var i = 0; i < amount; i++) {
-                SimulationResult simulationResult = new SimulationResult();
+            //Amount is to big, so we do at the end by the calculation 1 unit * amount
+            for (var i = 0; i < 1; i++) {
+                var simulationResult = new SimulationResult();
+                simulationResult.setName(isAdded ? "Production" : "Missed Production");
                 var data = new FactoryURL().getWeatherData(headers, template, getUrl(coordinates.getX(), coordinates.getY()));
 
                 for (var weather : data) {
@@ -84,8 +93,45 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
                 results.add(simulationResult);
             }
             simulationExpectationResult.setSimulationResults(results);
-            simulationExpectationResult.setKwTotalResult(simulationLogic.calculateKwProduction(results, true));
+            simulationExpectationResult.setKwTotalResult(simulationLogic.calculateKwProduction(results, amount, isAdded));
         }
+        return simulationExpectationResult;
+    }
+
+    private SimulationExpectationResult scenarioTurnOffSolarPark(int amount, SolarUnit solarUnit, List<String> dates, String createdAt) {
+        SimulationExpectationResult simulationExpectationResult = new SimulationExpectationResult();
+        simulationExpectationResult.setCreatedAt(createdAt);
+        List<SimulationResult> results = new ArrayList<>();
+
+        if (solarUnit != null) {
+            SimulationResult simulationResult = new SimulationResult();
+            simulationResult.setName("Production");
+
+            SimulationResult simulationResultMissed = new SimulationResult();
+            simulationResultMissed.setName("Missed Production");
+
+            var data = new FactoryURL().getWeatherData(headers, template, getUrl(solarUnit.getCoordinates().getX(), solarUnit.getCoordinates().getY()));
+
+            for (var weather : data) {
+                var dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(weather.getAsJsonObject().get("dt").getAsInt()), TimeZone.getDefault().toZoneId());
+
+                for (var i = 0; i < amount; i++) {
+                    if (dates.stream().noneMatch(dateTime.toString()::equals)) {
+                        simulationResult.addProductionExpectation(simulationLogic.createSimulationForSolarUnit(weather, solarUnit));
+                        simulationResultMissed.addProductionExpectation(new ProductionExpectation(0, dateTime));
+                    }
+                    else {
+                        simulationResultMissed.addProductionExpectation(simulationLogic.createSimulationForSolarUnit(weather, solarUnit));
+                        simulationResult.addProductionExpectation(new ProductionExpectation(0, dateTime));
+                    }
+                }
+            }
+            results.add(simulationResult);
+            results.add(simulationResultMissed);
+        }
+        simulationExpectationResult.setSimulationResults(results);
+        simulationExpectationResult.setKwTotalResult(simulationLogic.calculateKwProduction(results, 1, true));
+
         return simulationExpectationResult;
     }
 

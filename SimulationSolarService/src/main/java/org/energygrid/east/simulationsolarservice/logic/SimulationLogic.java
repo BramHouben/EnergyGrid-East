@@ -1,6 +1,7 @@
 package org.energygrid.east.simulationsolarservice.logic;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.energygrid.east.simulationsolarservice.model.Factor;
 import org.energygrid.east.simulationsolarservice.model.ProductionExpectation;
 import org.energygrid.east.simulationsolarservice.model.SolarUnit;
@@ -10,6 +11,8 @@ import org.energygrid.east.simulationsolarservice.model.results.SimulationResult
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 public class SimulationLogic implements ISimulationLogic {
@@ -32,7 +35,7 @@ public class SimulationLogic implements ISimulationLogic {
     }
 
     @Override
-    public Double calculateKwProduction(List<SimulationResult> simulationResults, Boolean isAdded) {
+    public Double calculateKwProduction(List<SimulationResult> simulationResults, int amount, Boolean isAdded) {
         var kwTotal = 0.0;
         for (var result : simulationResults) {
             for (var production : result.getProductionExpectations()) {
@@ -44,7 +47,7 @@ public class SimulationLogic implements ISimulationLogic {
             }
         }
 
-        return kwTotal;
+        return kwTotal * amount;
     }
 
     private double getSolarPanelFactor(JsonElement weather, SolarUnit solarUnit) {
@@ -74,10 +77,10 @@ public class SimulationLogic implements ISimulationLogic {
             return result;
         }
 
-        result = solarUnit.getNumberOfPanels() * 0.27;
+        result = solarUnit.getNumberOfPanels() * (0.25 * correction);
 
-        if (uvi <= 1) {
-            result = result * uvi;
+        if (uvi <= 3.5) {
+            result = result * (uvi / 10);
         }
 
         var temp = kelvinToCelsius(temperature);
@@ -86,7 +89,8 @@ public class SimulationLogic implements ISimulationLogic {
             result = result * (1 - ((temperature - 25) * coefficient) / 100);
         }
 
-        return (result * correction) * solarUnit.getNumberOfPanels();
+        return result;
+        //return (result * correction) * solarUnit.getNumberOfPanels();
     }
 
     public double kelvinToCelsius(double kelvin) {
