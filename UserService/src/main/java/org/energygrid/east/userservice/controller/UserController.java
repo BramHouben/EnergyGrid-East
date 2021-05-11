@@ -17,7 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("userservice/user")
+@RequestMapping("user")
 public class UserController {
     @Autowired
     private UserService userService;
