@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity AddUser(@NotNull @ModelAttribute User user) {
+    public ResponseEntity AddUser(@NotNull @RequestBody User user) {
         try {
             userService.addUser(user);
             return ResponseEntity.status(201).body(null);

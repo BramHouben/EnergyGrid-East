@@ -72,7 +72,7 @@ public class UserService {
             throw new NullPointerException();
         }
 
-        if (user.getNewPassword() != null) {
+        if (user.getNewPassword() != null && !user.getNewPassword().isEmpty()) {
             var userRabbitMq = mapper.map(dbUser, UserRabbitMq.class);
             userRabbitMq.setPassword(user.getNewPassword());
             UpdateUserInAuthenticationService(userRabbitMq);
