@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
@@ -21,13 +19,10 @@ import java.util.logging.Logger;
 public class EnergyService implements IEnergyService {
 
     private static final java.util.logging.Logger logger = Logger.getLogger(EnergyService.class.getName());
-
-    @Autowired
-    private EnergyBalanceStoreRepo energyBalanceStoreRepo;
-
     @Autowired
     RabbitTemplate rabbitTemplate;
-
+    @Autowired
+    private EnergyBalanceStoreRepo energyBalanceStoreRepo;
     @Autowired
     private EnergyBalanceRepo energyBalanceRepo;
 
@@ -38,21 +33,22 @@ public class EnergyService implements IEnergyService {
         return energyBalanceRepo.findFirstByOrderByTimeDesc();
 
     }
+
     @Scheduled(fixedDelay = 60000, initialDelay = 20000)
-    private void updateNewestBalance(){
+    public void updateNewestBalance() {
         logger.log(Level.INFO, "update NewestBalance called");
-        long usagePerMinute= 190000;
+        long usagePerMinute = 190000;
         long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
         long latestNuclear = 6300;
         long latestWind = energyBalanceStoreRepo.findFirstByType(Type.WIND).getProduction();
-        long total =+ latestNuclear+ latestWind+latestSolar;
+        long total = +latestNuclear + latestWind + latestSolar;
 //        long leverage = usagePerMinute-total;
-        long leverage =   156150;
-        total+=leverage;
+        long leverage = 156150;
+        total += leverage;
 
-        double balance = ((float)total/usagePerMinute)*100;
+        double balance = ((float) total / usagePerMinute) * 100;
         //per minute
-        var energyBalance = new EnergyBalance( UUID.randomUUID(), usagePerMinute, total, balance, LocalDateTime.now(ZoneOffset.UTC));
+        var energyBalance = new EnergyBalance(UUID.randomUUID(), usagePerMinute, total, balance, LocalDateTime.now(ZoneOffset.UTC));
         energyBalanceRepo.save(energyBalance);
     }
 }

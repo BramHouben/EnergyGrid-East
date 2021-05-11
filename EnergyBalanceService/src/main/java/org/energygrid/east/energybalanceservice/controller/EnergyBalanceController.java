@@ -17,21 +17,12 @@ public class EnergyBalanceController {
     @GetMapping("/currentbalance")
     public ResponseEntity<EnergyBalance> getCurrentBalance(){
 
-        EnergyBalance energyBalance = energyService.getLatestBalance();
+        var energyBalance = energyService.getLatestBalance();
         if (energyBalance==null){
             return ResponseEntity.badRequest().build();
         }
 
         return ResponseEntity.ok(energyBalance);
     }
-
-//
-//    @PutMapping
-//    public ResponseEntity<String> updateCurrencyBalance(){
-//
-//
-//    }
-
-
 
 }
