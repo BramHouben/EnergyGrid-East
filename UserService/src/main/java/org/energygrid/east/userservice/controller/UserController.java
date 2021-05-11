@@ -69,7 +69,7 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity EditUser(@NotNull @ModelAttribute User user) {
+    public ResponseEntity EditUser(@NotNull @RequestBody User user) {
         try {
             String jwt = request.getHeader("jwt");
             if(jwt == null || jwt.isEmpty()) {
