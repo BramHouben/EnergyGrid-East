@@ -16,7 +16,7 @@ public class AuthenticationController {
     private IAuthenticationService authenticationService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> Login(@NotNull @RequestBody User user) {
+    public ResponseEntity<String> Login(@NotNull @ModelAttribute User user) {
         try {
             return ResponseEntity.ok(authenticationService.login(user));
         } catch (IllegalAccessException e) {

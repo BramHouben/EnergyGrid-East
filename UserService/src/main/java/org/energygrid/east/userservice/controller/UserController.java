@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity AddUser(@NotNull @RequestBody User user) {
+    public ResponseEntity AddUser(@NotNull @ModelAttribute User user) {
         try {
             userService.addUser(user);
             return ResponseEntity.status(201).body(null);
@@ -69,7 +69,7 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity EditUser(@NotNull @RequestBody User user) {
+    public ResponseEntity EditUser(@NotNull @ModelAttribute User user) {
         try {
             String jwt = request.getHeader("jwt");
             if(jwt == null || jwt.isEmpty()) {
