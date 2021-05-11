@@ -49,7 +49,6 @@ public class RabbitConfiguration {
         try {
             return connection.createChannel();
         } catch (IOException e) {
-            e.printStackTrace();
             logger.log(Level.ALL, e.getMessage());
             return null;
         }

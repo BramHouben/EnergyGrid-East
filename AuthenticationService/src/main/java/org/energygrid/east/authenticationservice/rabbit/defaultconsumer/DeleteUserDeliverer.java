@@ -10,6 +10,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Component
 public class DeleteUserDeliverer implements DeliverCallback {
@@ -17,6 +19,7 @@ public class DeleteUserDeliverer implements DeliverCallback {
     private ApplicationContext applicationContext;
     private IUserService userService;
     private final Gson gson = new Gson();
+    private static final Logger logger = Logger.getLogger(DeleteUserDeliverer.class.getName());
 
     public DeleteUserDeliverer() {
         applicationContext = ApplicationContextUtils.getCtx();
@@ -30,7 +33,7 @@ public class DeleteUserDeliverer implements DeliverCallback {
             var user = gson.fromJson(json, UserRabbitMq.class);
             userService.deleteUser(user.getUuid());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.ALL, e.getMessage());
         }
     }
 }
