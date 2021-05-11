@@ -79,6 +79,15 @@ public class RabbitConfig {
         return container;
     }
 
+    @Bean
+    SimpleMessageListenerContainer containerNuclear(ConnectionFactory connectionFactory,
+                                                  @Qualifier("listenerAdapterNuclear") MessageListenerAdapter listenerAdapterNuclear) {
+        var container = new SimpleMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.setQueueNames(queueNameNuclear);
+        container.setMessageListener(listenerAdapterNuclear);
+        return container;
+    }
 
     @Bean
     @Qualifier("listenerAdapterWind")
@@ -90,5 +99,11 @@ public class RabbitConfig {
     @Qualifier("listenerAdapterSolar")
     MessageListenerAdapter listenerAdapterSolar(Receiver receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessageSolar");
+    }
+
+    @Bean
+    @Qualifier("listenerAdapterNuclear")
+    MessageListenerAdapter listenerAdapterNuclear(Receiver receiver) {
+        return new MessageListenerAdapter(receiver, "receiveMessageNuclear");
     }
 }
