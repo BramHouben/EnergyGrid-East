@@ -31,21 +31,21 @@ public class EnergyBalanceServiceApplication {
         SpringApplication.run(EnergyBalanceServiceApplication.class, args);
     }
 
-    @Bean
-    void test() throws InterruptedException {
-        repo.deleteAll();
-        storeRepo.deleteAll();
-        var energyBalance = new EnergyBalance(UUID.randomUUID(), 100000000000L, 102000000000L, 102, LocalDateTime.now(ZoneOffset.UTC));
-
-        TimeUnit.SECONDS.sleep(1);
-        var energyBalance2 = new EnergyBalance(UUID.randomUUID(), 100000000000L, 98000000000L, 98, LocalDateTime.now(ZoneOffset.UTC));
+//    @Bean
+//    void test() throws InterruptedException {
+//        repo.deleteAll();
+//        storeRepo.deleteAll();
+//        var energyBalance = new EnergyBalance(UUID.randomUUID(), 100000000000L, 102000000000L, 102, LocalDateTime.now(ZoneOffset.UTC));
+//
 //        TimeUnit.SECONDS.sleep(1);
-//        var energyBalance3 = new EnergyBalance(UUID.randomUUID(), 100000000000L, 100000000000L, 100, LocalDateTime.now(ZoneOffset.UTC));
-
-        repo.insert(energyBalance);
-        repo.insert(energyBalance2);
-//        repo.insert(energyBalance3);
-    }
+//        var energyBalance2 = new EnergyBalance(UUID.randomUUID(), 100000000000L, 98000000000L, 98, LocalDateTime.now(ZoneOffset.UTC));
+////        TimeUnit.SECONDS.sleep(1);
+////        var energyBalance3 = new EnergyBalance(UUID.randomUUID(), 100000000000L, 100000000000L, 100, LocalDateTime.now(ZoneOffset.UTC));
+//
+//        repo.insert(energyBalance);
+//        repo.insert(energyBalance2);
+////        repo.insert(energyBalance3);
+//    }
 
 
 }

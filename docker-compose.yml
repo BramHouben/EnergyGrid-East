@@ -1,7 +1,7 @@
 # mvn clean package -Dmaven.test.skip=true
-# Eerst docker-compose build
-# daarna docker-compose up
-#docker compose down --rmi all -v
+# First docker-compose build
+# Then docker-compose up
+# At the end docker compose down --rmi all -v
 
 version: '3'
 services:
