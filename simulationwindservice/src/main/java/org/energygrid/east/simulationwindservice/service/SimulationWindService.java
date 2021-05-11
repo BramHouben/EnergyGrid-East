@@ -44,11 +44,11 @@ public class SimulationWindService implements ISimulationWindService {
         this.headers = new HttpHeaders();
     }
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 10000)
     private void sendLatestWindInfoToQueue() {
         logger.log(Level.INFO, "Send wind message to queue");
         //total kwh per minute
-        var wind = "213";
+        var wind = "15010";
         rabbittemplate.convertAndSend("EnergyBalance", "balance.create.wind", wind);
     }
 

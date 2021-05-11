@@ -150,7 +150,7 @@ services:
     ports:
     - 8160:8160
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://:27019/energybalance
+      SPRING_DATA_MONGODB_URI: mongodb://mongoenergybalanceservice:27020/energybalance
 
   mongoenergybalanceservice:
     hostname: mongoenergybalanceservice
