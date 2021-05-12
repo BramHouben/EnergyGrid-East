@@ -15,17 +15,17 @@ public class Receiver {
     private IRabbitService rabbitService;
 
     public void receiveMessageWind(String message) {
-        logger.log(Level.INFO, "Got message in receiver Wind" + message);
+        logger.log(Level.INFO, ()-> "Got message in receiver Wind" + message);
         rabbitService.addLatestWind(message);
     }
 
     public void receiveMessageSolar(String message) {
-        logger.log(Level.INFO, "Got message in receiver Solar" + message);
+        logger.log(Level.INFO,  ()-> "Got message in receiver Solar" + message);
         rabbitService.addLatestSolar(message);
     }
 
     public void receiveMessageNuclear(String message) {
-        logger.log(Level.INFO, "Got message in receiver Nuclear" + message);
+        logger.log(Level.INFO, ()->  "Got message in receiver Nuclear" + message);
         rabbitService.addLatestNuclear(message);
     }
 }

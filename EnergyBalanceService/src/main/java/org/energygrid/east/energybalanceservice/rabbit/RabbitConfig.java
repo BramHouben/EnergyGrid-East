@@ -15,33 +15,33 @@ import org.springframework.stereotype.Component;
 @Component
 public class RabbitConfig {
 
-    static final String topicExchangeName = "EnergyBalance";
-    static final String queueNameWind = "energy-balance-wind";
-    static final String queueNameSolar = "energy-balance-solar";
-    static final String queueNameNuclear = "energy-balance-nuclear";
+    static final String TOPIC_EXCHANGE = "EnergyBalance";
+    static final String QUEUE_NAME_WIND = "energy-balance-wind";
+    static final String QUEUE_NAME_SOLAR = "energy-balance-solar";
+    static final String QUEUE_NAME_NUCLEAR = "energy-balance-nuclear";
 
 
     @Bean
     @Qualifier("queueNameWind")
     Queue queueWind() {
-        return new Queue(queueNameWind, false);
+        return new Queue(QUEUE_NAME_WIND, false);
     }
 
     @Bean
     @Qualifier("queueNameSolar")
     Queue queueSolar() {
-        return new Queue(queueNameSolar, false);
+        return new Queue(QUEUE_NAME_SOLAR, false);
     }
 
     @Bean
     @Qualifier("queueNameNuclear")
     Queue queueNuclear() {
-        return new Queue(queueNameNuclear, false);
+        return new Queue(QUEUE_NAME_NUCLEAR, false);
     }
 
     @Bean
     TopicExchange exchange() {
-        return new TopicExchange(topicExchangeName);
+        return new TopicExchange(TOPIC_EXCHANGE);
     }
 
     @Bean
@@ -64,7 +64,7 @@ public class RabbitConfig {
                                              @Qualifier("listenerAdapterWind") MessageListenerAdapter listenerAdapter) {
         var container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueNameWind);
+        container.setQueueNames(QUEUE_NAME_WIND);
         container.setMessageListener(listenerAdapter);
         return container;
     }
@@ -74,17 +74,17 @@ public class RabbitConfig {
                                                   @Qualifier("listenerAdapterSolar") MessageListenerAdapter listenerAdapterSolar) {
         var container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueNameSolar);
+        container.setQueueNames(QUEUE_NAME_SOLAR);
         container.setMessageListener(listenerAdapterSolar);
         return container;
     }
 
     @Bean
     SimpleMessageListenerContainer containerNuclear(ConnectionFactory connectionFactory,
-                                                  @Qualifier("listenerAdapterNuclear") MessageListenerAdapter listenerAdapterNuclear) {
+                                                    @Qualifier("listenerAdapterNuclear") MessageListenerAdapter listenerAdapterNuclear) {
         var container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueNameNuclear);
+        container.setQueueNames(QUEUE_NAME_NUCLEAR);
         container.setMessageListener(listenerAdapterNuclear);
         return container;
     }

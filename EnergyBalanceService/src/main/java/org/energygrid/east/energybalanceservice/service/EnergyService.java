@@ -28,7 +28,7 @@ public class EnergyService implements IEnergyService {
 
     @Override
     public EnergyBalance getLatestBalance() {
-        logger.log(Level.INFO, "latest balance called");
+        logger.log(Level.INFO, () -> "latest balance called");
 
         return energyBalanceRepo.findFirstByOrderByTimeDesc();
 
@@ -36,7 +36,7 @@ public class EnergyService implements IEnergyService {
 
     @Scheduled(fixedDelay = 60000, initialDelay = 20000)
     public void updateNewestBalance() {
-        logger.log(Level.INFO, "update NewestBalance called");
+        logger.log(Level.INFO, () -> "update NewestBalance called");
         long usagePerMinute = 190000;
         long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
         long latestNuclear = 6300;
