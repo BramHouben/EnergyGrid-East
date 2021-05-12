@@ -1,4 +1,4 @@
-package org.energygrid.east.userservice.model.enums;
+package org.energygrid.east.authenticationservice.model.enums;
 
 public enum AccountRole {
     CUSTOMER,

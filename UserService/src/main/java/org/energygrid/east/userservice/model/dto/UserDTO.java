@@ -1,28 +1,26 @@
 package org.energygrid.east.userservice.model.dto;
 
-import org.energygrid.east.userservice.model.enums.AccountRole;
-import org.hibernate.annotations.GenericGenerator;
-
+import org.hibernate.annotations.Type;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.UUID;
 
 @Entity
+@Table(name = "user")
 public class UserDTO {
     @Id
-    @GeneratedValue(generator = "system-uuid")
-    @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    private String uuid;
+    @Type(type="uuid-char")
+    private UUID uuid;
     private String username;
     private String email;
-    private AccountRole accountRole;
     private String language;
 
-    public String getUuid() {
+    public UUID getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 
@@ -32,14 +30,6 @@ public class UserDTO {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public AccountRole getAccountRole() {
-        return accountRole;
-    }
-
-    public void setAccountRole(AccountRole accountRole) {
-        this.accountRole = accountRole;
     }
 
     public String getLanguage() {
