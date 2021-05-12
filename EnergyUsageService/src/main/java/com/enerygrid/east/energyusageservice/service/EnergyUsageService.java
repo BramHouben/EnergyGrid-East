@@ -23,7 +23,7 @@ public class EnergyUsageService implements IEnergyUsageService {
 
         List<EnergyUsage> dailyUsage = energyUsageRepository.findUsageByUserIdAndDay(userId, date);
 
-        if (dailyUsage.size() == 0) dailyUsage = generateHourlyUsage(userId, date);
+        if (dailyUsage.isEmpty()) dailyUsage = generateHourlyUsage(userId, date);
 
         return dailyUsage;
     }
@@ -31,19 +31,19 @@ public class EnergyUsageService implements IEnergyUsageService {
     public List<EnergyUsage> generateHourlyUsage(String userId, String date){
         List<EnergyUsage> dailyUsage = new ArrayList<>();
 
-        for (int i = 0; i <= 23; i++){
+        for (var i = 0; i <= 23; i++){
 
             int kwh = getRandomKwh(i);
             double price = getKwhPrice(kwh);
-            double kwhDouble = (double) kwh / 100;
-            EnergyUsage usage = new EnergyUsage(UUID.randomUUID().toString(), userId, date, kwhDouble , price , i);
+            var kwhDouble = (double) kwh / 100;
+            var usage = new EnergyUsage(UUID.randomUUID().toString(), userId, date, kwhDouble , price , i);
 
             energyUsageRepository.insert(usage);
             dailyUsage.add(usage);
         }
 
-        double totalPrice = 0.0;
-        double totalKwh = 0.0;
+        var totalPrice = 0.0;
+        var totalKwh = 0.0;
 
         for (EnergyUsage usage : dailyUsage) {
             totalPrice = totalPrice + usage.getPrice();
@@ -54,7 +54,7 @@ public class EnergyUsageService implements IEnergyUsageService {
     }
 
     private int getRandomKwh(int hour) {
-        SecureRandom random = new SecureRandom();
+        var random = new SecureRandom();
 
         switch (hour) {
             case 1: case 2: case 3: case 4: case 5: case 6:
@@ -79,7 +79,7 @@ public class EnergyUsageService implements IEnergyUsageService {
     }
 
     private double round(double value) {
-        BigDecimal bd = BigDecimal.valueOf(value);
+        var bd = BigDecimal.valueOf(value);
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
