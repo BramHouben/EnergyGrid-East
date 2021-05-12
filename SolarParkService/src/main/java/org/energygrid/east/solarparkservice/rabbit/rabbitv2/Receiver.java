@@ -11,7 +11,7 @@ public class Receiver {
 
 
     public Object receiveMessageParks(String message) {
-        logger.log(Level.INFO, "receiveMessageParks" + message);
+        logger.log(Level.INFO, () -> "receiveMessageParks" + message);
         return "test";
     }
 

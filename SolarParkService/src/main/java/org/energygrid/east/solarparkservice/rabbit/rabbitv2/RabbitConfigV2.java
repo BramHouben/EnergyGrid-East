@@ -1,28 +1,30 @@
 package org.energygrid.east.solarparkservice.rabbit.rabbitv2;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 
 @Component
-public class RabbitConfigv2 {
+public class RabbitConfigV2 {
 
-    static final String directExchangeName = "SolarPanels";
-    static final String queueNameSolarPanels = "solar-panels-get";
+    static final String DIRECT_EXCHANGE_NAME = "SolarPanels";
+    static final String QUEUE_NAME_SOLAR_PANELS = "solar-panels-get";
 
     @Bean
     Queue queueSolarPanels() {
-        return new Queue(queueNameSolarPanels, false);
+        return new Queue(QUEUE_NAME_SOLAR_PANELS, false);
     }
 
     @Bean
     DirectExchange exchange() {
-        return new DirectExchange(directExchangeName);
+        return new DirectExchange(DIRECT_EXCHANGE_NAME);
     }
 
     @Bean
@@ -35,7 +37,7 @@ public class RabbitConfigv2 {
                                              MessageListenerAdapter listenerAdapter) {
         var container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(queueNameSolarPanels);
+        container.setQueueNames(QUEUE_NAME_SOLAR_PANELS);
         container.setMessageListener(listenerAdapter);
         return container;
     }
