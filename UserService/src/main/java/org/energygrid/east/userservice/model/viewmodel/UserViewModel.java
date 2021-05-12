@@ -1,12 +1,9 @@
 package org.energygrid.east.userservice.model.viewmodel;
 
-import org.energygrid.east.userservice.model.enums.AccountRole;
-
 public class UserViewModel {
     private String uuid;
     private String username;
     private String email;
-    private AccountRole accountRole;
     private String language;
 
     public String getUuid() {
@@ -31,14 +28,6 @@ public class UserViewModel {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public AccountRole getAccountRole() {
-        return accountRole;
-    }
-
-    public void setAccountRole(AccountRole accountRole) {
-        this.accountRole = accountRole;
     }
 
     public String getLanguage() {

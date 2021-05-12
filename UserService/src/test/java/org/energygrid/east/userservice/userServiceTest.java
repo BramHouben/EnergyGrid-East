@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.UUID;
+
 @ActiveProfiles("test")
 @SpringBootTest
 public class userServiceTest {
@@ -22,20 +24,20 @@ public class userServiceTest {
 
     @Test
     public void GetUserByUuidOrUsernameOrEmailNullPointerExceptionTest() {
-        Assert.assertThrows(NullPointerException.class, () -> userService.getUserByUuidOrUsernameOrEmail("Test", null, null));
+        Assert.assertThrows(NullPointerException.class, () -> userService.getUserByUuidOrUsernameOrEmail(UUID.randomUUID(), null, null));
         Assert.assertThrows(NullPointerException.class, () -> userService.getUserByUuidOrUsernameOrEmail(null, "Test", null));
         Assert.assertThrows(NullPointerException.class, () -> userService.getUserByUuidOrUsernameOrEmail(null, null, "Test"));
 
         Assert.assertThrows(NullPointerException.class, () -> userService.getUserByUuidOrUsernameOrEmail(null, "Test", "Test"));
-        Assert.assertThrows(NullPointerException.class, () -> userService.getUserByUuidOrUsernameOrEmail("Test", null, "Test"));
-        Assert.assertThrows(NullPointerException.class, () -> userService.getUserByUuidOrUsernameOrEmail("Test", "Test", null));
+        Assert.assertThrows(NullPointerException.class, () -> userService.getUserByUuidOrUsernameOrEmail(UUID.randomUUID(), null, "Test"));
+        Assert.assertThrows(NullPointerException.class, () -> userService.getUserByUuidOrUsernameOrEmail(UUID.randomUUID(), "Test", null));
 
         Assert.assertThrows(NullPointerException.class, () -> userService.getUserByUuidOrUsernameOrEmail(null, null, null));
     }
 
     @Test
     public void EditUserNullPointerExceptionTest() {
-        Assert.assertThrows(NullPointerException.class, () -> userService.editUser(null));
+        Assert.assertThrows(NullPointerException.class, () -> userService.editUser(null, null));
     }
 
     @Test

@@ -1,11 +1,7 @@
 package org.energygrid.east.authenticationservice.service;
 
+import org.energygrid.east.authenticationservice.model.fromFrontend.User;
+
 public interface IAuthenticationService {
-    /**
-     * @param email from user
-     * @param password from user
-     * @return true if credentials are correct
-     * false if incorrect
-     */
-    boolean login(String email, String password);
+    String login(User user) throws IllegalAccessException;
 }
