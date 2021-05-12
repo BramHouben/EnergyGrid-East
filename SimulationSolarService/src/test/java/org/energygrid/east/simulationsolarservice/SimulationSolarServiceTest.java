@@ -52,19 +52,6 @@ public class SimulationSolarServiceTest {
         Assertions.assertNull(simulationSolarService.getSimulationById("1"));
     }
 
-    @Test
-    void testSimulation() {
-        SimulationSolarService simulationSolarService = new SimulationSolarService(getWeather());
-        
-        List<EnergyRegionSolarParksInput> energyRegionSolarParksInputs = new ArrayList<>();
-        Point point = new Point(23, 34);
-        
-        energyRegionSolarParksInputs.add(new EnergyRegionSolarParksInput("test", 23, point));
-        EnergyRegionSolarParksOutput energyRegionSolarParksOutput = simulationSolarService.simulateEnergyGrid(energyRegionSolarParksInputs);
-
-        Assertions.assertNotEquals(0, energyRegionSolarParksOutput.getKwhList().size());
-    }
-
     private JsonObject getWeather() {
         final String url = "https://api.openweathermap.org/data/2.5/onecall?lat=51.441642&lon=5.4697225&units=metric&exlude=current,minutely,daily,alerts&appid=d43994b92b8caae6ee650e65194f0ad8";
         final RestTemplate restTemplate = new RestTemplate();
