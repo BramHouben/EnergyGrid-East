@@ -97,12 +97,12 @@ public class UserController {
             }
 
             userService.deleteUser(jwt);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.status(HttpStatus.OK().build();
         } catch (IllegalAccessException e) {
-            return ResponseEntity.status(401).body(null);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN().build();
         } catch (Exception e) {
             logger.log(Level.ALL, e.getMessage());
-            return ResponseEntity.status(500).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }
