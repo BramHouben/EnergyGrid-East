@@ -1,4 +1,4 @@
-package org.energygrid.east.authenticationservice.controller;
+package org.energygrid.east.authenticationservice.rabbit;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

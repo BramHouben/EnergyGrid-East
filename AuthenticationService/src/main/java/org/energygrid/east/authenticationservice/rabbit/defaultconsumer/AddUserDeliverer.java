@@ -2,7 +2,7 @@ package org.energygrid.east.authenticationservice.rabbit.defaultconsumer;
 
 import com.google.gson.Gson;
 import com.rabbitmq.client.*;
-import org.energygrid.east.authenticationservice.controller.ApplicationContextUtils;
+import org.energygrid.east.authenticationservice.rabbit.ApplicationContextUtils;
 import org.energygrid.east.authenticationservice.model.rabbitmq.UserRabbitMq;
 import org.energygrid.east.authenticationservice.service.IUserService;
 import org.springframework.context.ApplicationContext;
