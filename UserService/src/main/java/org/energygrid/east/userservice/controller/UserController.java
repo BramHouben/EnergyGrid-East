@@ -1,5 +1,6 @@
 package org.energygrid.east.userservice.controller;
 
+import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.fromFrontend.User;
 import org.energygrid.east.userservice.model.viewmodel.UserViewModel;
@@ -37,6 +38,8 @@ public class UserController {
         try {
             userService.addUser(user);
             return ResponseEntity.status(201).body(null);
+        } catch (DuplicatedNameException e) {
+            return ResponseEntity.status(409).body(null);
         } catch (Exception e) {
             logger.log(Level.ALL, e.getMessage());
             return ResponseEntity.status(500).body(null);
@@ -97,9 +100,9 @@ public class UserController {
             }
 
             userService.deleteUser(jwt);
-            return ResponseEntity.status(HttpStatus.OK().build();
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (IllegalAccessException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN().build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } catch (Exception e) {
             logger.log(Level.ALL, e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

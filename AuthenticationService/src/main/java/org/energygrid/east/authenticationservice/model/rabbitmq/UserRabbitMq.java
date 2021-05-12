@@ -1,12 +1,14 @@
 package org.energygrid.east.authenticationservice.model.rabbitmq;
 
+import org.energygrid.east.authenticationservice.model.enums.AccountRole;
+
 import java.util.UUID;
 
 public class UserRabbitMq {
     private UUID uuid;
     private String email;
     private String password;
-    private org.energygrid.east.authenticationservice.model.enums.accountRole accountRole;
+    private AccountRole accountRole;
     
     public String getEmail() {
         return email;
@@ -31,11 +33,11 @@ public class UserRabbitMq {
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
-    public org.energygrid.east.authenticationservice.model.enums.accountRole getAccountRole() {
+    public AccountRole getAccountRole() {
         return accountRole;
     }
 
-    public void setAccountRole(org.energygrid.east.authenticationservice.model.enums.accountRole accountRole) {
+    public void setAccountRole(AccountRole accountRole) {
         this.accountRole = accountRole;
     }
 }
