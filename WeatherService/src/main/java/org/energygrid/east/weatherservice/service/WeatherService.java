@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.annotation.PostConstruct;
 import java.awt.geom.Point2D;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
