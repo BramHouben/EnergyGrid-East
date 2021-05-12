@@ -41,7 +41,7 @@ public class UserService {
         userRepo.save(userToStore);
         var rabbitMqUser = mapper.map(user, UserRabbitMq.class);
         rabbitMqUser.setUuid(userToStore.getUuid());
-        rabbitMqUser.setAccountRole(AccountRole.largeScaleCustomer);
+        rabbitMqUser.setAccountRole(AccountRole.LARGE_SCALE_CUSTOMER);
         storeUserInAuthenticationService(rabbitMqUser);
     }
 

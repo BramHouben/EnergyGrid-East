@@ -4,7 +4,6 @@ import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.fromFrontend.User;
 import org.energygrid.east.userservice.model.viewmodel.UserViewModel;
-import org.energygrid.east.userservice.rabbit.RabbitProducer;
 import org.energygrid.east.userservice.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class UserController {
 
     @Autowired
     private HttpServletRequest request;
-    private static final Logger logger = Logger.getLogger(RabbitProducer.class.getName());
+    private static final Logger logger = Logger.getLogger(UserController.class.getName());
 
     public UserController() {
         this.modelMapper = new ModelMapper();

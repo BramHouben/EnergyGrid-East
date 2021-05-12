@@ -33,7 +33,7 @@ public class UpdateUserConsumer implements Consumer {
             channel.basicConsume(queueName, true, deliverCallback, s -> {
             });
 
-            Monitor monitor = new Monitor();
+            var monitor = new Monitor();
             monitor.start();
 
         } catch (IOException e) {

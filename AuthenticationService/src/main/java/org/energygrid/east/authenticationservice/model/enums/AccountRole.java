@@ -1,9 +1,9 @@
 package org.energygrid.east.authenticationservice.model.enums;
 
 public enum AccountRole {
-    customer,
-    largeScaleCustomer,
-    utilityCompany,
-    responsibleParty,
-    admin
+    CUSTOMER,
+    LARGE_SCALE_CUSTOMER,
+    UTILITY_COMPANY,
+    RESPONSIBLE_PARTY,
+    ADMIN
 }

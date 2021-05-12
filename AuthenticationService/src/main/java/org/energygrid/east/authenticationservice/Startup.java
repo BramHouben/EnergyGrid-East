@@ -14,10 +14,6 @@ import java.util.concurrent.Executors;
 @Profile("!test")
 @Component
 public class Startup implements ApplicationRunner {
-    public Startup() {
-
-    }
-
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
