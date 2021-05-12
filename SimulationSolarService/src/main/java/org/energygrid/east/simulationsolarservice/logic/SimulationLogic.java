@@ -28,14 +28,14 @@ public class SimulationLogic implements ISimulationLogic {
     }
 
     @Override
-    public ProductionExpectation createSimulationForSolarUnit(JsonElement weather, SolarUnit solarUnit) {
-        double factor = getSolarPanelFactor(weather, solarUnit);
+    public ProductionExpectation createSimulationForSolarUnit(JsonElement weather, SolarUnit solarUnit, int amount) {
+        double factor = getSolarPanelFactor(weather, solarUnit, amount);
         LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(weather.getAsJsonObject().get("dt").getAsInt()), TimeZone.getDefault().toZoneId());
         return new ProductionExpectation(factor, dateTime);
     }
 
     @Override
-    public Double calculateKwProduction(List<SimulationResult> simulationResults, int amount, Boolean isAdded) {
+    public Double calculateKwProduction(List<SimulationResult> simulationResults, Boolean isAdded) {
         var kwTotal = 0.0;
         for (var result : simulationResults) {
             for (var production : result.getProductionExpectations()) {
@@ -47,18 +47,18 @@ public class SimulationLogic implements ISimulationLogic {
             }
         }
 
-        return kwTotal * amount;
+        return kwTotal;
     }
 
-    private double getSolarPanelFactor(JsonElement weather, SolarUnit solarUnit) {
+    private double getSolarPanelFactor(JsonElement weather, SolarUnit solarUnit, int amount) {
         double factor;
 
         switch (solarUnit.getSolarPanelType()) {
             case MONO_CRYSTALLINE:
-                factor = calculateFactor(weather, 0.4, solarUnit);
+                factor = calculateFactor(weather, 0.4, solarUnit, amount);
                 break;
             case POLY_CRYSTALLINE:
-                factor = calculateFactor(weather, 0.5, solarUnit);
+                factor = calculateFactor(weather, 0.5, solarUnit, amount);
                 break;
             default:
                 factor = 0;
@@ -67,7 +67,7 @@ public class SimulationLogic implements ISimulationLogic {
         return factor;
     }
 
-    private double calculateFactor(JsonElement weather, double coefficient, SolarUnit solarUnit) {
+    private double calculateFactor(JsonElement weather, double coefficient, SolarUnit solarUnit, int amount) {
         double result = 0;
         double temperature = weather.getAsJsonObject().get("temp").getAsDouble();
         var uvi = weather.getAsJsonObject().get("uvi").getAsDouble();
@@ -77,10 +77,19 @@ public class SimulationLogic implements ISimulationLogic {
             return result;
         }
 
-        result = solarUnit.getNumberOfPanels() * (0.25 * correction);
+        result = solarUnit.getNumberOfPanels() * amount;
+        result = result * (0.25 * correction);
 
-        if (uvi <= 3.5) {
+        if (uvi <= 4) {
             result = result * (uvi / 10);
+        }
+
+        if (uvi > 4 && uvi < 5.5) {
+            result = result * (uvi / 9.5);
+        }
+
+        if (uvi > 5.5) {
+            result = result * (uvi / 8.5);
         }
 
         var temp = kelvinToCelsius(temperature);

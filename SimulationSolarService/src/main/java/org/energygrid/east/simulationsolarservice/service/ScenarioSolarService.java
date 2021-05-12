@@ -88,12 +88,12 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
                 var data = new FactoryURL().getWeatherData(headers, template, getUrl(coordinates.getX(), coordinates.getY()));
 
                 for (var weather : data) {
-                    simulationResult.addProductionExpectation(simulationLogic.createSimulationForSolarUnit(weather, solarUnit));
+                    simulationResult.addProductionExpectation(simulationLogic.createSimulationForSolarUnit(weather, solarUnit, amount));
                 }
                 results.add(simulationResult);
             }
             simulationExpectationResult.setSimulationResults(results);
-            simulationExpectationResult.setKwTotalResult(simulationLogic.calculateKwProduction(results, amount, isAdded));
+            simulationExpectationResult.setKwTotalResult(simulationLogic.calculateKwProduction(results, isAdded));
         }
         return simulationExpectationResult;
     }
@@ -115,13 +115,13 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
             for (var weather : data) {
                 var dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(weather.getAsJsonObject().get("dt").getAsInt()), TimeZone.getDefault().toZoneId());
 
-                for (var i = 0; i < amount; i++) {
+                for (var i = 0; i < 1; i++) {
                     if (dates.stream().noneMatch(dateTime.toString()::equals)) {
-                        simulationResult.addProductionExpectation(simulationLogic.createSimulationForSolarUnit(weather, solarUnit));
+                        simulationResult.addProductionExpectation(simulationLogic.createSimulationForSolarUnit(weather, solarUnit, amount));
                         simulationResultMissed.addProductionExpectation(new ProductionExpectation(0, dateTime));
                     }
                     else {
-                        simulationResultMissed.addProductionExpectation(simulationLogic.createSimulationForSolarUnit(weather, solarUnit));
+                        simulationResultMissed.addProductionExpectation(simulationLogic.createSimulationForSolarUnit(weather, solarUnit, amount));
                         simulationResult.addProductionExpectation(new ProductionExpectation(0, dateTime));
                     }
                 }
@@ -130,7 +130,7 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
             results.add(simulationResultMissed);
         }
         simulationExpectationResult.setSimulationResults(results);
-        simulationExpectationResult.setKwTotalResult(simulationLogic.calculateKwProduction(results, 1, true));
+        simulationExpectationResult.setKwTotalResult(simulationLogic.calculateKwProduction(results, true));
 
         return simulationExpectationResult;
     }

@@ -32,7 +32,7 @@ public interface ISimulationLogic {
      * @param weather
      * @return an expectation of solar panel energy output
      */
-    ProductionExpectation createSimulationForSolarUnit(JsonElement weather, SolarUnit solarUnit);
+    ProductionExpectation createSimulationForSolarUnit(JsonElement weather, SolarUnit solarUnit, int amount);
 
     /**
      * @param simulationResults result of simulations
@@ -40,5 +40,5 @@ public interface ISimulationLogic {
      * @param isAdded is the simulation added
      * @return the total kw production
      */
-    Double calculateKwProduction(List<SimulationResult> simulationResults, int amount, Boolean isAdded);
+    Double calculateKwProduction(List<SimulationResult> simulationResults, Boolean isAdded);
 }
