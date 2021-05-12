@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("simulation/wind")
+@RequestMapping("simulationwind")
 public class SimulationWindController {
 
     @Autowired
