@@ -1,8 +1,8 @@
 # voer de onderstaande commando's uit om docker compose te runnen
 # 1. mvn clean package -Dmaven.test.skip=true
-# 2. docker-compose build
-# 3. docker-compose up
-
+# 2. docker compose build
+# 3. docker compose up
+# 4. docker compose down --rmi all -v
 version: '3'
 services:
 
