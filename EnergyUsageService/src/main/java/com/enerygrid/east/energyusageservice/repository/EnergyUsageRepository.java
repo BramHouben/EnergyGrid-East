@@ -8,5 +8,5 @@ import java.util.List;
 
 @Component
 public interface EnergyUsageRepository extends MongoRepository<EnergyUsage, String> {
-    List<EnergyUsage> findUsageByUserId(String userId, String day);
+    List<EnergyUsage> findUsageByUserIdAndDay(String userId, String day);
 }

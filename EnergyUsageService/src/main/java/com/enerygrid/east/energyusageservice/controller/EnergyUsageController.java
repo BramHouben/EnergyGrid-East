@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("usage")
 public class EnergyUsageController {
@@ -17,9 +18,9 @@ public class EnergyUsageController {
     private IEnergyUsageService energyUsageService;
 
     @GetMapping("/day")
-    public ResponseEntity<List<EnergyUsage>> getLatestScenarios(@NotNull @RequestParam(name = "day") String day) {
+    public ResponseEntity<List<EnergyUsage>> getLatestScenarios(@NotNull @RequestParam(name = "date") String date) {
         //Get id with JWT claims when JWT implementation is fully working.
-        var result = energyUsageService.getEnergyUsageOfUser("1", day);
+        var result = energyUsageService.getEnergyUsageOfUser("1", date);
 
         if (result.size() != 24) return ResponseEntity.badRequest().build();
 

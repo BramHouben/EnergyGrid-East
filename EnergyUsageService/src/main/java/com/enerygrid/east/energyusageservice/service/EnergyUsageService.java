@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,24 +19,24 @@ public class EnergyUsageService implements IEnergyUsageService {
     private EnergyUsageRepository energyUsageRepository;
 
     @Override
-    public List<EnergyUsage> getEnergyUsageOfUser(String userId, String day) {
+    public List<EnergyUsage> getEnergyUsageOfUser(String userId, String date) {
 
-        List<EnergyUsage> dailyUsage = energyUsageRepository.findUsageByUserId(userId, "1");
+        List<EnergyUsage> dailyUsage = energyUsageRepository.findUsageByUserIdAndDay(userId, date);
 
-        if (dailyUsage.size() == 0) dailyUsage = generateHourlyUsage(userId, day);
+        if (dailyUsage.size() == 0) dailyUsage = generateHourlyUsage(userId, date);
 
         return dailyUsage;
     }
 
-    public List<EnergyUsage> generateHourlyUsage(String userId, String day){
+    public List<EnergyUsage> generateHourlyUsage(String userId, String date){
         List<EnergyUsage> dailyUsage = new ArrayList<>();
 
-        for (int i = 1; i <= 24; i++){
+        for (int i = 0; i <= 23; i++){
 
             int kwh = getRandomKwh(i);
             double price = getKwhPrice(kwh);
             double kwhDouble = (double) kwh / 100;
-            EnergyUsage usage = new EnergyUsage(UUID.randomUUID().toString(), userId, day, kwhDouble , price , i);
+            EnergyUsage usage = new EnergyUsage(UUID.randomUUID().toString(), userId, date, kwhDouble , price , i);
 
             energyUsageRepository.insert(usage);
             dailyUsage.add(usage);
@@ -60,7 +59,7 @@ public class EnergyUsageService implements IEnergyUsageService {
         switch (hour) {
             case 1: case 2: case 3: case 4: case 5: case 6:
                 return random.nextInt((29 - 25) + 1) + 25;
-            case 24: case 7: case 8: case 9: case 10: case 21: case 22: case 23:
+            case 0: case 7: case 8: case 9: case 10: case 21: case 22: case 23:
                 return random.nextInt((34 - 30) + 1) + 30;
             case 11: case 13: case 14: case 15: case 16:
                 return random.nextInt((39 - 35) + 1) + 35;
