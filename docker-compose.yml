@@ -159,7 +159,26 @@ services:
     volumes:
       - ./database:/mongosimulationwindservice
     ports:
-      - 27020:27020
+      - 27019:27019
+
+  energyusageservice:
+    build: EnergyUsageService
+    hostname: energyusageservice
+    container_name: energyusageservice
+    restart: always
+    ports:
+      - 8170:8170
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongoenergyusageservice:27020/energyusage
+
+  mongoenergyusageservice:
+    hostname: mongoenergyusageservice
+    container_name: mongoenergyusageservice
+    image: mongo
+    volumes:
+      - ./database:/mongoenergyusageservice
+    ports:
+      - 27020:27017
 
   energybalanceservice:
     build: EnergyBalanceService
