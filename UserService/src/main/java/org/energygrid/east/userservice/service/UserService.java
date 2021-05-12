@@ -1,15 +1,22 @@
 package org.energygrid.east.userservice.service;
 
+import io.jsonwebtoken.Claims;
+import javassist.NotFoundException;
 import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.enums.AccountRole;
 import org.energygrid.east.userservice.model.fromFrontend.User;
+import javax.validation.constraints.NotNull;
+import org.energygrid.east.userservice.model.rabbitMq.UserRabbitMq;
+import org.energygrid.east.userservice.rabbit.Producer.AddUserProducer;
+import org.energygrid.east.userservice.rabbit.Producer.DeleteUserProducer;
+import org.energygrid.east.userservice.rabbit.Producer.UpdateUserProducer;
+import org.energygrid.east.userservice.rabbit.RabbitProducer;
 import org.energygrid.east.userservice.repo.IUserRepo;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Service
@@ -17,56 +24,96 @@ public class UserService {
     @Autowired
     private IUserRepo userRepo;
 
+    @Autowired
+    private IJwtService jwtService;
+
+    private final ModelMapper mapper = new ModelMapper();
+
     public void addUser(@NotNull User user) {
         UserDTO dbUser = userRepo.getUserByUuidOrUsernameOrEmail(null, user.getUsername(), user.getEmail());
         if (dbUser != null) {
             throw new DuplicatedNameException("Username or email already in use");
-            // TODO check if email is in use by rabbitmq message to auth service
         }
 
-        UserDTO userToStore = new UserDTO();
-        userToStore.setUuid(UUID.randomUUID().toString());
-        userToStore.setUsername(user.getUsername());
-        userToStore.setAccountRole(AccountRole.LargeScaleCustomer);
-        userToStore.setLanguage(user.getLanguage());
+        UserDTO userToStore = mapper.map(user, UserDTO.class);
+        userToStore.setUuid(UUID.randomUUID());
 
         userRepo.save(userToStore);
+        var rabbitMqUser = mapper.map(user, UserRabbitMq.class);
+        rabbitMqUser.setUuid(userToStore.getUuid());
+        rabbitMqUser.setAccountRole(AccountRole.LARGE_SCALE_CUSTOMER);
+        storeUserInAuthenticationService(rabbitMqUser);
     }
 
-    public UserDTO getUserByUuidOrUsernameOrEmail(String uuid, String username, String email) {
+    private void storeUserInAuthenticationService(UserRabbitMq user) {
+        var rabbitProducer = new RabbitProducer();
+        var userProducer = new AddUserProducer(user);
+        rabbitProducer.produce(userProducer);
+    }
+
+    public UserDTO getUserByUuidOrUsernameOrEmail(UUID uuid, String username, String email) {
         if (StringUtils.isEmpty(uuid) && StringUtils.isEmpty(username) && StringUtils.isEmpty(email)) {
             throw new NullPointerException("uuid, username and or email was empty");
         }
-        // TODO add rabbitmq message to request data from the auth service
+
         return userRepo.getUserByUuidOrUsernameOrEmail(uuid, username, email);
     }
 
-    public void editUser(@NotNull User user) {
-        var dbUser = userRepo.getUserByUuid(user.getUuid());
-        if (dbUser == null) {
+    public void editUser(@NotNull User user, @NotNull String jwt) throws IllegalAccessException {
+        Claims jwtClaims = jwtService.getClaims(jwt);
+        var userUuid = UUID.fromString(jwtClaims.get("uuid").toString());
+        var dbUser = userRepo.getUserByUuidOrUsernameOrEmail(userUuid, null, null);
+
+        if (!userUuid.equals(dbUser.getUuid())) {
+            throw new IllegalAccessException();
+        }
+
+        if (jwt.isEmpty()) {
             throw new NullPointerException();
         }
 
-        var userToStore = new UserDTO();
-        if (!user.getNewPassword().isEmpty()) {
-            // TODO add rabbitmq message to update password on auth service
+        if (user.getNewPassword() != null && !user.getNewPassword().isEmpty()) {
+            var userRabbitMq = mapper.map(dbUser, UserRabbitMq.class);
+            userRabbitMq.setPassword(user.getNewPassword());
+            updateUserInAuthenticationService(userRabbitMq);
         }
 
         if (!user.getEmail().equals(dbUser.getEmail())) {
-            // TODO add rabbitmq message to update email on auth service
+            dbUser.setEmail(user.getEmail());
+            updateUserInAuthenticationService(mapper.map(dbUser, UserRabbitMq.class));
         }
 
-        userToStore.setUuid(user.getUuid());
-        userToStore.setUsername(user.getUsername());
-        userToStore.setAccountRole(user.getAccountRole());
-        userToStore.setLanguage(user.getLanguage());
+        dbUser.setUsername(user.getUsername());
+        dbUser.setLanguage(user.getLanguage());
 
-        userRepo.save(userToStore);
+        userRepo.save(dbUser);
     }
 
-    public void deleteUser(@NotNull String uuid) {
-        UserDTO userToDelete = userRepo.getUserByUuid(uuid);
-        // TODO add rabbitmq message to delete the user data on auth service
+    private void updateUserInAuthenticationService(UserRabbitMq user) {
+        var rabbitProducer = new RabbitProducer();
+        var userProducer = new UpdateUserProducer(user);
+        rabbitProducer.produce(userProducer);
+    }
+
+    public void deleteUser(@NotNull String jwt) throws NotFoundException, IllegalAccessException {
+        Claims claims = jwtService.getClaims(jwt);
+        var uuid = UUID.fromString(claims.get("uuid").toString());
+        UserDTO userToDelete = userRepo.getByUuid(uuid);
+        if (userToDelete == null) {
+            throw new NotFoundException("Not found");
+        }
+
+        if (!uuid.equals(userToDelete.getUuid())) {
+            throw new IllegalAccessException();
+        }
+
+        deleteUserInAuthenticationService(mapper.map(userToDelete, UserRabbitMq.class));
         userRepo.delete(userToDelete);
+    }
+
+    private void deleteUserInAuthenticationService(UserRabbitMq user) {
+        var rabbitProducer = new RabbitProducer();
+        var userProducer = new DeleteUserProducer(user);
+        rabbitProducer.produce(userProducer);
     }
 }

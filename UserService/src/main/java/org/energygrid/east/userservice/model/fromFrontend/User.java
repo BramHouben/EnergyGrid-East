@@ -1,24 +1,23 @@
 package org.energygrid.east.userservice.model.fromFrontend;
 
-import org.energygrid.east.userservice.model.enums.AccountRole;
+import java.util.UUID;
 
 public class User {
-    private String uuid;
+    private UUID uuid;
     private String username;
     private String email;
     private String password;
     private String newPassword;
-    private AccountRole accountRole;
     private String language;
 
     public User() {
     }
 
-    public String getUuid() {
+    public UUID getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
 
@@ -44,14 +43,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public AccountRole getAccountRole() {
-        return accountRole;
-    }
-
-    public void setAccountRole(AccountRole accountRole) {
-        this.accountRole = accountRole;
     }
 
     public String getLanguage() {
