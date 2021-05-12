@@ -1,6 +1,7 @@
 # mvn clean package -Dmaven.test.skip=true
-# Eerst docker-compose build
-# daarna docker-compose up
+# First docker-compose build
+# Then docker-compose up
+# At the end docker compose down --rmi all -v
 
 version: '3'
 services:
@@ -14,10 +15,10 @@ services:
       - 15672:15672
     restart: always
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://rabbitmq:15672" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+      test: [ "CMD", "curl", "-f", "http://rabbitmq:5672" ]
+      interval: 5s
+      timeout: 15s
+      retries: 1
 
   solarparkservice:
     build: SolarParkService
@@ -27,12 +28,13 @@ services:
     ports:
       - 8090:8090
     environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATA_MONGODB_URI: mongodb://mongosolarpark:27017/solarpark
 
   mongosolarpark:
     hostname: mongosolarpark
     container_name: mongosolarpark
-    image: mongo
+    image: mongo:latest
     volumes:
       - ./database:/datasolarpark
     ports:
@@ -130,13 +132,50 @@ services:
     ports:
       - 8140:8140
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongosimulationwindservice:27019/simulation_wind
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_DATA_MONGODB_URI: mongodb://mongosimulationwindservice:27020/simulation_wind
 
   mongosimulationwindservice:
     hostname: mongosimulationwindservice
     container_name: mongosimulationwindservice
-    image: mongo
+    image: mongo:latest
+    command: mongod --port 27020
     volumes:
       - ./database:/mongosimulationwindservice
     ports:
-      - 27019:27019
+      - 27020:27020
+
+  energybalanceservice:
+    build: EnergyBalanceService
+    hostname: energybalanceservice
+    container_name: energybalanceservice
+    depends_on:
+      - rabbitmq
+    restart: always
+    ports:
+    - 8160:8160
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_DATA_MONGODB_URI: mongodb://mongoenergybalanceservice:27030/energybalance
+
+  mongoenergybalanceservice:
+    hostname: mongoenergybalanceservice
+    container_name: mongoenergybalanceservice
+    command: mongod --port 27030
+    image: mongo:latest
+    volumes:
+      - ./database:/mongoenergybalanceservice
+    ports:
+      - 27030:27030
+
+  simulationsolarservice:
+    build: SimulationSolarService
+    hostname: simulationsolarservice
+    container_name: simulationsolarservice
+    depends_on:
+      - rabbitmq
+    restart: always
+    ports:
+      - 8120:8120
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
