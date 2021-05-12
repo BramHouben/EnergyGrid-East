@@ -39,12 +39,12 @@ public class JwtService implements IJwtService {
     }
 
     private Date getIssuedAt() {
-        Calendar now = Calendar.getInstance();
+        var now = Calendar.getInstance();
         return now.getTime();
     }
 
     private Date getExpiration() {
-        Calendar now = Calendar.getInstance();
+        var now = Calendar.getInstance();
         now.add(Calendar.MINUTE, 60);
         return now.getTime();
     }

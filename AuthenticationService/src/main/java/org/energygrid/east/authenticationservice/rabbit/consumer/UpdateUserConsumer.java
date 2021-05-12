@@ -4,8 +4,6 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.DeliverCallback;
 import org.energygrid.east.authenticationservice.rabbit.Consumer;
 import org.energygrid.east.authenticationservice.rabbit.Monitor;
-import org.energygrid.east.authenticationservice.rabbit.defaultconsumer.AddUserDeliverer;
-import org.energygrid.east.authenticationservice.rabbit.defaultconsumer.DeleteUserDeliverer;
 import org.energygrid.east.authenticationservice.rabbit.defaultconsumer.UpdateUserDeliverer;
 
 import java.io.IOException;
@@ -16,23 +14,24 @@ public class UpdateUserConsumer implements Consumer {
 
     private static final Logger logger = Logger.getLogger(UpdateUserConsumer.class.getName());
 
-    private final String queue_name;
-    private final String exchange_name;
+    private final String queueName;
+    private final String exchangeName;
 
     public UpdateUserConsumer() {
-        queue_name = "update_user_queue";
-        exchange_name = "update_user_exchange";
+        queueName = "update_user_queue";
+        exchangeName = "update_user_exchange";
     }
 
     @Override
     public Object consume(Channel channel) {
         try {
-            channel.queueDeclare(queue_name, false, false, false, null);
-            channel.exchangeDeclare(exchange_name, "direct", true);
-            channel.queueBind(queue_name, exchange_name, "");
+            channel.queueDeclare(queueName, false, false, false, null);
+            channel.exchangeDeclare(exchangeName, "direct", true);
+            channel.queueBind(queueName, exchangeName, "");
 
             DeliverCallback deliverCallback = new UpdateUserDeliverer();
-            channel.basicConsume(queue_name, true, deliverCallback, s -> {});
+            channel.basicConsume(queueName, true, deliverCallback, s -> {
+            });
 
             Monitor monitor = new Monitor();
             monitor.start();

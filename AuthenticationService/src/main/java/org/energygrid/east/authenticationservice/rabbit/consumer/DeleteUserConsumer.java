@@ -14,25 +14,25 @@ public class DeleteUserConsumer implements Consumer {
 
     private static final Logger logger = Logger.getLogger(DeleteUserConsumer.class.getName());
 
-    private final String queue_name;
-    private final String exchange_name;
+    private final String queueName;
+    private final String exchangeName;
 
     public DeleteUserConsumer() {
-        queue_name = "delete_user_queue";
-        exchange_name = "delete_user_exchange";
+        queueName = "delete_user_queue";
+        exchangeName = "delete_user_exchange";
     }
 
     @Override
     public Object consume(Channel channel) {
         try {
-            channel.queueDeclare(queue_name, false, false, false, null);
-            channel.exchangeDeclare(exchange_name, "direct", true);
-            channel.queueBind(queue_name, exchange_name, "");
+            channel.queueDeclare(queueName, false, false, false, null);
+            channel.exchangeDeclare(exchangeName, "direct", true);
+            channel.queueBind(queueName, exchangeName, "");
 
             DeliverCallback deliverCallback = new DeleteUserDeliverer();
-            channel.basicConsume(queue_name, true, deliverCallback, s -> {});
+            channel.basicConsume(queueName, true, deliverCallback, s -> {});
 
-            Monitor monitor = new Monitor();
+            var monitor = new Monitor();
             monitor.start();
 
         } catch (IOException e) {

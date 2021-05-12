@@ -29,7 +29,7 @@ public class UpdateUserDeliverer implements DeliverCallback {
     @Override
     public void handle(String s, Delivery delivery) {
         try {
-            String json = new String(delivery.getBody(), StandardCharsets.UTF_8);
+            var json = new String(delivery.getBody(), StandardCharsets.UTF_8);
             var user = gson.fromJson(json, UserRabbitMq.class);
             userService.updateUser(user);
         } catch (Exception e) {

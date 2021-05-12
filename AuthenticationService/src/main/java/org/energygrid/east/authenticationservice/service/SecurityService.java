@@ -1,10 +1,10 @@
 package org.energygrid.east.authenticationservice.service;
 
-import com.sun.istack.NotNull;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.nio.charset.StandardCharsets;
 
 @Service

@@ -1,6 +1,6 @@
 package org.energygrid.east.authenticationservice.service;
 
-import com.sun.istack.NotNull;
+import javax.validation.constraints.NotNull;
 
 public interface ISecurityService {
     String hashPassword(@NotNull String password);

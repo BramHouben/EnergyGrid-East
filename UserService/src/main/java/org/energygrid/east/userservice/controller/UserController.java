@@ -33,7 +33,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity AddUser(@RequestBody User user) {
+    public ResponseEntity addUser(@NotNull @RequestBody User user) {
         try {
             userService.addUser(user);
             return ResponseEntity.status(201).body(null);
@@ -44,7 +44,7 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<UserViewModel> GetUserByUuidOrUsernameOrEmail(@RequestParam(required = false) UUID uuid, @RequestParam(required = false) String username, @RequestParam(required = false) String email) {
+    public ResponseEntity<UserViewModel> getUserByUuidOrUsernameOrEmail(@RequestParam(required = false) UUID uuid, @RequestParam(required = false) String username, @RequestParam(required = false) String email) {
         try {
             String jwt = request.getHeader("jwt");
             if(jwt == null || jwt.isEmpty()) {
@@ -69,7 +69,7 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity EditUser(@RequestBody User user) {
+    public ResponseEntity editUser(@NotNull @RequestBody User user) {
         try {
             String jwt = request.getHeader("jwt");
             if(jwt == null || jwt.isEmpty()) {
@@ -89,7 +89,7 @@ public class UserController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<?> deleteUser() {
+    public ResponseEntity deleteUser() {
         try {
             String jwt = request.getHeader("jwt");
             if(jwt == null || jwt.isEmpty()) {

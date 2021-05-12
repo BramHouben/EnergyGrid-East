@@ -1,8 +1,5 @@
-package org.energygrid.east.authenticationservice.controller;
+package org.energygrid.east.authenticationservice;
 
-import org.energygrid.east.authenticationservice.rabbit.RabbitConsumer;
-import org.energygrid.east.authenticationservice.rabbit.consumer.AddUserConsumer;
-import org.energygrid.east.authenticationservice.rabbit.consumer.UpdateUserConsumer;
 import org.energygrid.east.authenticationservice.threads.RabbitMqAddUserThread;
 import org.energygrid.east.authenticationservice.threads.RabbitMqDeleteUserThread;
 import org.energygrid.east.authenticationservice.threads.RabbitMqUpdateUserThread;

@@ -1,6 +1,5 @@
 package org.energygrid.east.authenticationservice.service;
 
-import io.jsonwebtoken.Claims;
 import org.energygrid.east.authenticationservice.model.dto.UserDto;
 import org.energygrid.east.authenticationservice.model.rabbitmq.UserRabbitMq;
 import org.energygrid.east.authenticationservice.repository.AuthenticationRepository;

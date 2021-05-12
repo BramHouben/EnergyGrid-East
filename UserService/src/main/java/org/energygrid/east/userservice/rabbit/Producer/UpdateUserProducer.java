@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 
 public class UpdateUserProducer implements Producer {
     private UserRabbitMq user;
-    private final String exchangeName = "update_user_exchange";
-    private static final Logger logger = Logger.getLogger(RabbitProducer.class.getName());
+    private static final String exchangeName = "update_user_exchange";
+    private static final Logger logger = Logger.getLogger(UpdateUserProducer.class.getName());
 
     public UpdateUserProducer(UserRabbitMq user) {
         this.user = user;

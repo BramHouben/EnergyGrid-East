@@ -61,26 +61,26 @@ public class UserService {
 
     public void editUser(@NotNull User user, @NotNull String jwt) throws IllegalAccessException {
         Claims jwtClaims = jwtService.getClaims(jwt);
-        UUID userUuid = UUID.fromString(jwtClaims.get("uuid").toString());
+        var userUuid = UUID.fromString(jwtClaims.get("uuid").toString());
         var dbUser = userRepo.getUserByUuidOrUsernameOrEmail(userUuid, null, null);
 
         if (!userUuid.equals(dbUser.getUuid())) {
             throw new IllegalAccessException();
         }
 
-        if (dbUser == null || jwt.isEmpty()) {
+        if (jwt.isEmpty()) {
             throw new NullPointerException();
         }
 
         if (user.getNewPassword() != null && !user.getNewPassword().isEmpty()) {
             var userRabbitMq = mapper.map(dbUser, UserRabbitMq.class);
             userRabbitMq.setPassword(user.getNewPassword());
-            UpdateUserInAuthenticationService(userRabbitMq);
+            updateUserInAuthenticationService(userRabbitMq);
         }
 
         if (!user.getEmail().equals(dbUser.getEmail())) {
             dbUser.setEmail(user.getEmail());
-            UpdateUserInAuthenticationService(mapper.map(dbUser, UserRabbitMq.class));
+            updateUserInAuthenticationService(mapper.map(dbUser, UserRabbitMq.class));
         }
 
         dbUser.setUsername(user.getUsername());
@@ -89,7 +89,7 @@ public class UserService {
         userRepo.save(dbUser);
     }
 
-    private void UpdateUserInAuthenticationService(UserRabbitMq user) {
+    private void updateUserInAuthenticationService(UserRabbitMq user) {
         var rabbitProducer = new RabbitProducer();
         var userProducer = new UpdateUserProducer(user);
         rabbitProducer.produce(userProducer);
@@ -97,7 +97,7 @@ public class UserService {
 
     public void deleteUser(@NotNull String jwt) throws NotFoundException, IllegalAccessException {
         Claims claims = jwtService.getClaims(jwt);
-        UUID uuid = UUID.fromString(claims.get("uuid").toString());
+        var uuid = UUID.fromString(claims.get("uuid").toString());
         UserDTO userToDelete = userRepo.getByUuid(uuid);
         if (userToDelete == null) {
             throw new NotFoundException("Not found");
@@ -107,11 +107,11 @@ public class UserService {
             throw new IllegalAccessException();
         }
 
-        DeleteUserInAuthenticationService(mapper.map(userToDelete, UserRabbitMq.class));
+        deleteUserInAuthenticationService(mapper.map(userToDelete, UserRabbitMq.class));
         userRepo.delete(userToDelete);
     }
 
-    private void DeleteUserInAuthenticationService(UserRabbitMq user) {
+    private void deleteUserInAuthenticationService(UserRabbitMq user) {
         var rabbitProducer = new RabbitProducer();
         var userProducer = new DeleteUserProducer(user);
         rabbitProducer.produce(userProducer);

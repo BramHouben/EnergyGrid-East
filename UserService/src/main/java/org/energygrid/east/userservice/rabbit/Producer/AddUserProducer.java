@@ -2,7 +2,6 @@ package org.energygrid.east.userservice.rabbit.Producer;
 
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
-import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.rabbitMq.UserRabbitMq;
 import org.energygrid.east.userservice.rabbit.RabbitProducer;
 
@@ -13,8 +12,8 @@ import java.util.logging.Logger;
 public class AddUserProducer implements Producer {
 
     private UserRabbitMq user;
-    private final String exchangeName = "add_user_exchange";
-    private static final Logger logger = Logger.getLogger(RabbitProducer.class.getName());
+    private static final String exchangeName = "add_user_exchange";
+    private static final Logger logger = Logger.getLogger(AddUserProducer.class.getName());
 
     public AddUserProducer(UserRabbitMq user) {
         this.user = user;

@@ -4,8 +4,6 @@ import org.energygrid.east.userservice.rabbit.Producer.Producer;
 import java.util.logging.Logger;
 
 public class RabbitProducer extends ChannelHelper {
-    private static final Logger logger = Logger.getLogger(RabbitProducer.class.getName());
-
     public RabbitProducer() {
         super();
     }

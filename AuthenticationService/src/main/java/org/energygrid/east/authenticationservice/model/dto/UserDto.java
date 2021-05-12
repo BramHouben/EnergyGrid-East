@@ -1,11 +1,7 @@
 package org.energygrid.east.authenticationservice.model.dto;
 
-import org.energygrid.east.authenticationservice.model.enums.AccountRole;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
-
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.UUID;
@@ -18,9 +14,7 @@ public class UserDto {
     private UUID uuid;
     private String email;
     private String password;
-    private AccountRole accountRole;
-
-    public UserDto() {}
+    private org.energygrid.east.authenticationservice.model.enums.accountRole accountRole;
 
     public String getEmail() {
         return email;
@@ -45,11 +39,11 @@ public class UserDto {
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
-    public AccountRole getAccountRole() {
+    public org.energygrid.east.authenticationservice.model.enums.accountRole getAccountRole() {
         return accountRole;
     }
 
-    public void setAccountRole(AccountRole accountRole) {
+    public void setAccountRole(org.energygrid.east.authenticationservice.model.enums.accountRole accountRole) {
         this.accountRole = accountRole;
     }
 }

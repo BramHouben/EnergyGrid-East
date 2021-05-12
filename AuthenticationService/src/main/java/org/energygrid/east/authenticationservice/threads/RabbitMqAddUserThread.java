@@ -4,8 +4,8 @@ import org.energygrid.east.authenticationservice.rabbit.RabbitConsumer;
 import org.energygrid.east.authenticationservice.rabbit.consumer.AddUserConsumer;
 
 public class RabbitMqAddUserThread implements Runnable {
-    private RabbitConsumer rabbitConsumer;
-    private AddUserConsumer addUserConsumer;
+    private final RabbitConsumer rabbitConsumer;
+    private final AddUserConsumer addUserConsumer;
 
     public RabbitMqAddUserThread() {
         rabbitConsumer = new RabbitConsumer();

@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 
 public class DeleteUserProducer implements Producer {
     private UserRabbitMq user;
-    private final String exchangeName = "delete_user_exchange";
-    private static final Logger logger = Logger.getLogger(RabbitProducer.class.getName());
+    private static final String exchangeName = "delete_user_exchange";
+    private static final Logger logger = Logger.getLogger(DeleteUserProducer.class.getName());
 
     public DeleteUserProducer(UserRabbitMq user) {
         this.user = user;

@@ -12,9 +12,8 @@ public class JwtService implements IJwtService {
         String[] splitToken = token.split("\\.");
         String unsignedToken = splitToken[0] + "." + splitToken[1] + ".";
 
-        DefaultJwtParser parser = new DefaultJwtParser();
+        var parser = new DefaultJwtParser();
         Jwt<?, ?> jwt = parser.parse(unsignedToken);
-        Claims claims = (Claims) jwt.getBody();
-        return claims;
+        return (Claims) jwt.getBody();
     }
 }
