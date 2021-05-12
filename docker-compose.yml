@@ -1,10 +1,21 @@
-# mvn clean package -Dmaven.test.skip=true
-# First docker-compose build
-# Then docker-compose up
-# At the end docker compose down --rmi all -v
-
+# voer de onderstaande commando's uit om docker compose te runnen
+# 1. mvn clean package -Dmaven.test.skip=true
+# 2. docker compose build
+# 3. docker compose up
+# 4. docker compose down --rmi all -v
 version: '3'
 services:
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    links:
+      - mysql_userservice
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
 
   rabbitmq:
     container_name: rabbitmq
@@ -61,6 +72,9 @@ services:
       - 8130:8130
     environment:
       MYSQL_DB_HOST: mysql_userservice
+      RABBIT_HOST: rabbitmq
+    depends_on:
+      - mysql_userservice
 
   authenticationservice:
     build: AuthenticationService
@@ -72,13 +86,13 @@ services:
     environment:
       RABBIT_HOST: rabbitmq
       MYSQL_DB_HOST: mysql_authservice
+    depends_on:
+      - mysql_authservice
 
   mysql_authservice:
     container_name: mysql_authservice
     hostname: mysql_authservice
     image: mysql:latest
-    cap_add:
-      - SYS_NICE
     ports:
       - 3306:3306
     restart: always
@@ -92,8 +106,10 @@ services:
     hostname: mysql_userservice
     image: mysql:latest
     ports:
-      - 3307:3307
+      - 3307:3306
     restart: always
+    expose:
+      - 3307
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
 
@@ -102,7 +118,7 @@ services:
     hostname: gateway
     image: vincentdarwinkel/gateway
     ports:
-    - 8081:8081
+    - 8081:80
     restart: always
 
 #  regionservice:

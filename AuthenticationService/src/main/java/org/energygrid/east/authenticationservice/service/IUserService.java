@@ -1,10 +1,11 @@
 package org.energygrid.east.authenticationservice.service;
 
+import org.energygrid.east.authenticationservice.model.rabbitmq.UserRabbitMq;
+
+import java.util.UUID;
+
 public interface IUserService {
-    /**
-     * @param username from new user
-     * @param password from new user
-     *                 adds user in db
-     */
-    void addUser(String username, String password);
+    void addUser(UserRabbitMq user);
+    void updateUser(UserRabbitMq user);
+    void deleteUser(UUID uuid) throws IllegalAccessException;
 }

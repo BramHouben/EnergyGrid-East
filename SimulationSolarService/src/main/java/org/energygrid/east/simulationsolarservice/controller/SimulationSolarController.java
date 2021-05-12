@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
-@RequestMapping("simulation")
+@RequestMapping("simulationsolar")
 public class SimulationSolarController {
 
     @Autowired

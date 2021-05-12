@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 public class AuthenticationserviceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(AuthenticationserviceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(AuthenticationserviceApplication.class, args);
+    }
 
 }
