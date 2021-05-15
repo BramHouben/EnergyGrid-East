@@ -7,6 +7,7 @@ import org.energygrid.east.weatherservice.entity.Coordinates;
 import org.energygrid.east.weatherservice.models.Forecast;
 import org.energygrid.east.weatherservice.models.Weather;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -23,8 +24,12 @@ import java.util.List;
 
 @Service
 public class WeatherService implements IWeatherService {
-    private final String url = "https://api.openweathermap.org/data/2.5/";
-    private final String apiKey = "d43994b92b8caae6ee650e65194f0ad8";
+
+    @Value("${URL}")
+    private String url ;
+    @Value("${APIKEY}")
+    private String apiKey;
+
     private final RestTemplate template;
     private final HttpHeaders headers;
 
@@ -35,7 +40,7 @@ public class WeatherService implements IWeatherService {
     }
 
     private JsonObject getWeatherData(String url) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+        var builder = UriComponentsBuilder.fromHttpUrl(url);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
         ResponseEntity<String> response = template.exchange(builder.toUriString(), HttpMethod.GET, entity, String.class);
@@ -56,8 +61,8 @@ public class WeatherService implements IWeatherService {
     }
 
     public String formatDate(long unix) {
-        Date date = new Date(unix * 1000);
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM");
+        var date = new Date(unix * 1000);
+        var format = new SimpleDateFormat("dd-MM");
 
         return format.format(date);
     }

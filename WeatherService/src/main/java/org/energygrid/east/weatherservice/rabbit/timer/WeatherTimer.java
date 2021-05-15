@@ -3,6 +3,7 @@ package org.energygrid.east.weatherservice.rabbit.timer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.rabbitmq.client.Channel;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,9 +16,11 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class WeatherTimer extends TimerTask {
     private static final Logger logger = Logger.getLogger(WeatherTimer.class.getName());
-
+    @Value("${APIKEY}")
+    private String apiKey;
     private final Channel channel;
     private final String exchange_name;
 
@@ -33,7 +36,7 @@ public class WeatherTimer extends TimerTask {
     public void run() {
         this.started = true;
         try {
-            JsonObject jsonObject = getWeather();
+            var jsonObject = getWeather();
 
             channel.basicPublish(exchange_name, "", null, new Gson().toJson(jsonObject).getBytes());
             logger.log(Level.ALL, "weather published");
@@ -43,7 +46,7 @@ public class WeatherTimer extends TimerTask {
     }
 
     private JsonObject getWeather() {
-        final String url = "https://api.openweathermap.org/data/2.5/onecall?lat=51.441642&lon=5.4697225&units=metric&exlude=current,minutely,daily,alerts&appid=d43994b92b8caae6ee650e65194f0ad8";
+        final String url = "https://api.openweathermap.org/data/2.5/onecall?lat=51.441642&lon=5.4697225&units=metric&exlude=current,minutely,daily,alerts&appid="+apiKey;
         final RestTemplate restTemplate = new RestTemplate();
         final HttpHeaders headers = new HttpHeaders();
 
