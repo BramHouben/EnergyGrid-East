@@ -99,7 +99,6 @@ public class SimulationLogic implements ISimulationLogic {
         }
 
         return result;
-        //return (result * correction) * solarUnit.getNumberOfPanels();
     }
 
     public double kelvinToCelsius(double kelvin) {
