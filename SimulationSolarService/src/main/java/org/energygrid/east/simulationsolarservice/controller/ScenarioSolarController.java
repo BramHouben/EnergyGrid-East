@@ -5,10 +5,7 @@ import org.energygrid.east.simulationsolarservice.model.results.ScenarioExpectat
 import org.energygrid.east.simulationsolarservice.service.IScenarioSolarScenario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -20,10 +17,10 @@ public class ScenarioSolarController {
     private IScenarioSolarScenario scenarioSolarScenario;
 
     @PostMapping("/create")
-    public ResponseEntity<ScenarioExpectationResult> createScenario(@RequestBody Scenario scenario, @Nullable @RequestParam(name = "times") String[] times) {
-        if (times != null) {
-            scenario.setTurnOffTimes(Arrays.asList(times));
-        }
+    public ResponseEntity<ScenarioExpectationResult> createScenario(@RequestBody Scenario scenario) {
+//        if (scenario.getTurnOffTimes() != null) {
+//            scenario.setTurnOffTimes(scenario.getTurnOffTimes());
+//        }
         var result = scenarioSolarScenario.createScenario(scenario);
 
         return ResponseEntity.ok().body(result);

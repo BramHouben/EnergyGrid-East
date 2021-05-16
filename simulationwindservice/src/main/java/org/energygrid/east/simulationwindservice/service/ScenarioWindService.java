@@ -20,6 +20,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -42,7 +43,7 @@ public class ScenarioWindService implements IScenarioWindService {
 
     @Override
     public ScenarioExpectationResult createScenario(Scenario scenario) {
-        ScenarioExpectationResult scenarioExpectationResult = new ScenarioExpectationResult();
+        var scenarioExpectationResult = new ScenarioExpectationResult();
         scenarioExpectationResult.setName(scenario.getName());
         scenarioExpectationResult.setScenarioType(scenario.getScenarioType());
         scenarioExpectationResult.setCreatedAt(DateTimeFormatter.ISO_INSTANT.format(Instant.now()));
@@ -75,14 +76,14 @@ public class ScenarioWindService implements IScenarioWindService {
     }
 
     private SimulationExpectationResult createScenarioAddWindPark(String amount, Point coordinates, Double type, String createdAt) {
-        SimulationExpectationResult simulationExpectationResult = new SimulationExpectationResult();
+        var simulationExpectationResult = new SimulationExpectationResult();
         simulationExpectationResult.setCreatedAt(createdAt);
 
         if (amount != null && coordinates != null && type != null) {
             List<SimulationResult> results = new ArrayList<>();
 
             for (var i = 1; i < Integer.parseInt(amount) + 1; i++) {
-                SimulationResult simulationResult = new SimulationResult();
+                var simulationResult = new SimulationResult();
                 simulationResult.setTurbineId(i);
 
                 var data = new FactoryURL().getWeatherData(headers, template, getUrl(coordinates.getX(), coordinates.getY()));
@@ -99,12 +100,12 @@ public class ScenarioWindService implements IScenarioWindService {
     }
 
     private SimulationExpectationResult createScenarioWindTurbine(WindTurbine windTurbine, String createdAt, Boolean isAdded) {
-        SimulationExpectationResult simulationExpectationResult = new SimulationExpectationResult();
+        var simulationExpectationResult = new SimulationExpectationResult();
         simulationExpectationResult.setCreatedAt(createdAt);
         List<SimulationResult> results = new ArrayList<>();
 
         if (windTurbine != null) {
-            SimulationResult simulationResult = new SimulationResult();
+            var simulationResult = new SimulationResult();
             simulationResult.setName(isAdded ? "Production" : "Missed Production");
             simulationResult.setTurbineId(windTurbine.getTurbineId());
 
@@ -121,17 +122,18 @@ public class ScenarioWindService implements IScenarioWindService {
         return simulationExpectationResult;
     }
 
-    private SimulationExpectationResult createScenarioTurnOffWindTurbine(WindTurbine windTurbine, List<String> dates, String createdAt) {
-        SimulationExpectationResult simulationExpectationResult = new SimulationExpectationResult();
+    private SimulationExpectationResult createScenarioTurnOffWindTurbine(WindTurbine windTurbine, String dateString, String createdAt) {
+        var simulationExpectationResult = new SimulationExpectationResult();
         simulationExpectationResult.setCreatedAt(createdAt);
         List<SimulationResult> results = new ArrayList<>();
+        List<String> dates = Arrays.asList(dateString.split(","));
 
         if (windTurbine != null) {
-            SimulationResult simulationResult = new SimulationResult();
+            var simulationResult = new SimulationResult();
             simulationResult.setName("Production");
             simulationResult.setTurbineId(windTurbine.getTurbineId());
 
-            SimulationResult simulationResultMissed = new SimulationResult();
+            var simulationResultMissed = new SimulationResult();
             simulationResultMissed.setName("Missed Production");
             simulationResultMissed.setTurbineId(windTurbine.getTurbineId());
 

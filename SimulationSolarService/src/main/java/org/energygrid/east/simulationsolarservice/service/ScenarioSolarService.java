@@ -22,6 +22,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -98,10 +99,11 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
         return simulationExpectationResult;
     }
 
-    private SimulationExpectationResult scenarioTurnOffSolarPark(int amount, SolarUnit solarUnit, List<String> dates, String createdAt) {
+    private SimulationExpectationResult scenarioTurnOffSolarPark(int amount, SolarUnit solarUnit, String dateString, String createdAt) {
         SimulationExpectationResult simulationExpectationResult = new SimulationExpectationResult();
         simulationExpectationResult.setCreatedAt(createdAt);
         List<SimulationResult> results = new ArrayList<>();
+        List<String> dates = Arrays.asList(dateString.split(","));
 
         if (solarUnit != null) {
             SimulationResult simulationResult = new SimulationResult();

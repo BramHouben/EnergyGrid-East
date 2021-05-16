@@ -4,9 +4,6 @@ import org.energygrid.east.simulationsolarservice.model.enums.ScenarioType;
 import org.energygrid.east.simulationsolarservice.model.enums.SolarPanelType;
 import org.springframework.data.geo.Point;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Scenario {
 
     private String name;
@@ -16,11 +13,11 @@ public class Scenario {
     private Point coordinates;
     private SolarPark solarPark;
     private SolarUnit solarUnit;
-    private List<String> turnOffTimes;
+    private String turnOffTimes;
     private String description;
 
     public Scenario() {
-        turnOffTimes = new ArrayList<>();
+
     }
 
     public String getName() {
@@ -69,11 +66,11 @@ public class Scenario {
         this.solarUnit = solarUnit;
     }
 
-    public List<String> getTurnOffTimes() {
+    public String getTurnOffTimes() {
         return turnOffTimes;
     }
 
-    public void setTurnOffTimes(List<String> turnOffTimes) {
+    public void setTurnOffTimes(String turnOffTimes) {
         this.turnOffTimes = turnOffTimes;
     }
 
