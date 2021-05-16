@@ -1,13 +1,12 @@
 package org.energygrid.east.simulationsolarservice.service;
 
+import org.apache.tomcat.jni.Local;
 import org.energygrid.east.simulationsolarservice.factory.FactoryURL;
 import org.energygrid.east.simulationsolarservice.logic.ISimulationLogic;
 import org.energygrid.east.simulationsolarservice.logic.SimulationLogic;
 import org.energygrid.east.simulationsolarservice.model.ProductionExpectation;
 import org.energygrid.east.simulationsolarservice.model.Scenario;
-import org.energygrid.east.simulationsolarservice.model.SolarPark;
 import org.energygrid.east.simulationsolarservice.model.SolarUnit;
-import org.energygrid.east.simulationsolarservice.model.enums.SolarPanelType;
 import org.energygrid.east.simulationsolarservice.model.results.ScenarioExpectationResult;
 import org.energygrid.east.simulationsolarservice.model.results.SimulationExpectationResult;
 import org.energygrid.east.simulationsolarservice.model.results.SimulationResult;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -73,6 +73,14 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
     @Override
     public List<ScenarioExpectationResult> getLatestScenarios() {
         return scenarioSolarRepository.findTop3ByOrderByCreatedAtDesc();
+    }
+
+    @Override
+    public int countScenariosToday() {
+        var date = LocalDate.now();
+        String startDate = date + "T00:00:00Z";
+        String endDate = date + "T23:59:59Z";
+        return scenarioSolarRepository.countAllByCreatedAtBetween(startDate, endDate);
     }
 
     private SimulationExpectationResult createScenarioSolarPark(int amount, Point coordinates, SolarUnit solarUnit, String createdAt, Boolean isAdded) {

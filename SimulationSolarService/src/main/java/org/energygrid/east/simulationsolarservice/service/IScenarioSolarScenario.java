@@ -19,4 +19,9 @@ public interface IScenarioSolarScenario {
      * @return the latest 3 scenarios
      */
     List<ScenarioExpectationResult> getLatestScenarios();
+
+    /**
+     * Count all current scenario's of today
+     */
+    int countScenariosToday();
 }

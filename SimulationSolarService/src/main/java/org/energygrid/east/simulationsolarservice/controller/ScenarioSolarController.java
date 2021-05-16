@@ -18,9 +18,6 @@ public class ScenarioSolarController {
 
     @PostMapping("/create")
     public ResponseEntity<ScenarioExpectationResult> createScenario(@RequestBody Scenario scenario) {
-//        if (scenario.getTurnOffTimes() != null) {
-//            scenario.setTurnOffTimes(scenario.getTurnOffTimes());
-//        }
         var result = scenarioSolarScenario.createScenario(scenario);
 
         return ResponseEntity.ok().body(result);
@@ -30,5 +27,10 @@ public class ScenarioSolarController {
     public ResponseEntity<List<ScenarioExpectationResult>> getLatestScenarios() {
         var result = scenarioSolarScenario.getLatestScenarios();
         return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/today")
+    public ResponseEntity<?> getTodayScenarios() {
+        return ResponseEntity.ok().body(scenarioSolarScenario.countScenariosToday());
     }
 }

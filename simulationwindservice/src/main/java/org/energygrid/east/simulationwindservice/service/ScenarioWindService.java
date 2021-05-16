@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -73,6 +74,14 @@ public class ScenarioWindService implements IScenarioWindService {
     @Override
     public List<ScenarioExpectationResult> getLatestScenarios() {
         return scenarioWindRepository.findTop3ByOrderByCreatedAtDesc();
+    }
+
+    @Override
+    public int countScenariosToday() {
+        var date = LocalDate.now();
+        String startDate = date + "T00:00:00Z";
+        String endDate = date + "T23:59:59Z";
+        return scenarioWindRepository.countAllByCreatedAtBetween(startDate, endDate);
     }
 
     private SimulationExpectationResult createScenarioAddWindPark(String amount, Point coordinates, Double type, String createdAt) {

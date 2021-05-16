@@ -27,4 +27,9 @@ public class ScenarioWindController {
         var result = scenarioWindService.getLatestScenarios();
         return ResponseEntity.ok().body(result);
     }
+
+    @GetMapping("/today")
+    public ResponseEntity<?> getTodayScenarios() {
+        return ResponseEntity.ok().body(scenarioWindService.countScenariosToday());
+    }
 }
