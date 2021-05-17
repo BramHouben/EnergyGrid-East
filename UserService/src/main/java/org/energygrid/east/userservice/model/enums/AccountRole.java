@@ -1,9 +1,9 @@
 package org.energygrid.east.userservice.model.enums;
 
 public enum AccountRole {
-    Customer,
-    LargeScaleCustomer,
-    UtilityCompany,
-    ResponsibleParty,
-    Admin
+    CUSTOMER,
+    LARGE_SCALE_CUSTOMER,
+    UTILITY_COMPANY,
+    RESPONSIBLE_PARTY,
+    ADMIN
 }
