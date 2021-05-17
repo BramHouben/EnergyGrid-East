@@ -121,24 +121,25 @@ services:
     - 8081:80
     restart: always
 
-#  regionservice:
-#    build: RegionService
-#    hostname: regionservice
-#    container_name: regionservice
-#    restart: always
-#    ports:
-#      - 8150:8150
-#    environment:
-#      SPRING_DATA_MONGODB_URI: mongodb://mongoregion:27018/region
+  regionservice:
+    build: RegionService
+    hostname: regionservice
+    container_name: regionservice
+    restart: always
+    ports:
+      - 8150:8150
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongoregion:27050/region
 
-#  mongoregion:
-#    hostname: mongoregion
-#    container_name: mongoregion
-#    image: mongo
-#    volumes:
-#      - ./database:/mongoregion
-#    ports:
-#      - 27018:27018
+  mongoregion:
+    hostname: mongoregion
+    container_name: mongoregion
+    image: mongo
+    command: mongod --port 27050
+    volumes:
+      - ./database:/mongoregion
+    ports:
+      - 27050:27050
 
   simulationwindservice:
     build: simulationwindservice
