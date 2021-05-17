@@ -1,32 +1,30 @@
 package org.energygrid.east.authenticationservice.service;
 
-import org.energygrid.east.authenticationservice.model.User;
+import org.energygrid.east.authenticationservice.model.dto.UserDto;
+import org.energygrid.east.authenticationservice.model.fromFrontend.User;
 import org.energygrid.east.authenticationservice.repository.AuthenticationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class AuthenticationService implements IAuthenticationService {
 
+    @Autowired
     private AuthenticationRepository authenticationRepository;
 
-    private final Map<String, String> users = new HashMap<>();
+    @Autowired
+    private IJwtService jwtService;
 
-    public AuthenticationService(AuthenticationRepository authenticationRepository) {
-        this.authenticationRepository = authenticationRepository;
-        users.put("1@user.com", "password1");
-        users.put("2@user.com", "password2");
-        users.put("3@user.com", "password3");
-        users.put("4@user.com", "password4");
-        users.put("5@user.com", "password5");
-    }
-
+    @Autowired
+    private SecurityService securityService;
 
     @Override
-    public boolean Login(String email, String password) {
-        User user = authenticationRepository.findUserByEmailAndPassword(email, password);
-        return user != null;
+    public String login(User user) throws IllegalAccessException {
+        UserDto dbUser = authenticationRepository.findByEmail(user.getEmail());
+        if (dbUser == null || !securityService.verifyHash(dbUser.getPassword(), user.getPassword())) {
+            throw new IllegalAccessException();
+        }
+
+        return jwtService.create(dbUser);
     }
 }

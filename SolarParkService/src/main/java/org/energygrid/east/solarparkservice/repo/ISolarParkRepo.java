@@ -9,6 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface ISolarParkRepo extends MongoRepository<SolarPark, String> {
+
     SolarPark getSolarParkBySolarParkName(String name);
 
     SolarPark getSolarParkBySolarParkId(UUID uuid);
