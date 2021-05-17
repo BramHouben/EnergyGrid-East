@@ -5,10 +5,7 @@ import org.energygrid.east.simulationwindservice.model.results.ScenarioExpectati
 import org.energygrid.east.simulationwindservice.service.IScenarioWindService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -19,10 +16,7 @@ public class ScenarioWindController {
     private IScenarioWindService scenarioWindService;
 
     @PostMapping("/create")
-    public ResponseEntity<ScenarioExpectationResult> createScenario(@RequestBody Scenario scenario, @Nullable @RequestParam(name = "times") String[] times) {
-        if (times != null) {
-            scenario.setWindTurbineOffTimes(Arrays.asList(times));
-        }
+    public ResponseEntity<ScenarioExpectationResult> createScenario(@RequestBody Scenario scenario) {
         var result = scenarioWindService.createScenario(scenario);
 
         return ResponseEntity.ok().body(result);
@@ -32,5 +26,10 @@ public class ScenarioWindController {
     public ResponseEntity<List<ScenarioExpectationResult>> getLatestScenarios() {
         var result = scenarioWindService.getLatestScenarios();
         return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/today")
+    public ResponseEntity<?> getTodayScenarios() {
+        return ResponseEntity.ok().body(scenarioWindService.countScenariosToday());
     }
 }

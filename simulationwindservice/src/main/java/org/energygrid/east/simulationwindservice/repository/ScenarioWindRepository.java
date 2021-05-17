@@ -9,4 +9,6 @@ import java.util.List;
 @Component
 public interface ScenarioWindRepository extends MongoRepository<ScenarioExpectationResult, String> {
     List<ScenarioExpectationResult> findTop3ByOrderByCreatedAtDesc();
+    int countAllByCreatedAtBetween(String startDate, String endDate);
+    List<ScenarioExpectationResult> findAllByCreatedAtBetween(String startDate, String endDate);
 }

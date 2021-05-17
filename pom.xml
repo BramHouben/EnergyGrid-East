@@ -78,6 +78,5 @@
         <module>SimulationSolarService</module>
         <module>simulationwindservice</module>
         <module>RegionService</module>
-        <module>SimulationNuclearService</module>
     </modules>
 </project>
