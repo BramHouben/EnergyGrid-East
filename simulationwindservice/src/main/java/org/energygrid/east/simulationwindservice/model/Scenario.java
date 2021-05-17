@@ -3,9 +3,6 @@ package org.energygrid.east.simulationwindservice.model;
 import org.energygrid.east.simulationwindservice.model.enums.EScenarioType;
 import org.springframework.data.geo.Point;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Scenario {
 
     private String name;
@@ -14,11 +11,11 @@ public class Scenario {
     private Double type;
     private Point coordinates;
     private WindTurbine windTurbine;
-    private List<String> windTurbineOffTimes;
+    private String windTurbineOffTimes;
     private String description;
 
     public Scenario() {
-        windTurbineOffTimes = new ArrayList<>();
+
     }
 
     public String getName() {
@@ -69,11 +66,11 @@ public class Scenario {
         this.windTurbine = windTurbine;
     }
 
-    public List<String> getWindTurbineOffTimes() {
+    public String getWindTurbineOffTimes() {
         return windTurbineOffTimes;
     }
 
-    public void setWindTurbineOffTimes(List<String> windTurbineOffTimes) {
+    public void setWindTurbineOffTimes(String windTurbineOffTimes) {
         this.windTurbineOffTimes = windTurbineOffTimes;
     }
 

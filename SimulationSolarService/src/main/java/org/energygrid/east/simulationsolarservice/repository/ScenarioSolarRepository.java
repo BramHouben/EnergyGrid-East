@@ -1,13 +1,13 @@
-package org.energygrid.east.simulationwindservice.repository;
+package org.energygrid.east.simulationsolarservice.repository;
 
-import org.energygrid.east.simulationwindservice.model.results.ScenarioExpectationResult;
+import org.energygrid.east.simulationsolarservice.model.results.ScenarioExpectationResult;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
-public interface ScenarioWindRepository extends MongoRepository<ScenarioExpectationResult, String> {
+@Repository
+public interface ScenarioSolarRepository extends MongoRepository<ScenarioExpectationResult, String> {
     List<ScenarioExpectationResult> findTop3ByOrderByCreatedAtDesc();
     int countAllByCreatedAtBetween(String startDate, String endDate);
     List<ScenarioExpectationResult> findAllByCreatedAtBetween(String startDate, String endDate);

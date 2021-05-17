@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 public class SimulationSolarService implements ISimulationSolarService {
 
     private static final java.util.logging.Logger logger = Logger.getLogger(SimulationSolarService.class.getName());
-
     private final List<SimulationSolar> simulationSolars;
     private JsonObject weatherData;
 
@@ -95,7 +94,6 @@ public class SimulationSolarService implements ISimulationSolarService {
                     var temperatureCorrection = (temperature - 25) * 0.4;
                     finalKwh = finalKwh * (1 - (temperatureCorrection / 100));
                 }
-
                 kwh += finalKwh;
             }
             energyRegionSolarParksOutput.addKwh(new Kwh(kwh, triggerTime));
@@ -106,14 +104,8 @@ public class SimulationSolarService implements ISimulationSolarService {
 
     @Scheduled(fixedDelay = 10000)
     private void sendMessageKwh(){
-
-//        var solarparks = rabbitTemplate.convertSendAndReceive("SolarPanels", "solar.panels.get", "test");
-        //  simple algo
         logger.log(Level.INFO, "Send solar message to queue");
-        //total kwh per minute
         var solar = "12540";
-
         rabbitTemplate.convertAndSend("EnergyBalance", "balance.create.solar", solar);
     }
-
 }

@@ -36,7 +36,7 @@ public class SimulationWindService implements ISimulationWindService {
     private final ISimulationLogic simulationLogic;
 
     @Autowired
-    private  RabbitTemplate rabbittemplate;
+    private RabbitTemplate rabbittemplate;
 
     @Autowired
     private SimulationWindRepository simulationWindRepository;

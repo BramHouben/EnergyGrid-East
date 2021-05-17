@@ -129,17 +129,17 @@ services:
     ports:
       - 8150:8150
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongoregion:27050/region
+      SPRING_DATA_MONGODB_URI: mongodb://mongoregion:27080/region
 
   mongoregion:
     hostname: mongoregion
     container_name: mongoregion
     image: mongo
-    command: mongod --port 27050
+    command: mongod --port 27080
     volumes:
       - ./database:/mongoregion
     ports:
-      - 27050:27050
+      - 27080:27080
 
   simulationwindservice:
     build: simulationwindservice
@@ -160,7 +160,7 @@ services:
     volumes:
       - ./database:/mongosimulationwindservice
     ports:
-      - 27019:27019
+      - 27020:27017
 
   energyusageservice:
     build: EnergyUsageService
@@ -170,16 +170,17 @@ services:
     ports:
       - 8170:8170
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongoenergyusageservice:27020/energyusage
+      SPRING_DATA_MONGODB_URI: mongodb://mongoenergyusageservice:27050/energyusage
 
   mongoenergyusageservice:
     hostname: mongoenergyusageservice
     container_name: mongoenergyusageservice
     image: mongo
+    command: mongod --port 27050
     volumes:
       - ./database:/mongoenergyusageservice
     ports:
-      - 27020:27017
+      - 27050:27017
 
   energybalanceservice:
     build: EnergyBalanceService
@@ -215,3 +216,14 @@ services:
       - 8120:8120
     environment:
       SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_DATA_MONGODB_URI: mongodb://mongosolarservice:27040/solar
+
+  mongosolarservice:
+    hostname: mongosolarservice
+    container_name: mongosolarservice
+    command: mongod --port 27040
+    image: mongo:latest
+    volumes:
+      - ./database:/mongosolarservice
+    ports:
+      - 27040:27040
