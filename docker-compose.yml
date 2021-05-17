@@ -129,17 +129,17 @@ services:
     ports:
       - 8150:8150
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongoregion:27050/region
+      SPRING_DATA_MONGODB_URI: mongodb://mongoregion:27080/region
 
   mongoregion:
     hostname: mongoregion
     container_name: mongoregion
     image: mongo
-    command: mongod --port 27050
+    command: mongod --port 27080
     volumes:
       - ./database:/mongoregion
     ports:
-      - 27050:27050
+      - 27080:27080
 
   simulationwindservice:
     build: simulationwindservice
