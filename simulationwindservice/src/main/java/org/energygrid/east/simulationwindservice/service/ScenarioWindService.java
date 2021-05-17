@@ -5,6 +5,7 @@ import org.energygrid.east.simulationwindservice.logic.ISimulationLogic;
 import org.energygrid.east.simulationwindservice.logic.SimulationLogic;
 import org.energygrid.east.simulationwindservice.model.ProductionExpectation;
 import org.energygrid.east.simulationwindservice.model.Scenario;
+import org.energygrid.east.simulationwindservice.model.ScenarioWindResponse;
 import org.energygrid.east.simulationwindservice.model.results.ScenarioExpectationResult;
 import org.energygrid.east.simulationwindservice.model.WindTurbine;
 import org.energygrid.east.simulationwindservice.model.results.SimulationExpectationResult;
@@ -77,11 +78,20 @@ public class ScenarioWindService implements IScenarioWindService {
     }
 
     @Override
-    public int countScenariosToday() {
+    public ScenarioWindResponse countScenariosToday() {
         var date = LocalDate.now();
         String startDate = date + "T00:00:00Z";
         String endDate = date + "T23:59:59Z";
-        return scenarioWindRepository.countAllByCreatedAtBetween(startDate, endDate);
+        var result = scenarioWindRepository.findAllByCreatedAtBetween(startDate, endDate);
+        var kwh = 0.0;
+
+        if (!result.isEmpty()) {
+            for (var object : result) {
+                kwh = kwh + object.getSimulationExpectationResult().getKwTotalResult();
+            }
+            return new ScenarioWindResponse(kwh, result.size());
+        }
+        return null;
     }
 
     private SimulationExpectationResult createScenarioAddWindPark(String amount, Point coordinates, Double type, String createdAt) {

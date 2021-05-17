@@ -1,6 +1,7 @@
 package org.energygrid.east.simulationwindservice.service;
 
 import org.energygrid.east.simulationwindservice.model.Scenario;
+import org.energygrid.east.simulationwindservice.model.ScenarioWindResponse;
 import org.energygrid.east.simulationwindservice.model.results.ScenarioExpectationResult;
 
 import java.util.List;
@@ -12,5 +13,5 @@ public interface IScenarioWindService {
     /**
      * Count all current scenario's of today
      */
-    int countScenariosToday();
+    ScenarioWindResponse countScenariosToday();
 }

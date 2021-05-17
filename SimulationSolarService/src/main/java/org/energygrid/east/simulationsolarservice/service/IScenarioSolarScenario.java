@@ -1,6 +1,7 @@
 package org.energygrid.east.simulationsolarservice.service;
 
 import org.energygrid.east.simulationsolarservice.model.Scenario;
+import org.energygrid.east.simulationsolarservice.model.ScenarioSolarResponse;
 import org.energygrid.east.simulationsolarservice.model.results.ScenarioExpectationResult;
 
 import java.util.List;
@@ -23,5 +24,5 @@ public interface IScenarioSolarScenario {
     /**
      * Count all current scenario's of today
      */
-    int countScenariosToday();
+    ScenarioSolarResponse countScenariosToday();
 }

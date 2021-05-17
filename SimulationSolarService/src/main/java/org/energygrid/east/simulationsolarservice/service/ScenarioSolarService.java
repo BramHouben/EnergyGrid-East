@@ -6,6 +6,7 @@ import org.energygrid.east.simulationsolarservice.logic.ISimulationLogic;
 import org.energygrid.east.simulationsolarservice.logic.SimulationLogic;
 import org.energygrid.east.simulationsolarservice.model.ProductionExpectation;
 import org.energygrid.east.simulationsolarservice.model.Scenario;
+import org.energygrid.east.simulationsolarservice.model.ScenarioSolarResponse;
 import org.energygrid.east.simulationsolarservice.model.SolarUnit;
 import org.energygrid.east.simulationsolarservice.model.results.ScenarioExpectationResult;
 import org.energygrid.east.simulationsolarservice.model.results.SimulationExpectationResult;
@@ -76,11 +77,20 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
     }
 
     @Override
-    public int countScenariosToday() {
+    public ScenarioSolarResponse countScenariosToday() {
         var date = LocalDate.now();
         String startDate = date + "T00:00:00Z";
         String endDate = date + "T23:59:59Z";
-        return scenarioSolarRepository.countAllByCreatedAtBetween(startDate, endDate);
+        var result = scenarioSolarRepository.findAllByCreatedAtBetween(startDate, endDate);
+        var kwh = 0.0;
+
+        if (!result.isEmpty()) {
+            for (var object : result) {
+                kwh = kwh + object.getSimulationExpectationResult().getKwTotalResult();
+            }
+            return new ScenarioSolarResponse(kwh, result.size());
+        }
+        return null;
     }
 
     private SimulationExpectationResult createScenarioSolarPark(int amount, Point coordinates, SolarUnit solarUnit, String createdAt, Boolean isAdded) {
