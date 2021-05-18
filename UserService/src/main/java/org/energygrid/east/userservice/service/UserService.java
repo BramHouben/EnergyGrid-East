@@ -6,7 +6,6 @@ import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.enums.AccountRole;
 import org.energygrid.east.userservice.model.fromFrontend.User;
-import javax.validation.constraints.NotNull;
 import org.energygrid.east.userservice.model.rabbitMq.UserRabbitMq;
 import org.energygrid.east.userservice.rabbit.Producer.AddUserProducer;
 import org.energygrid.east.userservice.rabbit.Producer.DeleteUserProducer;
@@ -16,18 +15,17 @@ import org.energygrid.east.userservice.repo.IUserRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Service
 public class UserService {
+    private final ModelMapper mapper = new ModelMapper();
     @Autowired
     private IUserRepo userRepo;
-
     @Autowired
     private IJwtService jwtService;
-
-    private final ModelMapper mapper = new ModelMapper();
 
     public void addUser(@NotNull User user) {
         UserDTO dbUser = userRepo.getUserByUuidOrUsernameOrEmail(null, user.getUsername(), user.getEmail());
@@ -52,7 +50,7 @@ public class UserService {
     }
 
     public UserDTO getUserByUuidOrUsernameOrEmail(UUID uuid, String username, String email) {
-        if (StringUtils.isEmpty(uuid) && StringUtils.isEmpty(username) && StringUtils.isEmpty(email)) {
+        if (uuid == null && username.isEmpty() && email.isEmpty()) {
             throw new NullPointerException("uuid, username and or email was empty");
         }
 

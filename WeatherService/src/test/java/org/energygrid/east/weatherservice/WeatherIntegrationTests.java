@@ -9,9 +9,11 @@ import org.energygrid.east.weatherservice.models.Weather;
 import org.energygrid.east.weatherservice.service.IWeatherService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -30,9 +32,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
+@ExtendWith(MockitoExtension.class)
 @SpringBootTest
-public class WeatherIntegrationTests {
+class WeatherIntegrationTests {
 
     @InjectMocks
     private WeatherController weatherController;
@@ -43,7 +45,7 @@ public class WeatherIntegrationTests {
     private MockMvc mockMvc;
 
     @Before
-    public void setup() {
+    void setup() {
         initMocks(this);
         this.mockMvc = MockMvcBuilders.standaloneSetup(weatherController).build();
     }

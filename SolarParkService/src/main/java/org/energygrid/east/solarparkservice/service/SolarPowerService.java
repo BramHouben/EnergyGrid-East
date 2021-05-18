@@ -98,7 +98,7 @@ public class SolarPowerService implements ISolarParkPower {
 
     @Override
     public void updateSolarPark(UUID id, String name, int solarPanels) {
-        SolarPark solarPark = solarParkRepo.getSolarParkBySolarParkId(id);
+        var solarPark = solarParkRepo.getSolarParkBySolarParkId(id);
         solarPark.setCountSonarPanels(solarPanels);
         solarPark.setSolarParkName(name);
         solarParkRepo.save(solarPark);
