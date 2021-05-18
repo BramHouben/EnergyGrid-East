@@ -1,6 +1,7 @@
-
 trigger:
   - main
+  - master
+
 
 pool:
   vmImage: ubuntu-latest
@@ -18,3 +19,9 @@ steps:
       testResultsFiles: '**/surefire-reports/TEST-*.xml'
 #      codeCoverageToolOption: JaCoCo
       goals: 'clean package'
+
+  - task: KubernetesManifest@0
+    inputs:
+      action: 'deploy'
+      kubernetesServiceConnection: 'EnergyGridEast'
+      manifests: 'kubernetes/**'
