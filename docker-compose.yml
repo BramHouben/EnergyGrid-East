@@ -242,7 +242,7 @@ services:
     mem_reservation: 128M
     container_name: eureka
     hostname: eureka
-    build: eurekaserver
+    build: EurekaServer
     ports:
       - 8761:8761
     restart: always
