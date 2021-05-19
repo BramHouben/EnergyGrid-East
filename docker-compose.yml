@@ -41,6 +41,7 @@ services:
     environment:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATA_MONGODB_URI: mongodb://mongosolarpark:27017/solarpark
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
 
   mongosolarpark:
     hostname: mongosolarpark
@@ -60,6 +61,7 @@ services:
       - 8110:8110
     environment:
       RABBIT_HOST: rabbitmq
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
     depends_on:
       - rabbitmq
 
@@ -71,6 +73,7 @@ services:
     ports:
       - 8130:8130
     environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
       MYSQL_DB_HOST: mysql_userservice
       RABBIT_HOST: rabbitmq
     depends_on:
@@ -84,6 +87,7 @@ services:
     ports:
       - 8100:8100
     environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
       RABBIT_HOST: rabbitmq
       MYSQL_DB_HOST: mysql_authservice
     depends_on:
@@ -129,6 +133,7 @@ services:
     ports:
       - 8150:8150
     environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
       SPRING_DATA_MONGODB_URI: mongodb://mongoregion:27080/region
 
   mongoregion:
@@ -149,6 +154,7 @@ services:
     ports:
       - 8140:8140
     environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATA_MONGODB_URI: mongodb://mongosimulationwindservice:27020/simulation_wind
 
@@ -170,6 +176,7 @@ services:
     ports:
       - 8170:8170
     environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
       SPRING_DATA_MONGODB_URI: mongodb://mongoenergyusageservice:27050/energyusage
 
   mongoenergyusageservice:
@@ -192,6 +199,7 @@ services:
     ports:
     - 8160:8160
     environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATA_MONGODB_URI: mongodb://mongoenergybalanceservice:27030/energybalance
 
@@ -215,6 +223,7 @@ services:
     ports:
       - 8120:8120
     environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATA_MONGODB_URI: mongodb://mongosolarservice:27040/solar
 
@@ -227,3 +236,20 @@ services:
       - ./database:/mongosolarservice
     ports:
       - 27040:27040
+
+  eureka:
+    mem_limit: 512m
+    mem_reservation: 128M
+    container_name: eureka
+    hostname: eureka
+    build: eurekaserver
+    ports:
+      - 8761:8761
+    restart: always
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://eureka:8761/eureka/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5

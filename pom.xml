@@ -86,6 +86,7 @@
         <module>simulationwindservice</module>
         <module>RegionService</module>
         <module>EnergyUsageService</module>
+        <module>EurekaServer</module>
         <module>EnergyBalanceService</module>
     </modules>
 </project>
