@@ -13,8 +13,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-            <sonar.projectKey>BramHouben_EnergyGrid-East</sonar.projectKey>
-            <sonar.organization>bramhouben-github</sonar.organization>
+        <sonar.projectKey>BramHouben_EnergyGrid-East</sonar.projectKey>
+        <sonar.organization>bramhouben-github</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <!-- Sonar -->
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -28,15 +28,22 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.9.RELEASE</version>
+        <version>2.4.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.7.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Hoxton.SR3</version>
+                <version>2020.0.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -72,10 +79,13 @@
     </profiles>
     <modules>
         <module>SolarParkService</module>
-        <module>gateway</module>
         <module>WeatherService</module>
         <module>AuthenticationService</module>
         <module>UserService</module>
-        <module>SimulationService</module>
+        <module>SimulationSolarService</module>
+        <module>simulationwindservice</module>
+        <module>RegionService</module>
+        <module>EnergyUsageService</module>
+        <module>EnergyBalanceService</module>
     </modules>
 </project>
