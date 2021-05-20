@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("scenarioNuclear")
+@RequestMapping("scenario/nuclear")
 public class ScenarioNuclearController {
 
     @Autowired
@@ -22,7 +22,7 @@ public class ScenarioNuclearController {
         return ResponseEntity.ok().body(scenario);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/all")
     public ResponseEntity<List<Scenario>> getScenarios() {
         var scenarios = scenarioNuclearService.getScenarios();
         return ResponseEntity.ok().body(scenarios);

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("simulationNuclear")
+@RequestMapping("simulation/nuclear")
 public class SimulationNuclearController {
 
     @Autowired
@@ -31,7 +31,7 @@ public class SimulationNuclearController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/all")
     public ResponseEntity<List<Simulation>> getSimulations() {
         return ResponseEntity.ok().body(simulationService.getSimulations());
     }
