@@ -96,9 +96,9 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
 
   simulationnuclearservice:
-    build: simulationnuclearservice
+    build: SimulationNuclearService
     hostname: simulationnuclearservice
-    container_name: simulationnuclearservice
+    container_name: SimulationNuclearService
     restart: always
     ports:
       - 8160:8160
