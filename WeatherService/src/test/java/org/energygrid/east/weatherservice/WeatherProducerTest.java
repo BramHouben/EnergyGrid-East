@@ -5,13 +5,11 @@ import org.energygrid.east.weatherservice.rabbit.RabbitConfiguration;
 import org.energygrid.east.weatherservice.rabbit.timer.WeatherTimer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeoutException;
 
 @ActiveProfiles("test")
@@ -39,6 +37,6 @@ class WeatherProducerTest {
 
         Thread.sleep(1000);
 
-        Assertions.assertTrue(weatherTimer.isStarted());
+        assertTrue(weatherTimer.isStarted());
     }
 }
