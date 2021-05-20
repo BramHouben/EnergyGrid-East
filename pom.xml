@@ -84,7 +84,9 @@
         <module>UserService</module>
         <module>SimulationSolarService</module>
         <module>simulationwindservice</module>
-        <module>SimulationNuclearService</module>
         <module>RegionService</module>
+        <module>EnergyUsageService</module>
+        <module>EnergyBalanceService</module>
+        <module>SimulationNuclearService</module>
     </modules>
 </project>

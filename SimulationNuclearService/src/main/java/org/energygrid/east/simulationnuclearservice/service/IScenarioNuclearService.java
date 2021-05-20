@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface IScenarioNuclearService {
     Scenario createScenario(ScenarioDTO scenarioDTO);
+
     List<Scenario> getScenarios();
 }

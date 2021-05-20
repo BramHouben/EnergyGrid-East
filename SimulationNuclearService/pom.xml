@@ -44,7 +44,8 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration><finalName>simulationnuclearservice</finalName></configuration>
+				<configuration>
+					<finalName>simulationnuclearservice</finalName></configuration>
 			</plugin>
 		</plugins>
 	</build>

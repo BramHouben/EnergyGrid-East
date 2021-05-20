@@ -1,6 +1,5 @@
 package org.energygrid.east.simulationnuclearservice.service;
 
-import org.apache.tomcat.jni.Local;
 import org.energygrid.east.simulationnuclearservice.model.Kwh;
 import org.energygrid.east.simulationnuclearservice.model.Scenario;
 import org.energygrid.east.simulationnuclearservice.model.Simulation;
@@ -24,9 +23,9 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
 
     @Override
     public Scenario createScenario(ScenarioDTO scenarioDTO) {
-        Scenario scenario = new Scenario(scenarioDTO.getName());
+        var scenario = new Scenario(scenarioDTO.getName());
 
-        switch(scenarioDTO.getScenarioType()) {
+        switch (scenarioDTO.getScenarioType()) {
             case SHUTOFF_REACTOR:
                 scenario = createScenarioPowerplantShutoff(scenarioDTO, scenario);
                 scenarioNuclearRepository.save(scenario);
@@ -44,7 +43,7 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
     }
 
     private Scenario createScenarioPowerplantShutoff(ScenarioDTO scenarioDTO, Scenario scenario) {
-        Simulation simulation = simulationNuclearRepository.getSimulationBySimulationId(scenarioDTO.getId());
+        var simulation = simulationNuclearRepository.getSimulationBySimulationId(scenarioDTO.getId());
         var time = scenarioDTO.getStartTime();
 
         for (int i = 0; i < 48; i++) {
@@ -126,7 +125,7 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
 
         int kw = 0;
 
-        for(Simulation simulationFromList : simulationList) {
+        for (Simulation simulationFromList : simulationList) {
             kw += simulationFromList.getMaxPower();
         }
 
