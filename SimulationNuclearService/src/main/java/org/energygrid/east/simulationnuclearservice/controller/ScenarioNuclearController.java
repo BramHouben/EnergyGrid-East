@@ -5,10 +5,9 @@ import org.energygrid.east.simulationnuclearservice.model.dto.ScenarioDTO;
 import org.energygrid.east.simulationnuclearservice.service.IScenarioNuclearService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("scenarioNuclear")
@@ -21,5 +20,11 @@ public class ScenarioNuclearController {
     public ResponseEntity<Scenario> createScenario(@RequestBody ScenarioDTO scenarioDTO) {
         var scenario = scenarioNuclearService.createScenario(scenarioDTO);
         return ResponseEntity.ok().body(scenario);
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<Scenario>> getScenarios() {
+        var scenarios = scenarioNuclearService.getScenarios();
+        return ResponseEntity.ok().body(scenarios);
     }
 }

@@ -95,6 +95,26 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
 
+  simulationnuclearservice:
+    build: simulationnuclearservice
+    hostname: simulationnuclearservice
+    container_name: simulationnuclearservice
+    restart: always
+    ports:
+      - 8160:8160
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongosimulationnuclearservice:27030/simulation_nuclear
+
+  mongosimulationnuclearservice:
+    hostname: mongosimulationnuclearservice
+    container_name: mongosimulationnuclearservice
+    image: mongo
+    command: mongod --port 27030
+    volumes:
+      - ./database:/mongosimulationnuclearservice
+    ports:
+      - 27030:27030
+
 #  regionservice:
 #    build: RegionService
 #    hostname: regionservice

@@ -1,9 +1,11 @@
 package org.energygrid.east.simulationnuclearservice.service;
 
+import org.apache.tomcat.jni.Local;
 import org.energygrid.east.simulationnuclearservice.model.Kwh;
 import org.energygrid.east.simulationnuclearservice.model.Scenario;
 import org.energygrid.east.simulationnuclearservice.model.Simulation;
 import org.energygrid.east.simulationnuclearservice.model.dto.ScenarioDTO;
+import org.energygrid.east.simulationnuclearservice.repository.ScenarioNuclearRepository;
 import org.energygrid.east.simulationnuclearservice.repository.SimulationNuclearRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
     @Autowired
     private SimulationNuclearRepository simulationNuclearRepository;
 
+    @Autowired
+    private ScenarioNuclearRepository scenarioNuclearRepository;
+
     @Override
     public Scenario createScenario(ScenarioDTO scenarioDTO) {
         Scenario scenario = new Scenario(scenarioDTO.getName());
@@ -24,12 +29,15 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
         switch(scenarioDTO.getScenarioType()) {
             case SHUTOFF_REACTOR:
                 scenario = createScenarioPowerplantShutoff(scenarioDTO, scenario);
+                scenarioNuclearRepository.save(scenario);
                 return scenario;
             case ADD_REACTOR:
                 scenario = createScenarioAddReactor(scenarioDTO, scenario);
+                scenarioNuclearRepository.save(scenario);
                 return scenario;
             case REMOVE_REACTOR:
                 scenario = createScenarioRemoveReactor(scenarioDTO, scenario);
+                scenarioNuclearRepository.save(scenario);
                 return scenario;
         }
         return scenario;
@@ -39,18 +47,19 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
         Simulation simulation = simulationNuclearRepository.getSimulationBySimulationId(scenarioDTO.getId());
         var time = scenarioDTO.getStartTime();
 
-        for (int i = 0; i <= 48; i++) {
+        for (int i = 0; i < 48; i++) {
             if (time.isEqual(scenarioDTO.getStartTimeEvent())) {
-                for (int j = 0; j <= scenarioDTO.getHours(); j++) {
+                for (int j = 0; j < scenarioDTO.getHours(); j++) {
                     scenario.addKwh(new Kwh(0, time));
                     scenario.addTotalKwh(calculateTotalKwh(simulation, 0, time));
-                    time.plusHours(1);
+                    time = time.plusHours(1);
+                    i++;
                 }
                 continue;
             }
             scenario.addKwh(new Kwh(simulation.getMaxPower(), time));
             scenario.addTotalKwh(calculateTotalKwh(simulation, simulation.getMaxPower(), time));
-            time.plusHours(1);
+            time = time.plusHours(1);
         }
         return scenario;
     }
@@ -66,7 +75,7 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
 
         LocalDateTime time = scenarioDTO.getStartTime();
 
-        for (int i = 0; i <= 48; i++) {
+        for (int i = 0; i < 48; i++) {
             int correctedKw = kw;
 
             if (time.isEqual(scenarioDTO.getStartTimeEvent()) || time.isAfter(scenarioDTO.getStartTimeEvent())) {
@@ -97,7 +106,7 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
 
         LocalDateTime time = scenarioDTO.getStartTime();
 
-        for (int i = 0; i <= 48; i++) {
+        for (int i = 0; i < 48; i++) {
 
             if (time.isEqual(scenarioDTO.getStartTimeEvent()) || time.isAfter(scenarioDTO.getStartTimeEvent())) {
                 scenario.addKwh(new Kwh(simulation.getMaxPower(), time));
@@ -123,5 +132,11 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
 
         kw += kilowatt;
         return new Kwh(kw, time);
+    }
+
+
+    @Override
+    public List<Scenario> getScenarios() {
+        return scenarioNuclearRepository.findAll();
     }
 }

@@ -1,8 +1,8 @@
 package org.energygrid.east.simulationnuclearservice.model.dto;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import org.apache.tomcat.jni.Local;
 import org.energygrid.east.simulationnuclearservice.model.enums.ScenarioType;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -10,10 +10,10 @@ public class ScenarioDTO {
     private final UUID id;
     private final String name;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private final LocalDateTime startTime;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private final LocalDateTime startTimeEvent;
 
     private final int hours;
