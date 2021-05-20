@@ -1,6 +1,8 @@
 package org.energygrid.east.energybalanceservice.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.energygrid.east.energybalanceservice.model.EnergyBalance;
+import org.energygrid.east.energybalanceservice.model.EnergyBalanceDTO;
 import org.energygrid.east.energybalanceservice.model.Type;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceRepo;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceStoreRepo;
@@ -25,6 +27,8 @@ public class EnergyService implements IEnergyService {
     private EnergyBalanceStoreRepo energyBalanceStoreRepo;
     @Autowired
     private EnergyBalanceRepo energyBalanceRepo;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Override
     public EnergyBalance getLatestBalance() {
@@ -42,13 +46,18 @@ public class EnergyService implements IEnergyService {
         long latestNuclear = 6300;
         long latestWind = energyBalanceStoreRepo.findFirstByType(Type.WIND).getProduction();
         long total = +latestNuclear + latestWind + latestSolar;
-//        long leverage = usagePerMinute-total;
         long leverage = 156150;
         total += leverage;
 
         double balance = ((float) total / usagePerMinute) * 100;
-        //per minute
+        //per minute4
+
         var energyBalance = new EnergyBalance(UUID.randomUUID(), usagePerMinute, total, balance, LocalDateTime.now(ZoneOffset.UTC));
+
+        //Need to be checked, because something went wrong
+        var message = new EnergyBalanceDTO(energyBalance.getConsume(), energyBalance.getProduction(), energyBalance.getBalance(), energyBalance.getTime());
+        rabbitTemplate.convertAndSend("WebSockets", "websockets.balance.update", message.toString());
+        logger.info("Sending message...."  + message);
         energyBalanceRepo.save(energyBalance);
     }
 }
