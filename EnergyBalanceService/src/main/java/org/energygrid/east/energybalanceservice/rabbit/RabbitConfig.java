@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-@Configuration
 public class RabbitConfig {
 
     static final String TOPIC_EXCHANGE = "EnergyBalance";
@@ -110,16 +109,16 @@ public class RabbitConfig {
     MessageListenerAdapter listenerAdapterNuclear(Receiver receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessageNuclear");
     }
-
-    @Bean
-    public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
-        final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(producerJackson2MessageConverter());
-        return rabbitTemplate;
-    }
-
-    @Bean
-    public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
-        return new Jackson2JsonMessageConverter();
-    }
+//
+//    @Bean
+//    public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
+//        final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+//        rabbitTemplate.setMessageConverter(producerJackson2MessageConverter());
+//        return rabbitTemplate;
+//    }
+//
+//    @Bean
+//    public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
+//        return new Jackson2JsonMessageConverter();
+//    }
 }

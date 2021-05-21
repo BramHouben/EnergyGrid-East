@@ -1,6 +1,5 @@
 package org.energygrid.east.energybalanceservice.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.energygrid.east.energybalanceservice.model.EnergyBalance;
 import org.energygrid.east.energybalanceservice.model.EnergyBalanceDTO;
 import org.energygrid.east.energybalanceservice.model.Type;
@@ -21,14 +20,15 @@ import java.util.logging.Logger;
 public class EnergyService implements IEnergyService {
 
     private static final java.util.logging.Logger logger = Logger.getLogger(EnergyService.class.getName());
+
     @Autowired
-    RabbitTemplate rabbitTemplate;
+    private RabbitTemplate rabbitTemplate;
+
     @Autowired
     private EnergyBalanceStoreRepo energyBalanceStoreRepo;
+
     @Autowired
     private EnergyBalanceRepo energyBalanceRepo;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Override
     public EnergyBalance getLatestBalance() {
@@ -45,19 +45,17 @@ public class EnergyService implements IEnergyService {
         long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
         long latestNuclear = 6300;
         long latestWind = energyBalanceStoreRepo.findFirstByType(Type.WIND).getProduction();
-        long total = +latestNuclear + latestWind + latestSolar;
+        long total = +latestNuclear + 16750 + 16750;
         long leverage = 156150;
         total += leverage;
 
         double balance = ((float) total / usagePerMinute) * 100;
-        //per minute4
+        //per minute
 
+        final var message = new EnergyBalanceDTO(usagePerMinute, total, balance, LocalDateTime.now());
+
+        rabbitTemplate.convertAndSend("websockets", "websocket.balance.update", message.toString());
         var energyBalance = new EnergyBalance(UUID.randomUUID(), usagePerMinute, total, balance, LocalDateTime.now(ZoneOffset.UTC));
-
-        //Need to be checked, because something went wrong
-        var message = new EnergyBalanceDTO(energyBalance.getConsume(), energyBalance.getProduction(), energyBalance.getBalance(), energyBalance.getTime());
-        rabbitTemplate.convertAndSend("WebSockets", "websockets.balance.update", message.toString());
-        logger.info("Sending message...."  + message);
         energyBalanceRepo.save(energyBalance);
     }
 }

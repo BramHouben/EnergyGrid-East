@@ -1,4 +1,4 @@
-package com.example.websocketsservice.configuration;
+package org.energygrid.east.websocketsservice.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

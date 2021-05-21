@@ -1,6 +1,7 @@
-package com.example.websocketsservice.controller;
+package org.energygrid.east.websocketsservice.controller;
 
-import com.example.websocketsservice.models.EnergyBalanceDTO;
+
+import org.energygrid.east.websocketsservice.models.EnergyBalanceDTO;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;

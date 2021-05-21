@@ -1,15 +1,15 @@
-package com.example.websocketsservice.models;
+package org.energygrid.east.websocketsservice.models;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class EnergyBalanceDTO {
+public class EnergyBalanceDTO implements Serializable {
 
     private long consume;
     private long production;
     private double balance;
     private LocalDateTime time;
 
-    public EnergyBalanceDTO() {}
 
     public EnergyBalanceDTO(long consume, long production, double balance, LocalDateTime time) {
         this.consume = consume;

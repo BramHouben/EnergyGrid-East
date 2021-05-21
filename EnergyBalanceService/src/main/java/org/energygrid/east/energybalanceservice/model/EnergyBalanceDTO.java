@@ -1,8 +1,9 @@
 package org.energygrid.east.energybalanceservice.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class EnergyBalanceDTO {
+public class EnergyBalanceDTO implements Serializable {
 
     private long consume;
     private long production;

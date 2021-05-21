@@ -1,4 +1,4 @@
-package com.example.websocketsservice.rabbit;
+package org.energygrid.east.websocketsservice.rabbit;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -13,35 +13,38 @@ import org.springframework.stereotype.Component;
 @Component
 public class RabbitConfig {
 
-    static final String TOPIC_EXCHANGE = "WebSockets";
-    static final String QUEUE_NAME_BALANCE = "ws-energy-balance";
+    static final String WEBSOCKET_TOPIC = "websockets";
+    static final String BALANCE_QUEUE = "balance-queue";
 
     @Bean
     Queue queue() {
-        return new Queue(QUEUE_NAME_BALANCE, false);
+        return new Queue(BALANCE_QUEUE, false);
     }
 
     @Bean
     TopicExchange exchange() {
-        return new TopicExchange(TOPIC_EXCHANGE);
+        return new TopicExchange(WEBSOCKET_TOPIC);
     }
 
     @Bean
-    Binding bindingBalanceUpdate(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with("websockets.balance.update");
+    Binding binding(Queue queue, TopicExchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with("websocket.balance.update");
     }
 
     @Bean
-    SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
+    SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
+                                             MessageListenerAdapter listenerAdapter) {
         var container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(QUEUE_NAME_BALANCE);
+        container.setQueueNames(BALANCE_QUEUE);
         container.setMessageListener(listenerAdapter);
         return container;
     }
 
     @Bean
-    MessageListenerAdapter listenerAdapter( Receiver receiver) {
-        return new MessageListenerAdapter(receiver, "test");
+    MessageListenerAdapter listenerAdapter(Receiver receiver) {
+        return new MessageListenerAdapter(receiver, "getBalance");
     }
+
+
 }
