@@ -18,6 +18,11 @@ public class ScenarioNuclearController {
 
     @PostMapping("/create")
     public ResponseEntity<Scenario> createScenario(@RequestBody ScenarioDTO scenarioDTO) {
+
+        if (scenarioDTO == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
         var scenario = scenarioNuclearService.createScenario(scenarioDTO);
         return ResponseEntity.ok().body(scenario);
     }

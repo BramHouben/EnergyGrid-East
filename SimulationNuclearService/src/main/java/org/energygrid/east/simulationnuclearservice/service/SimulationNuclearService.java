@@ -17,7 +17,7 @@ public class SimulationNuclearService implements ISimulationNuclearService {
 
     @Override
     public Simulation addSimulation(AddNuclearPowerplantDTO addNuclearPowerplantDTO) {
-        Simulation simulation = new Simulation(UUID.randomUUID(), addNuclearPowerplantDTO.getName(), addNuclearPowerplantDTO.getReactorGeneration(), addNuclearPowerplantDTO.getCoordinates(), addNuclearPowerplantDTO.getMaxPower(), addNuclearPowerplantDTO.getBuildYear());
+        var simulation = new Simulation(UUID.randomUUID(), addNuclearPowerplantDTO.getName(), addNuclearPowerplantDTO.getReactorGeneration(), addNuclearPowerplantDTO.getCoordinates(), addNuclearPowerplantDTO.getMaxPower(), addNuclearPowerplantDTO.getBuildYear());
         simulationNuclearRepository.save(simulation);
         return simulation;
     }

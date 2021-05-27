@@ -20,6 +20,10 @@ public class SimulationNuclearController {
 
     @PostMapping("/create")
     public ResponseEntity<Simulation> createNuclearPowerplant(@RequestBody AddNuclearPowerplantDTO addNuclearPowerplantDTO) {
+        if (addNuclearPowerplantDTO == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
         var simulation = simulationService.addSimulation(addNuclearPowerplantDTO);
         return ResponseEntity.ok().body(simulation);
     }

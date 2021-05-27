@@ -9,12 +9,12 @@ public class Scenario {
     private List<Kwh> kwhList = new ArrayList<>();
     private List<Kwh> totalKwhList = new ArrayList<>();
 
-    public String getName() {
-        return name;
-    }
-
     public Scenario(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public List<Kwh> getKwhList() {
@@ -29,5 +29,7 @@ public class Scenario {
         return totalKwhList;
     }
 
-    public void addTotalKwh(Kwh kwh) {this.totalKwhList.add(kwh); }
+    public void addTotalKwh(Kwh kwh) {
+        this.totalKwhList.add(kwh);
+    }
 }
