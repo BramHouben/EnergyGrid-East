@@ -115,7 +115,7 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
             }
 
             scenario.addKwh(new Kwh(simulation.getMaxPower(), time));
-            scenario.addTotalKwh(new Kwh(kw + simulation.getMaxPower(), time));
+            scenario.addTotalKwh(new Kwh((double)kw + simulation.getMaxPower(), time));
         }
         return scenario;
     }
