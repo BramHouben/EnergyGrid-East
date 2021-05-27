@@ -1,5 +1,6 @@
 package org.energygrid.east.websocketsservice.rabbit;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.energygrid.east.websocketsservice.models.EnergyBalanceDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -18,11 +19,18 @@ public class Receiver {
 
     public void getBalance(String message) {
         logger.log(Level.INFO, message);
-        listen(message);
+        try {
+            var objectMapper = new ObjectMapper();
+            var energyBalanceDTO = objectMapper.readValue(message, EnergyBalanceDTO.class);
+            listen(energyBalanceDTO);
+        }
+        catch (Exception e) {
+            logger.log(Level.WARNING, e.getMessage(), e);
+        }
     }
 
-    public void listen(String message) {
+    public void listen(EnergyBalanceDTO energyBalanceDTO) {
         System.out.println("sending websocket message..");
-        template.convertAndSend("/topic", message);
+        template.convertAndSend("/topic", energyBalanceDTO);
     }
 }

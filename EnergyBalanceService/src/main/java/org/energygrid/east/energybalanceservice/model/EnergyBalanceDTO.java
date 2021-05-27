@@ -8,11 +8,11 @@ public class EnergyBalanceDTO implements Serializable {
     private long consume;
     private long production;
     private double balance;
-    private LocalDateTime time;
+    private String time;
 
     public EnergyBalanceDTO() {}
 
-    public EnergyBalanceDTO(long consume, long production, double balance, LocalDateTime time) {
+    public EnergyBalanceDTO(long consume, long production, double balance, String time) {
         this.consume = consume;
         this.production = production;
         this.balance = balance;
@@ -43,21 +43,21 @@ public class EnergyBalanceDTO implements Serializable {
         this.balance = balance;
     }
 
-    public LocalDateTime getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(LocalDateTime time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
     @Override
     public String toString() {
-        return "EnergyBalanceDTO{" +
+        return "{" +
                 "consume=" + consume +
                 ", production=" + production +
                 ", balance=" + balance +
-                ", time=" + time +
+                ", time='" + time + '\'' +
                 '}';
     }
 }
