@@ -2,7 +2,9 @@ package com.enerygrid.east.energyusageservice.service;
 
 import com.enerygrid.east.energyusageservice.entity.EnergyUsage;
 import com.enerygrid.east.energyusageservice.repository.EnergyUsageRepository;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -11,12 +13,18 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 @Service
 public class EnergyUsageService implements IEnergyUsageService {
 
+    private static final java.util.logging.Logger logger = Logger.getLogger(EnergyUsage.class.getName());
+
     @Autowired
     private EnergyUsageRepository energyUsageRepository;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
 
     @Override
     public List<EnergyUsage> getEnergyUsageOfUser(String userId, String date) {
@@ -82,5 +90,12 @@ public class EnergyUsageService implements IEnergyUsageService {
         var bd = BigDecimal.valueOf(value);
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+
+    @Scheduled(fixedDelay = 10000 )
+    private void sendDailyUsageToEnergyBalance(){
+        logger.info("test");
+        EnergyUsage energyUsage= energyUsageRepository.findFirstById();
+    //    rabbitTemplate.convertAndSend();
     }
 }
