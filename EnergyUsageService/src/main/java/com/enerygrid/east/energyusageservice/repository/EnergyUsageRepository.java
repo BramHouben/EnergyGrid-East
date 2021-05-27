@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface EnergyUsageRepository extends MongoRepository<EnergyUsage, String> {
     List<EnergyUsage> findUsageByUserIdAndDay(String userId, String day);
-    EnergyUsage findFirstById();
+    EnergyUsage findFirstByOrderByDayDesc();
 }

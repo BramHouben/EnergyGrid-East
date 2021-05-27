@@ -1,8 +1,13 @@
 package org.energygrid.east.energybalanceservice.rabbit.rabbitservice;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.energygrid.east.energybalanceservice.model.EnergyBalanceStore;
+import org.energygrid.east.energybalanceservice.model.EnergyUsage;
+import org.energygrid.east.energybalanceservice.model.EnergyUsagePerMinute;
 import org.energygrid.east.energybalanceservice.model.Type;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceStoreRepo;
+import org.energygrid.east.energybalanceservice.repo.EnergyUsageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +17,9 @@ import java.util.UUID;
 
 @Service
 public class RabbitService implements IRabbitService {
+
+    @Autowired
+    private EnergyUsageRepo energyUsageRepo;
 
     @Autowired
     private EnergyBalanceStoreRepo energyBalanceStoreRepo;
@@ -45,5 +53,17 @@ public class RabbitService implements IRabbitService {
         energyBalanceStore.setProduction(Long.parseLong(message));
         energyBalanceStore.setTime(LocalDateTime.now(ZoneOffset.UTC));
         energyBalanceStoreRepo.save(energyBalanceStore);
+    }
+
+    @Override
+    public void addLatestUsage(String message) {
+        Gson gson = new Gson();
+        var energyUsagePerHour = gson.fromJson(message, EnergyUsage.class);
+        energyUsagePerHour.setKwh(energyUsagePerHour.getKwh()/60);
+        if (energyUsagePerHour!=null) {
+            energyUsageRepo.save(energyUsagePerHour);
+        }
+//        var EnergyUsagePerMinute = new EnergyUsagePerMinute(energyUsagePerHour.getDay(),energyUsagePerHour.getKwh(), energyUsagePerHour.getPrice(), energyUsagePerHour.getHour());
+//        for ()
     }
 }

@@ -28,4 +28,9 @@ public class Receiver {
         logger.log(Level.INFO, ()->  "Got message in receiver Nuclear" + message);
         rabbitService.addLatestNuclear(message);
     }
+
+    public void receiveMessageUsage(String message){
+        logger.log(Level.INFO,()-> "Got message in receiver Usage"+ message);
+        rabbitService.addLatestUsage(message);
+    }
 }
