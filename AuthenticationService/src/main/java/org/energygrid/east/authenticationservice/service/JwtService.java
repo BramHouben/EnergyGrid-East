@@ -2,9 +2,11 @@ package org.energygrid.east.authenticationservice.service;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.apache.tomcat.util.net.openssl.ciphers.Cipher;
 import org.energygrid.east.authenticationservice.model.dto.UserDto;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Calendar;
 import java.util.Date;
@@ -57,7 +59,8 @@ public class JwtService implements IJwtService {
 
     private Key getKey() {
         if (key == null) {
-            key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+            String secret = "g343g45qa5gaer";
+            key = new SecretKeySpec(secret.getBytes(), "AES");
             return key;
         }
         return key;
