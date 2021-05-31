@@ -62,7 +62,6 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
                 break;
             case TURN_OFF_SOLAR_PARK:
                 scenarioExpectationResult.setSimulationExpectationResult(scenarioTurnOffSolarPark(scenario.getAmount(), scenario.getSolarUnit(), scenario.getTurnOffTimes(), scenarioExpectationResult.getCreatedAt()));
-            case TURN_OFF_UNIT:
                 break;
             default:
                 return null;

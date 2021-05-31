@@ -13,6 +13,12 @@ public class SolarUnit {
 
     public SolarUnit() {}
 
+    public SolarUnit(Point coordinates, SolarPanelType solarPanelType, int numberOfPanels) {
+        this.coordinates = coordinates;
+        this.solarPanelType = solarPanelType;
+        this.numberOfPanels = numberOfPanels;
+    }
+
     public SolarUnit(int solarUnitId, String description, Point coordinates, SolarPanelType solarPanelType, int numberOfPanels) {
         this.solarUnitId = solarUnitId;
         this.description = description;
