@@ -1,0 +1,560 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-userservice-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: mysql-userservice-class
+  capacity:
+    storage: 3Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data/user/db"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-userservice-pv-claim
+spec:
+  storageClassName: mysql-userservice-class
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-userservice
+spec:
+  selector:
+    matchLabels:
+      app: mysql-userservice
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql-userservice
+    spec:
+      containers:
+        - image: mysql
+          name: mysql-userservice
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-userservice
+                  key: root-password
+          ports:
+            - containerPort: 3306
+              name: user-db
+          volumeMounts:
+            - name: mysql-userservice-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-userservice-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-userservice-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-userservice
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql-userservice
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - image: "docker.io/rabbitmq:management"
+          imagePullPolicy: Always
+          name: rabbitmq
+          ports:
+            - containerPort: 15672
+              name: http-port
+          volumeMounts:
+            - mountPath: /var/rabbitmqapp_home
+              name: rabbitmqapp-home
+      volumes:
+        - emptyDir: {}
+          name: rabbitmqapp-home
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-db-phpmyadmin
+  labels:
+    app: user-db-phpmyadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-db-phpmyadmin
+  template:
+    metadata:
+      labels:
+        app: user-db-phpmyadmin
+    spec:
+      containers:
+        - name: user-db-phpmyadmin
+          image: phpmyadmin/phpmyadmin
+          ports:
+            - containerPort: 80
+          env:
+            - name: PMA_HOST
+              value: mysql-userservice
+            - name: PMA_PORT
+              value: "3306"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-db-phpmyadmin
+spec:
+  type: LoadBalancer
+  selector:
+    app: user-db-phpmyadmin
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  namespace: default
+spec:
+  ports:
+    - name: ui
+      protocol: TCP
+      port: 15672
+      targetPort: 15672
+    - name: service
+      port: 5672
+      targetPort: 5672
+      protocol: TCP
+  selector:
+    app: rabbitmq
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solarparkservice-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: solarparkservice
+  template:
+    metadata:
+      labels:
+        app: solarparkservice
+    spec:
+      containers:
+        - name: solarparkservice
+          image: energygrideast/solarparkservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8090
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq
+      restartPolicy: Always
+      env:
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: solarparkservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: solarparkservice
+  ports:
+    - port: 8090
+      targetPort: 8090
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weatherservice-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weatherservice
+  template:
+    metadata:
+      labels:
+        app: weatherservice
+    spec:
+      containers:
+        - name: weatherservice
+          image: energygrideast/weatherservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8110
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq
+      restartPolicy: Always
+      env:
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: weatherservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: weatherservice
+  ports:
+    - port: 8110
+      targetPort: 8110
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userservice-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userservice
+  template:
+    metadata:
+      labels:
+        app: userservice
+    spec:
+      containers:
+        - name: userservice
+          image: energygrideast/userservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8130
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq
+      restartPolicy: Always
+      env:
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: userservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: userservice
+  ports:
+    - port: 8130
+      targetPort: 8130
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authenticationservice-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authenticationservice
+  template:
+    metadata:
+      labels:
+        app: authenticationservice
+    spec:
+      containers:
+        - name: authenticationservice
+          image: energygrideast/authenticationservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8100
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq
+      restartPolicy: Always
+      env:
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authenticationservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: authenticationservice
+  ports:
+    - port: 8100
+      targetPort: 8100
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - name: gateway
+          image: vincentdarwinkel/gateway
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq
+      restartPolicy: Always
+      env:
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+spec:
+  type: LoadBalancer
+  selector:
+    app: gateway
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: regionservice-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: regionservice
+  template:
+    metadata:
+      labels:
+        app: regionservice
+    spec:
+      containers:
+        - name: regionservice
+          image: energygrideast/regionservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8150
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq
+      restartPolicy: Always
+      env:
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: regionservice
+spec:
+  type: LoadBalancer
+  selector:
+    app: regionservice
+  ports:
+    - protocol: TCP
+      port: 8150
+      targetPort: 8150
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulationwindservice-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simulationwindservice
+  template:
+    metadata:
+      labels:
+        app: simulationwindservice
+    spec:
+      containers:
+        - name: simulationwindservice
+          image: energygrideast/simulationwindservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8140
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq
+      restartPolicy: Always
+      env:
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simulationwindservice
+spec:
+  type: LoadBalancer
+  selector:
+    app: simulationwindservice
+  ports:
+    - protocol: TCP
+      port: 8140
+      targetPort: 8140
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: energyusageservice-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: energyusageservice
+  template:
+    metadata:
+      labels:
+        app: energyusageservice
+    spec:
+      containers:
+        - name: energyusageservice
+          image: energygrideast/energyusageservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8170
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq
+      restartPolicy: Always
+      env:
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: energyusageservice
+spec:
+  type: LoadBalancer
+  selector:
+    app: energyusageservice
+  ports:
+    - protocol: TCP
+      port: 8170
+      targetPort: 8170
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: energybalanceservice-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: energybalanceservice
+  template:
+    metadata:
+      labels:
+        app: energybalanceservice
+    spec:
+      containers:
+        - name: energybalanceservice
+          image: energygrideast/energybalanceservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8160
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq
+      restartPolicy: Always
+      env:
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: energybalanceservice
+spec:
+  type: LoadBalancer
+  selector:
+    app: energybalanceservice
+  ports:
+    - protocol: TCP
+      port: 8160
+      targetPort: 8160
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulationsolarservice-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simulationsolarservice
+  template:
+    metadata:
+      labels:
+        app: simulationsolarservice
+    spec:
+      containers:
+        - name: simulationsolarservice
+          image: energygrideast/simulationsolarservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8120
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq
+      restartPolicy: Always
+      env:
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simulationsolarservice
+spec:
+  type: LoadBalancer
+  selector:
+    app: simulationsolarservice
+  ports:
+    - protocol: TCP
+      port: 8120
+      targetPort: 8120
