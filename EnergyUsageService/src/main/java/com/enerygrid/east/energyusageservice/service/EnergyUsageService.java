@@ -2,19 +2,26 @@ package com.enerygrid.east.energyusageservice.service;
 
 import com.enerygrid.east.energyusageservice.entity.EnergyUsage;
 import com.enerygrid.east.energyusageservice.repository.EnergyUsageRepository;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 @Service
 public class EnergyUsageService implements IEnergyUsageService {
 
+    private static final java.util.logging.Logger logger = Logger.getLogger(EnergyUsage.class.getName());
+    @Autowired
+    RabbitTemplate rabbitTemplate;
     @Autowired
     private EnergyUsageRepository energyUsageRepository;
 
@@ -28,15 +35,15 @@ public class EnergyUsageService implements IEnergyUsageService {
         return dailyUsage;
     }
 
-    public List<EnergyUsage> generateHourlyUsage(String userId, String date){
+    public List<EnergyUsage> generateHourlyUsage(String userId, String date) {
         List<EnergyUsage> dailyUsage = new ArrayList<>();
 
-        for (var i = 0; i <= 23; i++){
+        for (var i = 0; i <= 23; i++) {
 
             int kwh = getRandomKwh(i);
             double price = getKwhPrice(kwh);
             var kwhDouble = (double) kwh / 100;
-            var usage = new EnergyUsage(UUID.randomUUID().toString(), userId, date, kwhDouble , price , i);
+            var usage = new EnergyUsage(UUID.randomUUID().toString(), userId, date, kwhDouble, price, i);
 
             energyUsageRepository.insert(usage);
             dailyUsage.add(usage);
@@ -57,15 +64,33 @@ public class EnergyUsageService implements IEnergyUsageService {
         var random = new SecureRandom();
 
         switch (hour) {
-            case 1: case 2: case 3: case 4: case 5: case 6:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
                 return random.nextInt((29 - 25) + 1) + 25;
-            case 0: case 7: case 8: case 9: case 10: case 21: case 22: case 23:
+            case 0:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+            case 21:
+            case 22:
+            case 23:
                 return random.nextInt((34 - 30) + 1) + 30;
-            case 11: case 13: case 14: case 15: case 16:
+            case 11:
+            case 13:
+            case 14:
+            case 15:
+            case 16:
                 return random.nextInt((39 - 35) + 1) + 35;
-            case 12: case 20:
+            case 12:
+            case 20:
                 return random.nextInt((46 - 40) + 1) + 40;
-            case 17: case 19:
+            case 17:
+            case 19:
                 return random.nextInt((54 - 47) + 1) + 47;
             case 18:
                 return random.nextInt((60 - 55) + 1) + 55;
@@ -74,7 +99,7 @@ public class EnergyUsageService implements IEnergyUsageService {
         }
     }
 
-    private double getKwhPrice(int kwh){
+    private double getKwhPrice(int kwh) {
         return round(0.22 / 100 * kwh);
     }
 
@@ -82,5 +107,19 @@ public class EnergyUsageService implements IEnergyUsageService {
         var bd = BigDecimal.valueOf(value);
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+
+    @Scheduled(fixedDelay = 60000)
+    private void sendDailyUsageToEnergyBalance() {
+        logger.info("sendDailyUsageToEnergyBalance");
+        var localDateDay = LocalDate.now().toString();
+        List<EnergyUsage> dailyUsage = energyUsageRepository.findUsageByUserIdAndDay("1", localDateDay);
+
+        if (dailyUsage.isEmpty()) {
+            generateHourlyUsage("1", localDateDay);
+        }
+        var energyUsage = energyUsageRepository.findFirstByOrderByDayDesc();
+        energyUsageRepository.delete(energyUsage);
+        rabbitTemplate.convertAndSend("EnergyBalance", "balance.create.usage", energyUsage.toString());
     }
 }
