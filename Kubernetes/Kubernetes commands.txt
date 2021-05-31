@@ -1,0 +1,1 @@
+kubectl create secret generic mysql-userservice --from-literal=root-password=fwefwef23ferhj455
