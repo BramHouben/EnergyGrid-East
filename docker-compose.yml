@@ -205,25 +205,25 @@ services:
     ports:
       - 27030:27030
 
-  simulationsolarservice:
-    build: SimulationSolarService
-    hostname: simulationsolarservice
-    container_name: simulationsolarservice
-    depends_on:
-      - rabbitmq
-    restart: always
-    ports:
-      - 8120:8120
-    environment:
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_DATA_MONGODB_URI: mongodb://mongosolarservice:27040/solar
+#  simulationsolarservice:
+#    build: SimulationSolarService
+#    hostname: simulationsolarservice
+#    container_name: simulationsolarservice
+#    depends_on:
+#      - rabbitmq
+#    restart: always
+#    ports:
+#      - 8120:8120
+#    environment:
+#      SPRING_RABBITMQ_HOST: rabbitmq
+#      SPRING_DATA_MONGODB_URI: mongodb://mongosolarservice:27040/solar
 
-  mongosolarservice:
-    hostname: mongosolarservice
-    container_name: mongosolarservice
-    command: mongod --port 27040
-    image: mongo:latest
-    volumes:
-      - ./database:/mongosolarservice
-    ports:
-      - 27040:27040
+#  mongosolarservice:
+#    hostname: mongosolarservice
+#    container_name: mongosolarservice
+#    command: mongod --port 27040
+#    image: mongo:latest
+#    volumes:
+#      - ./database:/mongosolarservice
+#    ports:
+#      - 27040:27040

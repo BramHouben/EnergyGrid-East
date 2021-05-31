@@ -1,21 +1,16 @@
-package org.energygrid.east.simulationsolarservice.model;
+package org.energygrid.east.websocketsservice.models;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+public class SolarParkProductionViewModel {
 
-@Document(collection = "production")
-public class SolarParkProduction {
-
-    @Id
     private String id;
-
     private SolarParkViewModel solarPark;
     private double todayProduction;
     private double yearProduction;
 
-    public SolarParkProduction() { }
+    public SolarParkProductionViewModel() { }
 
-    public SolarParkProduction(SolarParkViewModel solarPark, double todayProduction, double yearProduction) {
+    public SolarParkProductionViewModel(String id, SolarParkViewModel solarPark, double todayProduction, double yearProduction) {
+        this.id = id;
         this.solarPark = solarPark;
         this.todayProduction = todayProduction;
         this.yearProduction = yearProduction;

@@ -1,5 +1,6 @@
 package org.energygrid.east.simulationsolarservice.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
 import org.energygrid.east.simulationsolarservice.factory.FactoryURL;
 import org.energygrid.east.simulationsolarservice.logic.SimulationLogic;
@@ -37,7 +38,7 @@ public class SimulationSolarService implements ISimulationSolarService {
     @Value("${URL}")
     private String url ;
 
-    @Value("${APIKEY}")
+    @Value("${APIKEY_SIMULATION}")
     private String apiKey;
 
     private final RestTemplate template;
@@ -80,6 +81,8 @@ public class SimulationSolarService implements ISimulationSolarService {
         solarParks.add(new SolarParkViewModel(30, "Rivierenland, Waterschap", new Point(51.965177468519435, 5.854872754972738), 1000, SolarPanelType.POLY_CRYSTALLINE));
     }
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
@@ -99,6 +102,7 @@ public class SimulationSolarService implements ISimulationSolarService {
     }
 
     //@Scheduled(fixedDelay = 3600000)
+    //@Scheduled(fixedDelay = 600000)
     @Scheduled(fixedDelay = 300000)
     private void sendSolarProduction() {
         try {
@@ -119,13 +123,16 @@ public class SimulationSolarService implements ISimulationSolarService {
             }
             results.add(simulationResult);
             simulationExpectationResult.setKwTotalResult(simulationLogic.calculateKwProduction(results, true));
+
+            sendProductionResults();
         }
         catch (Exception ex) {
             logger.log(Level.WARNING, ex.getMessage(), ex);
         }
     }
 
-    @Scheduled(cron = "0 0 12 * * ?")
+    //Every Day on 00:00:00 this method will be called
+    @Scheduled(cron = "0 0 0 * * ?")
     private void dayReset() {
         try {
             var productions = solarParkProductionRepository.findAll();
@@ -170,9 +177,21 @@ public class SimulationSolarService implements ISimulationSolarService {
             solarParkProduction = new SolarParkProduction();
             solarParkProduction.setSolarPark(park);
         }
-        solarParkProduction.setTodayProduction(solarParkProduction.getTodayProduction() + (productionExpectation.getKw() / 12));
-        solarParkProduction.setYearProduction(solarParkProduction.getYearProduction() + (productionExpectation.getKw() / 12));
+        solarParkProduction.setTodayProduction(solarParkProduction.getTodayProduction() + (productionExpectation.getKw() / 6));
+        solarParkProduction.setYearProduction(solarParkProduction.getYearProduction() + (productionExpectation.getKw() / 6));
         solarParkProductionRepository.save(solarParkProduction);
+    }
+
+    private void sendProductionResults() {
+        try {
+            var results = getOverviewProductionSolarParks();
+            var message = objectMapper.writeValueAsString(results);
+
+            rabbitTemplate.convertAndSend("websockets", "websocket.overview.update", message);
+        }
+        catch (Exception ex) {
+            logger.log(Level.WARNING, ex.getMessage(), ex);
+        }
     }
 
     @Override
