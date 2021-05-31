@@ -1,9 +1,13 @@
 package org.energygrid.east.userservice.controller;
 
+import io.jsonwebtoken.Claims;
 import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
+import org.energygrid.east.userservice.model.enums.AccountRole;
+import org.energygrid.east.userservice.model.fromFrontend.Operator;
 import org.energygrid.east.userservice.model.fromFrontend.User;
 import org.energygrid.east.userservice.model.viewmodel.UserViewModel;
+import org.energygrid.east.userservice.service.IJwtService;
 import org.energygrid.east.userservice.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,9 @@ import java.util.logging.Logger;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private IJwtService jwtService;
 
     private final ModelMapper modelMapper;
 
@@ -107,4 +114,60 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    @GetMapping("/operator")
+    public ResponseEntity getGridOperators(){
+        try {
+            if(checkForNotAdmin(request.getHeader("jwt"))) return ResponseEntity.status(401).body(null);
+
+            var operators = userService.getGridOperators();
+
+            var operatorViewModel = modelMapper.map(operators, UserViewModel.class);
+            return ResponseEntity.ok(operatorViewModel);
+        } catch (NullPointerException e) {
+            return ResponseEntity.status(404).body(null);
+        } catch (Exception e) {
+            logger.log(Level.ALL, e.getMessage());
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @PostMapping("/operator")
+    public ResponseEntity addGridOperator(@NotNull @RequestBody User user){
+        try {
+            if(checkForNotAdmin(request.getHeader("jwt"))) return ResponseEntity.status(401).body(null);
+
+            userService.addUser(user);
+            return ResponseEntity.status(201).body(null);
+        } catch (DuplicatedNameException e) {
+            return ResponseEntity.status(409).body(null);
+        } catch (Exception e) {
+            logger.log(Level.ALL, e.getMessage());
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @DeleteMapping("/operator")
+    public ResponseEntity deleteGridOperator(@NotNull @RequestBody Operator operator){
+        try{
+            if(checkForNotAdmin(request.getHeader("jwt"))) return ResponseEntity.status(401).body(null);
+
+            userService.deleteOperator(operator);
+            return ResponseEntity.status(201).body(null);
+        } catch (DuplicatedNameException e) {
+            return ResponseEntity.status(409).body(null);
+        } catch (Exception e) {
+            logger.log(Level.ALL, e.getMessage());
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    private boolean checkForNotAdmin(String jwt){
+        if(jwt == null || jwt.isEmpty()) return true;
+
+        Claims jwtClaims = jwtService.getClaims(jwt);
+        var userRole = jwtClaims.get("role");
+        return userRole != AccountRole.ADMIN;
+    }
+
 }

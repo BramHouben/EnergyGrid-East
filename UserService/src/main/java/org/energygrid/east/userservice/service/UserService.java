@@ -5,6 +5,7 @@ import javassist.NotFoundException;
 import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.enums.AccountRole;
+import org.energygrid.east.userservice.model.fromFrontend.Operator;
 import org.energygrid.east.userservice.model.fromFrontend.User;
 import org.energygrid.east.userservice.model.rabbitMq.UserRabbitMq;
 import org.energygrid.east.userservice.rabbit.Producer.AddUserProducer;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -34,6 +36,7 @@ public class UserService {
         }
 
         UserDTO userToStore = mapper.map(user, UserDTO.class);
+        userToStore.setAccountRole(AccountRole.LARGE_SCALE_CUSTOMER);
         userToStore.setUuid(UUID.randomUUID());
 
         userRepo.save(userToStore);
@@ -113,5 +116,15 @@ public class UserService {
         var rabbitProducer = new RabbitProducer();
         var userProducer = new DeleteUserProducer(user);
         rabbitProducer.produce(userProducer);
+    }
+
+    public List<UserDTO> getGridOperators(){
+        return userRepo.findAllByAccountRole(AccountRole.GRID_OPERATOR);
+    }
+
+    public void deleteOperator(Operator operator){
+        UserDTO operatorToDelete = userRepo.getByUuid(operator.getUuid());
+
+        userRepo.delete(operatorToDelete);
     }
 }
