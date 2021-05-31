@@ -24,4 +24,4 @@ steps:
     inputs:
       action: 'deploy'
       kubernetesServiceConnection: 'EnergyGridEast'
-      manifests: 'kubernetes/Kubernetes.yaml'
+      manifests: 'Kubernetes/Kubernetes.yaml'
