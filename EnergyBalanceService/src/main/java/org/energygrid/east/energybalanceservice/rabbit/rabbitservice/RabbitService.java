@@ -1,10 +1,8 @@
 package org.energygrid.east.energybalanceservice.rabbit.rabbitservice;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.energygrid.east.energybalanceservice.model.EnergyBalanceStore;
 import org.energygrid.east.energybalanceservice.model.EnergyUsage;
-import org.energygrid.east.energybalanceservice.model.EnergyUsagePerMinute;
 import org.energygrid.east.energybalanceservice.model.Type;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceStoreRepo;
 import org.energygrid.east.energybalanceservice.repo.EnergyUsageRepo;
@@ -57,13 +55,11 @@ public class RabbitService implements IRabbitService {
 
     @Override
     public void addLatestUsage(String message) {
-        Gson gson = new Gson();
+        var gson = new Gson();
         var energyUsagePerHour = gson.fromJson(message, EnergyUsage.class);
-        energyUsagePerHour.setKwh(energyUsagePerHour.getKwh()/60);
-        if (energyUsagePerHour!=null) {
-            energyUsageRepo.save(energyUsagePerHour);
-        }
-//        var EnergyUsagePerMinute = new EnergyUsagePerMinute(energyUsagePerHour.getDay(),energyUsagePerHour.getKwh(), energyUsagePerHour.getPrice(), energyUsagePerHour.getHour());
-//        for ()
+        energyUsagePerHour.setKwh(energyUsagePerHour.getKwh() / 60);
+        energyUsageRepo.save(energyUsagePerHour);
+
+
     }
 }

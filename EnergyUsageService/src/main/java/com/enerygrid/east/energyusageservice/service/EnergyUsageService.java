@@ -11,8 +11,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -22,12 +20,10 @@ import java.util.logging.Logger;
 public class EnergyUsageService implements IEnergyUsageService {
 
     private static final java.util.logging.Logger logger = Logger.getLogger(EnergyUsage.class.getName());
-
-    @Autowired
-    private EnergyUsageRepository energyUsageRepository;
-
     @Autowired
     RabbitTemplate rabbitTemplate;
+    @Autowired
+    private EnergyUsageRepository energyUsageRepository;
 
     @Override
     public List<EnergyUsage> getEnergyUsageOfUser(String userId, String date) {
@@ -113,14 +109,16 @@ public class EnergyUsageService implements IEnergyUsageService {
         return bd.doubleValue();
     }
 
-    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 60000)
     private void sendDailyUsageToEnergyBalance() {
         logger.info("sendDailyUsageToEnergyBalance");
-        String localDateDay = LocalDate.now().toString();
+        var localDateDay = LocalDate.now().toString();
         List<EnergyUsage> dailyUsage = energyUsageRepository.findUsageByUserIdAndDay("1", localDateDay);
 
-        if (dailyUsage.isEmpty()) dailyUsage = generateHourlyUsage("1", localDateDay);
-        EnergyUsage energyUsage = energyUsageRepository.findFirstByOrderByDayDesc();
+        if (dailyUsage.isEmpty()) {
+            generateHourlyUsage("1", localDateDay);
+        }
+        var energyUsage = energyUsageRepository.findFirstByOrderByDayDesc();
         energyUsageRepository.delete(energyUsage);
         rabbitTemplate.convertAndSend("EnergyBalance", "balance.create.usage", energyUsage.toString());
     }

@@ -22,7 +22,7 @@ public class EnergyService implements IEnergyService {
     private static final java.util.logging.Logger logger = Logger.getLogger(EnergyService.class.getName());
 
     @Autowired
-    RabbitTemplate rabbitTemplate;
+   private RabbitTemplate rabbitTemplate;
 
     @Autowired
     private EnergyBalanceStoreRepo energyBalanceStoreRepo;
@@ -47,17 +47,14 @@ public class EnergyService implements IEnergyService {
         var lastEnergyUsageMinute = energyUsageRepo.findFirstByOrderByDayDesc().getKwh();
 
         var usagePerMinute = (lastEnergyUsageMinute*1000000);
-//        long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
-//        long latestWind = energyBalanceStoreRepo.findFirstByType(Type.WIND).getProduction();
+        long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
+        long latestWind = energyBalanceStoreRepo.findFirstByType(Type.WIND).getProduction();
         long latestNuclear = 6300;
 
-        long total = +latestNuclear + 16750 + 16750;
-//        long leverage = usagePerMinute-total;
-        long leverage = 156150;
-        total += leverage;
+        long total = +latestNuclear + latestSolar + latestWind;
 
         double balance = ((float) total / usagePerMinute) * 100;
-        //per minute
+
         var energyBalance = new EnergyBalance(UUID.randomUUID(), 3333, total, balance, LocalDateTime.now(ZoneOffset.UTC));
         energyBalanceRepo.save(energyBalance);
     }
