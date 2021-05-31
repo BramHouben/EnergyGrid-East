@@ -14,7 +14,7 @@ public class Receiver {
     @Autowired
     private IRabbitService rabbitService;
 
-    public void receiveMessageWind(String message) {
+    public void receiveMessageWind(double message) {
         logger.log(Level.INFO, ()-> "Got message in receiver Wind" + message);
         rabbitService.addLatestWind(message);
     }

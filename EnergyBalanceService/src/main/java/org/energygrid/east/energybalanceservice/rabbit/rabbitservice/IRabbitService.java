@@ -5,7 +5,7 @@ public interface IRabbitService {
     /**
      * @param message with latest wind details
      */
-    void addLatestWind(String message);
+    void addLatestWind(double message);
 
     /**
      * @param message with latest solar details

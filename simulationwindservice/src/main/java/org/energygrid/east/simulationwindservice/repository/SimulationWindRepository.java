@@ -7,4 +7,6 @@ import org.springframework.stereotype.Component;
 @Component
 public interface SimulationWindRepository extends MongoRepository<SimulationExpectationResult, String> {
 
+    SimulationExpectationResult findFirstByOrderByCreatedAt();
+
 }

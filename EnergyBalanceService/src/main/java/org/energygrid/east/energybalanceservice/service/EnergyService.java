@@ -47,15 +47,18 @@ public class EnergyService implements IEnergyService {
         var lastEnergyUsageMinute = energyUsageRepo.findFirstByOrderByDayDesc().getKwh();
 
         var usagePerMinute = (lastEnergyUsageMinute*1000000);
-        long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
+//       long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
         long latestWind = energyBalanceStoreRepo.findFirstByType(Type.WIND).getProduction();
         long latestNuclear = 6300;
 
-        long total = +latestNuclear + latestSolar + latestWind;
+        long total = +latestNuclear + 8000 + latestWind;
+
+        long leverage = 25000;
+        total += leverage;
 
         double balance = ((float) total / usagePerMinute) * 100;
-
-        var energyBalance = new EnergyBalance(UUID.randomUUID(), 3333, total, balance, LocalDateTime.now(ZoneOffset.UTC));
+        //per minute
+        var energyBalance = new EnergyBalance(UUID.randomUUID(), (long)usagePerMinute, total, balance, LocalDateTime.now(ZoneOffset.UTC));
         energyBalanceRepo.save(energyBalance);
     }
 }

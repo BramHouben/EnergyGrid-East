@@ -23,11 +23,11 @@ public class RabbitService implements IRabbitService {
     private EnergyBalanceStoreRepo energyBalanceStoreRepo;
 
     @Override
-    public void addLatestWind(String message) {
+    public void addLatestWind(double message) {
         var energyBalanceStore = new EnergyBalanceStore();
         energyBalanceStore.setUuid(UUID.randomUUID());
         energyBalanceStore.setType(Type.WIND);
-        energyBalanceStore.setProduction(Long.parseLong(message));
+        energyBalanceStore.setProduction((long) message);
         energyBalanceStore.setTime(LocalDateTime.now(ZoneOffset.UTC));
         energyBalanceStoreRepo.save(energyBalanceStore);
 
