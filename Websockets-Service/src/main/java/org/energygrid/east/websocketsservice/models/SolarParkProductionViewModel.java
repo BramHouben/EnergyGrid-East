@@ -7,7 +7,8 @@ public class SolarParkProductionViewModel {
     private double todayProduction;
     private double yearProduction;
 
-    public SolarParkProductionViewModel() { }
+    public SolarParkProductionViewModel() {
+    }
 
     public SolarParkProductionViewModel(String id, SolarParkViewModel solarPark, double todayProduction, double yearProduction) {
         this.id = id;
@@ -16,9 +17,13 @@ public class SolarParkProductionViewModel {
         this.yearProduction = yearProduction;
     }
 
-    public String getId() { return id; }
+    public String getId() {
+        return id;
+    }
 
-    public void setId(String id) { this.id = id; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public SolarParkViewModel getSolarPark() {
         return solarPark;

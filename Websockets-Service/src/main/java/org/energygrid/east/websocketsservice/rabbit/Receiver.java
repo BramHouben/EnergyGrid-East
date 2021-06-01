@@ -15,10 +15,9 @@ import java.util.logging.Logger;
 @Component
 public class Receiver {
 
-    @Autowired
-    SimpMessagingTemplate template;
-
     private static final java.util.logging.Logger logger = Logger.getLogger(Receiver.class.getName());
+    @Autowired
+    private SimpMessagingTemplate template;
 
     public void getBalance(String message) {
         logger.log(Level.INFO, message);
@@ -26,8 +25,7 @@ public class Receiver {
             var objectMapper = new ObjectMapper();
             var energyBalanceDTO = objectMapper.readValue(message, EnergyBalanceDTO.class);
             listen(energyBalanceDTO);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.log(Level.WARNING, e.getMessage(), e);
         }
     }
@@ -36,21 +34,21 @@ public class Receiver {
         logger.log(Level.INFO, message);
         try {
             var objectMapper = new ObjectMapper();
-            List<SolarParkProductionViewModel> solarParkProduction = objectMapper.readValue(message, new TypeReference<>(){});
+            List<SolarParkProductionViewModel> solarParkProduction = objectMapper.readValue(message, new TypeReference<>() {
+            });
             listenOverviewProduction(solarParkProduction);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.log(Level.WARNING, e.getMessage(), e);
         }
     }
 
     public void listen(EnergyBalanceDTO energyBalanceDTO) {
-        System.out.println("sending websocket message..");
+        logger.log(Level.INFO, "sending websocket message..");
         template.convertAndSend("/topic", energyBalanceDTO);
     }
 
     public void listenOverviewProduction(List<SolarParkProductionViewModel> solarParkProductionViewModel) {
-        System.out.println("sending websocket message..");
+        logger.log(Level.INFO, "sending websocket message..");
         template.convertAndSend("/topic-overview", solarParkProductionViewModel);
     }
 }

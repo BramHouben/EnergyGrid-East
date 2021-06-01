@@ -1,7 +1,6 @@
 package org.energygrid.east.websocketsservice.models;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 public class EnergyBalanceDTO implements Serializable {
 
@@ -10,7 +9,8 @@ public class EnergyBalanceDTO implements Serializable {
     private double balance;
     private String time;
 
-    public EnergyBalanceDTO() {}
+    public EnergyBalanceDTO() {
+    }
 
     public EnergyBalanceDTO(long consume, long production, double balance, String time) {
         this.consume = consume;

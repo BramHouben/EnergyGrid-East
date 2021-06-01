@@ -5,13 +5,10 @@ import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 
@@ -106,7 +103,7 @@ public class RabbitConfig {
 
     @Bean
     SimpleMessageListenerContainer containerUsage(ConnectionFactory connectionFactory,
-                                                    @Qualifier("listenerAdapterUsage") MessageListenerAdapter listenerAdapterNuclear) {
+                                                  @Qualifier("listenerAdapterUsage") MessageListenerAdapter listenerAdapterNuclear) {
         var container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(QUEUE_NAME_USAGE);

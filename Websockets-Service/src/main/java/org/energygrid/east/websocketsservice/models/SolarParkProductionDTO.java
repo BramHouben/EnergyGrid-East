@@ -6,7 +6,8 @@ public class SolarParkProductionDTO {
 
     private List<SolarParkProductionViewModel> solarParkProductions;
 
-    public SolarParkProductionDTO() {}
+    public SolarParkProductionDTO() {
+    }
 
     public SolarParkProductionDTO(List<SolarParkProductionViewModel> solarParkProductions) {
         this.solarParkProductions = solarParkProductions;

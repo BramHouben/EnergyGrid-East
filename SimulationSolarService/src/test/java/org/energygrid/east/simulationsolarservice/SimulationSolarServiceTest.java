@@ -20,6 +20,7 @@ class SimulationSolarServiceTest {
     @Value("${APIKEY}")
     private String apiKey;
 
+    @Test
     private JsonObject getWeather() {
         final String url = "https://api.openweathermap.org/data/2.5/onecall?lat=51.441642&lon=5.4697225&units=metric&exlude=current,minutely,daily,alerts&appid=" + apiKey;
         final RestTemplate restTemplate = new RestTemplate();
