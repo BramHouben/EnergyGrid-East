@@ -1,8 +1,6 @@
 package org.energygrid.east.authenticationservice.service;
 
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import org.apache.tomcat.util.net.openssl.ciphers.Cipher;
 import org.energygrid.east.authenticationservice.model.dto.UserDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
