@@ -18,11 +18,7 @@ public class UserService implements IUserService {
     private ISecurityService securityService;
 
     @Autowired
-    private final AuthenticationRepository authenticationRepository;
-
-    public UserService(AuthenticationRepository authenticationRepository) {
-        this.authenticationRepository = authenticationRepository;
-    }
+    private AuthenticationRepository authenticationRepository;
 
     @Override
     public void addUser(UserRabbitMq user) {
