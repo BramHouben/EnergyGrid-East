@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("solar/simulation")
+@RequestMapping("solar/production")
 @CrossOrigin(origins = "http://localhost:3000")
 public class SimulationSolarController {
 
@@ -20,7 +20,7 @@ public class SimulationSolarController {
     private ISimulationSolarService simulationSolarService;
 
     @GetMapping("/overview")
-    public ResponseEntity<List<SolarParkProduction>> getLatestScenarios() {
+    public ResponseEntity<List<SolarParkProduction>> getProductionOverview() {
         var result = simulationSolarService.getOverviewProductionSolarParks();
         if (result.isEmpty()) {
             return ResponseEntity.noContent().build();
