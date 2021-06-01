@@ -27,14 +27,13 @@ import java.util.logging.Logger;
 public class SimulationWindService implements ISimulationWindService {
 
 
+    private static final java.util.logging.Logger logger = Logger.getLogger(SimulationWindService.class.getName());
     @Value("${KEYSECRET}")
     private static String url;
-    private static final java.util.logging.Logger logger = Logger.getLogger(SimulationWindService.class.getName());
-
     private final RestTemplate template;
     private final HttpHeaders headers;
     private final ISimulationLogic simulationLogic;
-
+    private final List<WindTurbine> windTurbines;
     @Autowired
     private RabbitTemplate rabbittemplate;
 
@@ -46,14 +45,17 @@ public class SimulationWindService implements ISimulationWindService {
         this.simulationLogic = new SimulationLogic();
         this.template = new RestTemplate();
         this.headers = new HttpHeaders();
-    }
-
-    @Scheduled(fixedDelay = 10000)
-    private void sendLatestWindInfoToQueue() {
-        logger.log(Level.INFO, "Send wind message to queue");
-        //total kwh per minute
-        var wind = "15010";
-        rabbittemplate.convertAndSend("EnergyBalance", "balance.create.wind", wind);
+        windTurbines = new ArrayList<>();
+        var windTurbine1 = new WindTurbine(1, "test", new Point(6.46073, 52.57363), 3.0);
+        var windTurbine2 = new WindTurbine(2, "test", new Point(6.46051, 52.57072), 3.0);
+        var windTurbine3 = new WindTurbine(3, "test", new Point(6.45386, 52.57085), 3.0);
+        var windTurbine4 = new WindTurbine(3, "test", new Point(6.45365, 52.56796), 3.0);
+        var windTurbine5 = new WindTurbine(4, "test", new Point(6.46322, 52.57036), 3.0);
+        windTurbines.add(windTurbine1);
+        windTurbines.add(windTurbine2);
+        windTurbines.add(windTurbine3);
+        windTurbines.add(windTurbine4);
+        windTurbines.add(windTurbine5);
     }
 
     @Override
@@ -81,5 +83,24 @@ public class SimulationWindService implements ISimulationWindService {
         simulationExpectationResult.setKwTotalResult(simulationLogic.calculateKwProduction(results, true));
         simulationWindRepository.save(simulationExpectationResult);
         return simulationExpectationResult;
+    }
+
+    @Scheduled(fixedDelay = 60000, initialDelay = 10000)
+    private void sendLatestWindInfo() {
+        double total = 0;
+        for (var turbine : windTurbines) {
+            var data = new FactoryURL().getWeatherData(headers, template, getUrl(turbine.getCoordinates().getX(), turbine.getCoordinates().getY()));
+            var productionExpectation = simulationLogic.createSimulationForWindTurbine(turbine.getType(), data.get(0));
+            total = +productionExpectation.getKw();
+        }
+        //  this is temporary!
+        var totalPerMinute = total * 3;
+//       var totalPerMinute = total /60;
+        rabbittemplate.convertAndSend("EnergyBalance", "balance.create.wind", totalPerMinute);
+        logger.log(Level.INFO, () -> "Send wind message to queue: " + totalPerMinute);
+    }
+
+    private String getUrl(double x, double y) {
+        return "https://api.openweathermap.org/data/2.5/onecall?lat=" + x + "&lon=" + y + "&exclude=current,minutely,daily,hourly,alerts&appid=da713c7b97d2a6f912d9266ec49a30d8";
     }
 }

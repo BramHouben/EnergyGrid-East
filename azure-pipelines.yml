@@ -1,4 +1,3 @@
-
 trigger:
   - main
 
@@ -14,7 +13,10 @@ steps:
       javaHomeOption: 'JDKVersion'
       jdkVersionOption: '1.11'
       jdkArchitectureOption: 'x64'
-      publishJUnitResults: true
-      testResultsFiles: '**/surefire-reports/TEST-*.xml'
-#      codeCoverageToolOption: JaCoCo
-      goals: 'clean package'
+      goals: 'clean package -Dmaven.test.skip=true'
+
+  - task: KubernetesManifest@0
+    inputs:
+      action: 'deploy'
+      kubernetesServiceConnection: 'EnergyGridEast'
+      manifests: 'Kubernetes/Kubernetes.yaml'

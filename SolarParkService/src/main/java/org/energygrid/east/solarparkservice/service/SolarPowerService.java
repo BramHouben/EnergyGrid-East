@@ -61,7 +61,7 @@ public class SolarPowerService implements ISolarParkPower {
     }
 
     private SolarPark setDtoToObject(AddSolarParkDTO solarParkDto) {
-        SolarPark solarPark = new SolarPark();
+        var solarPark = new SolarPark();
         solarPark.setSolarParkName(solarParkDto.getSolarParkName());
         solarPark.setCoordinates(solarParkDto.getCoordinates());
         solarPark.setPower(solarParkDto.getPower());
@@ -98,7 +98,7 @@ public class SolarPowerService implements ISolarParkPower {
 
     @Override
     public void updateSolarPark(UUID id, String name, int solarPanels) {
-        SolarPark solarPark = solarParkRepo.getSolarParkBySolarParkId(id);
+        var solarPark = solarParkRepo.getSolarParkBySolarParkId(id);
         solarPark.setCountSonarPanels(solarPanels);
         solarPark.setSolarParkName(name);
         solarParkRepo.save(solarPark);

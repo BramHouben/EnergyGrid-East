@@ -1,11 +1,14 @@
 package org.energygrid.east.energybalanceservice.service;
 
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.energygrid.east.energybalanceservice.model.BalanceType;
 import org.energygrid.east.energybalanceservice.model.EnergyBalance;
 import org.energygrid.east.energybalanceservice.model.EnergyBalanceDTO;
 import org.energygrid.east.energybalanceservice.model.Type;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceRepo;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceStoreRepo;
+import org.energygrid.east.energybalanceservice.repo.EnergyUsageRepo;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,6 +27,7 @@ import java.util.logging.Logger;
 public class EnergyService implements IEnergyService {
 
     private static final java.util.logging.Logger logger = Logger.getLogger(EnergyService.class.getName());
+  
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
@@ -35,6 +39,9 @@ public class EnergyService implements IEnergyService {
     @Autowired
     private EnergyBalanceRepo energyBalanceRepo;
 
+    @Autowired
+    private EnergyUsageRepo energyUsageRepo;
+
     @Override
     public EnergyBalance getLatestBalance() {
         logger.log(Level.INFO, () -> "latest balance called");
@@ -45,35 +52,50 @@ public class EnergyService implements IEnergyService {
 
     @Scheduled(fixedDelay = 60000, initialDelay = 20000)
     public void updateNewestBalance() {
+
         try {
-            logger.log(Level.INFO, () -> "update NewestBalance called");
-            long usagePerMinute = 190000;
-            //long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
-            long latestNuclear = 6300;
-            //long latestWind = energyBalanceStoreRepo.findFirstByType(Type.WIND).getProduction();
-            var max = 17000;
-            var min = 10000;
-            Random random = new Random();
-            var solar = random.nextInt(max - min + 1) + min;
-            var wind = random.nextInt(max - min + 1) + min;
+        logger.log(Level.INFO, () -> "update NewestBalance called");
+        var lastEnergyUsageMinute = energyUsageRepo.findFirstByOrderByDayDesc().getKwh();
+        var usagePerMinute = (lastEnergyUsageMinute * 1000000);
+        long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
 
-            long total = +latestNuclear + solar + wind;
-            long leverage = 156150;
-            total += leverage;
+        long latestWind = energyBalanceStoreRepo.findFirstByType(Type.WIND).getProduction();
+        long latestNuclear = 6300;
 
-            double balance = ((float) total / usagePerMinute) * 100;
-            //per minute
+        long total = +latestNuclear + latestSolar + latestWind;
 
-            var energyBalance = new EnergyBalance(UUID.randomUUID(), usagePerMinute, total, balance, LocalDateTime.now(ZoneOffset.UTC));
-            var energyBalanceDTO = new EnergyBalanceDTO(energyBalance.getConsume(), energyBalance.getProduction(), energyBalance.getBalance(), energyBalance.getTime().toString());
+        long leverage = 25000;
+        total += leverage;
 
-            var message = objectMapper.writeValueAsString(energyBalanceDTO);
+        double balance = ((float) total / usagePerMinute) * 100;
+        //per minute
 
-            rabbitTemplate.convertAndSend("websockets", "websocket.balance.update", message);
+        if (balance <= 99) {
+            double kwhNeeded = 100 - balance;
+            rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.buy", kwhNeeded);
+            var energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SHORTAGE, LocalDateTime.now(ZoneOffset.UTC));
             energyBalanceRepo.save(energyBalance);
+        }
+
+        if (balance > 100) {
+            double kwhSell = balance - 100;
+            rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.sell", kwhSell);
+            var energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SURPLUS, LocalDateTime.now(ZoneOffset.UTC));
+            energyBalanceRepo.save(energyBalance);
+        }
+
+        if (balance >= 99 && balance <= 100) {
+            var energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.NORMAL, LocalDateTime.now(ZoneOffset.UTC));
+            energyBalanceRepo.save(energyBalance);
+        }
+ 
+            var energyBalanceDTO = new EnergyBalanceDTO(energyBalance.getConsume(), energyBalance.getProduction(), energyBalance.getBalance(), energyBalance.getTime().toString());
+            var message = objectMapper.writeValueAsString(energyBalanceDTO);
+            rabbitTemplate.convertAndSend("websockets", "websocket.balance.update", message);
         }
         catch(Exception ex) {
             logger.log(Level.WARNING, ex.getMessage(), ex);
         }
+
     }
 }
