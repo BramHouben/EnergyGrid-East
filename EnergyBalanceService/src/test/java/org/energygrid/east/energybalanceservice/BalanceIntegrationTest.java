@@ -1,6 +1,7 @@
 package org.energygrid.east.energybalanceservice;
 
 import org.energygrid.east.energybalanceservice.controller.EnergyBalanceController;
+import org.energygrid.east.energybalanceservice.model.BalanceType;
 import org.energygrid.east.energybalanceservice.model.EnergyBalance;
 import org.energygrid.east.energybalanceservice.service.IEnergyService;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +47,7 @@ class BalanceIntegrationTest {
     void returnOkGetLatestBalance() throws Exception {
 
 
-        when(energyService.getLatestBalance()).thenReturn(new EnergyBalance(UUID.randomUUID(), 100, 100, 100, balanceType, LocalDateTime.now()));
+        when(energyService.getLatestBalance()).thenReturn(new EnergyBalance(UUID.randomUUID(), 100, 100, 100, BalanceType.NORMAL, LocalDateTime.now()));
 
         mockMvc.perform(get("/energybalance/currentbalance"))
                 .andExpect(status().isOk());
