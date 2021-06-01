@@ -1,6 +1,5 @@
-package com.enerygrid.east.energyusageservice.entity;
+package org.energygrid.east.energybalanceservice.model;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -8,7 +7,6 @@ import java.io.Serializable;
 @Document(collection = "usage")
 public class EnergyUsage implements Serializable {
 
-    @Id
     private String id;
     private String userId;
     private String day;
