@@ -62,14 +62,16 @@ public class EnergyService implements IEnergyService {
         //per minute
 
         if (balance <= 99) {
-            double kwhNeeded = 100 - balance;
+            double balanceShortage = 100 - balance;
+            double kwhNeeded = (usagePerMinute/100) *balanceShortage;
             rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.buy", kwhNeeded);
             var energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SHORTAGE, LocalDateTime.now(ZoneOffset.UTC));
             energyBalanceRepo.save(energyBalance);
         }
 
         if (balance > 100) {
-            double kwhSell = balance - 100;
+            double balanceSurplus = balance - 100;
+            double kwhSell = (usagePerMinute/100) *balanceSurplus;
             rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.sell", kwhSell);
             var energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SURPLUS, LocalDateTime.now(ZoneOffset.UTC));
             energyBalanceRepo.save(energyBalance);
