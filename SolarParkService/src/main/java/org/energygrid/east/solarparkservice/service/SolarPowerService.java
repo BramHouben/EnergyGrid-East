@@ -61,7 +61,7 @@ public class SolarPowerService implements ISolarParkPower {
     }
 
     private SolarPark setDtoToObject(AddSolarParkDTO solarParkDto) {
-        SolarPark solarPark = new SolarPark();
+        var solarPark = new SolarPark();
         solarPark.setSolarParkName(solarParkDto.getSolarParkName());
         solarPark.setCoordinates(solarParkDto.getCoordinates());
         solarPark.setPower(solarParkDto.getPower());
