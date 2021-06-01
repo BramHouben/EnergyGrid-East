@@ -1,74 +1,79 @@
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: mysql-userservice-pv-volume
-  labels:
-    type: local
-spec:
-  storageClassName: mysql-userservice-class
-  capacity:
-    storage: 3Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/mnt/data/user/db"
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mysql-userservice-pv-claim
-spec:
-  storageClassName: mysql-userservice-class
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 3Gi
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql-userservice
+  name: mysql_userservice
 spec:
   selector:
     matchLabels:
-      app: mysql-userservice
+      app: mysql_userservice
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: mysql-userservice
+        app: mysql_userservice
     spec:
       containers:
         - image: mysql
-          name: mysql-userservice
+          name: mysql_userservice
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-userservice
+                  name: mysql_userservice
                   key: root-password
           ports:
             - containerPort: 3306
               name: user-db
-          volumeMounts:
-            - name: mysql-userservice-persistent-storage
-              mountPath: /var/lib/mysql
-      volumes:
-        - name: mysql-userservice-persistent-storage
-          persistentVolumeClaim:
-            claimName: mysql-userservice-pv-claim
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-userservice
+  name: mysql_userservice
 spec:
   ports:
     - port: 3306
   selector:
-    app: mysql-userservice
+    app: mysql_userservice
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql_authservice
+spec:
+  selector:
+    matchLabels:
+      app: mysql_authservice
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql_authservice
+    spec:
+      containers:
+        - image: mysql
+          name: mysql_authservice
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql_authservice
+                  key: root-password
+          ports:
+            - containerPort: 3306
+              name: auth-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql_authservice
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql_authservice
   clusterIP: None
 ---
 apiVersion: apps/v1
@@ -99,46 +104,6 @@ spec:
       volumes:
         - emptyDir: {}
           name: rabbitmqapp-home
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: user-db-phpmyadmin
-  labels:
-    app: user-db-phpmyadmin
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: user-db-phpmyadmin
-  template:
-    metadata:
-      labels:
-        app: user-db-phpmyadmin
-    spec:
-      containers:
-        - name: user-db-phpmyadmin
-          image: phpmyadmin/phpmyadmin
-          ports:
-            - containerPort: 80
-          env:
-            - name: PMA_HOST
-              value: mysql-userservice
-            - name: PMA_PORT
-              value: "3306"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: user-db-phpmyadmin
-spec:
-  type: LoadBalancer
-  selector:
-    app: user-db-phpmyadmin
-  ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 80
 ---
 apiVersion: v1
 kind: Service
@@ -183,6 +148,8 @@ spec:
           env:
             - name: RABBIT_HOST
               value: rabbitmq
+            - name: SPRING_DATA_MONGODB_URI
+              value: mongodb://mongo-solarparkservice:27017/solarpark
       restartPolicy: Always
       env:
 ---
@@ -198,6 +165,39 @@ spec:
   ports:
     - port: 8090
       targetPort: 8090
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-solarparkservice
+spec:
+  serviceName: mongo-solarparkservice
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-solarparkservice
+  template:
+    metadata:
+      labels:
+        app: mongo-solarparkservice
+        selector: mongo-solarparkservice
+    spec:
+      containers:
+        - name: mongo-solarparkservice
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: solarparkservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: solarparkservice
+  ports:
+    - port: 27017
+      targetPort: 27017
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -381,6 +381,8 @@ spec:
           ports:
             - containerPort: 8150
           env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: mongodb://mongo-regionservice:27020/solarpark
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
@@ -391,13 +393,45 @@ kind: Service
 metadata:
   name: regionservice
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: regionservice
   ports:
-    - protocol: TCP
-      port: 8150
+    - port: 8150
       targetPort: 8150
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-regionservice
+spec:
+  serviceName: mongo-regionservice
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-regionservice
+  template:
+    metadata:
+      labels:
+        app: mongo-regionservice
+        selector: mongo-regionservice
+    spec:
+      containers:
+        - name: mongo-regionservice
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-regionservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: mongo-regionservice
+  ports:
+    - port: 27017
+      targetPort: 27017
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -421,6 +455,8 @@ spec:
           ports:
             - containerPort: 8140
           env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: mongodb://mongo-simulationwindservice:27021/simulation_wind
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
@@ -431,13 +467,45 @@ kind: Service
 metadata:
   name: simulationwindservice
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: simulationwindservice
   ports:
-    - protocol: TCP
-      port: 8140
+    - port: 8140
       targetPort: 8140
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-simulationwindservice
+spec:
+  serviceName: mongo-simulationwindservice
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-simulationwindservice
+  template:
+    metadata:
+      labels:
+        app: mongo-simulationwindservice
+        selector: mongo-simulationwindservice
+    spec:
+      containers:
+        - name: mongo-simulationwindservice
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-simulationwindservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: mongo-simulationwindservice
+  ports:
+    - port: 27017
+      targetPort: 27017
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -461,6 +529,8 @@ spec:
           ports:
             - containerPort: 8170
           env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: mongodb://mongo-energyusageservice:27021/energyusage
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
@@ -471,13 +541,45 @@ kind: Service
 metadata:
   name: energyusageservice
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: energyusageservice
   ports:
-    - protocol: TCP
-      port: 8170
+    - port: 8170
       targetPort: 8170
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-energyusageservice
+spec:
+  serviceName: mongo-energyusageservice
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-energyusageservice
+  template:
+    metadata:
+      labels:
+        app: mongo-energyusageservice
+        selector: mongo-energyusageservice
+    spec:
+      containers:
+        - name: mongo-energyusageservice
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-energyusageservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: mongo-energyusageservice
+  ports:
+    - port: 27017
+      targetPort: 27017
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -501,6 +603,8 @@ spec:
           ports:
             - containerPort: 8160
           env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: mongodb://mongo-energybalanceservice:27023/energybalance
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
@@ -511,13 +615,45 @@ kind: Service
 metadata:
   name: energybalanceservice
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: energybalanceservice
   ports:
-    - protocol: TCP
-      port: 8160
+    - port: 8160
       targetPort: 8160
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-energybalanceservice
+spec:
+  serviceName: mongo-energybalanceservice
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-energybalanceservice
+  template:
+    metadata:
+      labels:
+        app: mongo-energybalanceservice
+        selector: mongo-energybalanceservice
+    spec:
+      containers:
+        - name: mongo-energybalanceservice
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-energybalanceservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: mongo-energybalanceservice
+  ports:
+    - port: 27017
+      targetPort: 27017
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -541,6 +677,8 @@ spec:
           ports:
             - containerPort: 8120
           env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: mongodb://mongo-simulationsolarservice:27024/solar
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
@@ -551,10 +689,42 @@ kind: Service
 metadata:
   name: simulationsolarservice
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: simulationsolarservice
   ports:
-    - protocol: TCP
-      port: 8120
+    - port: 8120
       targetPort: 8120
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-simulationsolarservice
+spec:
+  serviceName: mongo-simulationsolarservice
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-simulationsolarservice
+  template:
+    metadata:
+      labels:
+        app: mongo-simulationsolarservice
+        selector: mongo-simulationsolarservice
+    spec:
+      containers:
+        - name: mongo-simulationsolarservice
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-simulationsolarservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: mongo-simulationsolarservice
+  ports:
+    - port: 27017
+      targetPort: 27017

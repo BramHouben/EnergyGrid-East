@@ -6,7 +6,6 @@ import org.energygrid.east.energybalanceservice.model.Type;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceRepo;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceStoreRepo;
 import org.energygrid.east.energybalanceservice.repo.EnergyUsageRepo;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -48,17 +47,19 @@ public class EnergyService implements IEnergyService {
         var lastEnergyUsageMinute = energyUsageRepo.findFirstByOrderByDayDesc().getKwh();
 
         var usagePerMinute = (lastEnergyUsageMinute * 1000000);
-//       long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
+        long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
+
         long latestWind = energyBalanceStoreRepo.findFirstByType(Type.WIND).getProduction();
         long latestNuclear = 6300;
 
-        long total = +latestNuclear + 8000 + latestWind;
+        long total = +latestNuclear + latestSolar + latestWind;
 
         long leverage = 25000;
         total += leverage;
 
         double balance = ((float) total / usagePerMinute) * 100;
         //per minute
+
 
         if (balance <= 99) {
             double kwhNeeded = 100 - balance;
@@ -79,5 +80,8 @@ public class EnergyService implements IEnergyService {
             energyBalanceRepo.save(energyBalance);
         }
 
+
+//         var energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, LocalDateTime.now(ZoneOffset.UTC));
+//         energyBalanceRepo.save(energyBalance);
     }
 }

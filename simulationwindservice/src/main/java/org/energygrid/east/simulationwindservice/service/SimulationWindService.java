@@ -33,7 +33,7 @@ public class SimulationWindService implements ISimulationWindService {
     private final RestTemplate template;
     private final HttpHeaders headers;
     private final ISimulationLogic simulationLogic;
-    private List<WindTurbine> windTurbines;
+    private final List<WindTurbine> windTurbines;
     @Autowired
     private RabbitTemplate rabbittemplate;
 
@@ -46,11 +46,11 @@ public class SimulationWindService implements ISimulationWindService {
         this.template = new RestTemplate();
         this.headers = new HttpHeaders();
         windTurbines = new ArrayList<>();
-        WindTurbine windTurbine1 = new WindTurbine(1, "test", new Point(6.46073, 52.57363), 3.0);
-        WindTurbine windTurbine2 = new WindTurbine(2, "test", new Point(6.46051, 52.57072), 3.0);
-        WindTurbine windTurbine3 = new WindTurbine(3, "test", new Point(6.45386, 52.57085), 3.0);
-        WindTurbine windTurbine4 = new WindTurbine(3, "test", new Point(6.45365, 52.56796), 3.0);
-        WindTurbine windTurbine5 = new WindTurbine(4, "test", new Point(6.46322, 52.57036), 3.0);
+        var windTurbine1 = new WindTurbine(1, "test", new Point(6.46073, 52.57363), 3.0);
+        var windTurbine2 = new WindTurbine(2, "test", new Point(6.46051, 52.57072), 3.0);
+        var windTurbine3 = new WindTurbine(3, "test", new Point(6.45386, 52.57085), 3.0);
+        var windTurbine4 = new WindTurbine(3, "test", new Point(6.45365, 52.56796), 3.0);
+        var windTurbine5 = new WindTurbine(4, "test", new Point(6.46322, 52.57036), 3.0);
         windTurbines.add(windTurbine1);
         windTurbines.add(windTurbine2);
         windTurbines.add(windTurbine3);
@@ -94,10 +94,10 @@ public class SimulationWindService implements ISimulationWindService {
             total = +productionExpectation.getKw();
         }
         //  this is temporary!
-        var totalPerMinute = total*3;
+        var totalPerMinute = total * 3;
 //       var totalPerMinute = total /60;
         rabbittemplate.convertAndSend("EnergyBalance", "balance.create.wind", totalPerMinute);
-        logger.log(Level.INFO, "Send wind message to queue: "+totalPerMinute);
+        logger.log(Level.INFO, () -> "Send wind message to queue: " + totalPerMinute);
     }
 
     private String getUrl(double x, double y) {

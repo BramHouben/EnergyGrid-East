@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EnergyBalanceStoreRepo extends MongoRepository<EnergyBalanceStore, String> {
 
-        EnergyBalanceStore findFirstByType(Type  type);
+    EnergyBalanceStore findFirstByType(Type type);
 }
