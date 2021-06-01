@@ -171,6 +171,7 @@ services:
     ports:
       - 8170:8170
     environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATA_MONGODB_URI: mongodb://mongoenergyusageservice:27050/energyusage
 
   mongoenergyusageservice:

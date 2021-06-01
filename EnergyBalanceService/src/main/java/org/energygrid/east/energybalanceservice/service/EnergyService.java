@@ -53,16 +53,17 @@ public class EnergyService implements IEnergyService {
         try {
             logger.log(Level.INFO, () -> "update NewestBalance called");
             var lastEnergyUsageMinute = energyUsageRepo.findFirstByOrderByDayDesc().getKwh();
-            var usagePerMinute = (lastEnergyUsageMinute * 1000000);
+            var usagePerMinute = (lastEnergyUsageMinute * 1844100);
             long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
-
             long latestWind = energyBalanceStoreRepo.findFirstByType(Type.WIND).getProduction();
             long latestNuclear = 6300;
 
-            long total = +latestNuclear + latestSolar + latestWind;
+            //  usage per minute and total has extra kwh
+            //  now its everything from the region not only houses. Now the
 
-            long leverage = 25000;
-            total += leverage;
+            usagePerMinute+=170000;
+            long total = +latestNuclear + latestSolar + latestWind;
+            total+=160000;
 
             double balance = ((float) total / usagePerMinute) * 100;
             //per minute

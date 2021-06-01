@@ -101,7 +101,7 @@ public class SimulationSolarService implements ISimulationSolarService {
         this.simulationLogic = new SimulationLogic();
     }
 
-    @Scheduled(fixedDelay = 600000)
+    @Scheduled(fixedDelay = 600000, initialDelay = 5000)
     private void sendSolarProduction() {
         try {
             var simulationExpectationResult = new SimulationExpectationResult();
