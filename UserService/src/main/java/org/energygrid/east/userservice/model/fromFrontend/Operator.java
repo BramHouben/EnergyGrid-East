@@ -5,8 +5,7 @@ import java.util.UUID;
 public class Operator {
     private UUID uuid;
 
-    public Operator(UUID uuid) {
-        this.uuid = uuid;
+    public Operator() {
     }
 
     public UUID getUuid() {

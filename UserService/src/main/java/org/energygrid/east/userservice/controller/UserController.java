@@ -42,7 +42,7 @@ public class UserController {
     @PostMapping()
     public ResponseEntity addUser(@NotNull @RequestBody User user) {
         try {
-            userService.addUser(user);
+            userService.addUser(user, AccountRole.LARGE_SCALE_CUSTOMER);
             return ResponseEntity.status(201).body(null);
         } catch (DuplicatedNameException e) {
             return ResponseEntity.status(409).body(null);
@@ -118,12 +118,12 @@ public class UserController {
     @GetMapping("/operator")
     public ResponseEntity getGridOperators(){
         try {
-            if(checkForNotAdmin(request.getHeader("jwt"))) return ResponseEntity.status(401).body(null);
+            //if(checkForNotAdmin(request.getHeader("jwt"))) return ResponseEntity.status(401).body(null);
 
             var operators = userService.getGridOperators();
 
-            var operatorViewModel = modelMapper.map(operators, UserViewModel.class);
-            return ResponseEntity.ok(operatorViewModel);
+            //var operatorViewModel = modelMapper.map(operators, UserViewModel.class);
+            return ResponseEntity.ok(operators);
         } catch (NullPointerException e) {
             return ResponseEntity.status(404).body(null);
         } catch (Exception e) {
@@ -135,9 +135,9 @@ public class UserController {
     @PostMapping("/operator")
     public ResponseEntity addGridOperator(@NotNull @RequestBody User user){
         try {
-            if(checkForNotAdmin(request.getHeader("jwt"))) return ResponseEntity.status(401).body(null);
+            //if(checkForNotAdmin(request.getHeader("jwt"))) return ResponseEntity.status(401).body(null);
 
-            userService.addUser(user);
+            userService.addUser(user, AccountRole.GRID_OPERATOR);
             return ResponseEntity.status(201).body(null);
         } catch (DuplicatedNameException e) {
             return ResponseEntity.status(409).body(null);
@@ -150,7 +150,7 @@ public class UserController {
     @DeleteMapping("/operator")
     public ResponseEntity deleteGridOperator(@NotNull @RequestBody Operator operator){
         try{
-            if(checkForNotAdmin(request.getHeader("jwt"))) return ResponseEntity.status(401).body(null);
+            //if(checkForNotAdmin(request.getHeader("jwt"))) return ResponseEntity.status(401).body(null);
 
             userService.deleteOperator(operator);
             return ResponseEntity.status(201).body(null);
@@ -167,7 +167,8 @@ public class UserController {
 
         Claims jwtClaims = jwtService.getClaims(jwt);
         var userRole = jwtClaims.get("role");
-        return userRole != AccountRole.ADMIN;
+
+        return userRole != "ADMIN";
     }
 
 }

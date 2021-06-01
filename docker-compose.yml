@@ -31,37 +31,37 @@ services:
       timeout: 15s
       retries: 1
 
-  solarparkservice:
-    build: SolarParkService
-    hostname: solarparkservice
-    container_name: solarparkservice
-    restart: always
-    ports:
-      - 8090:8090
-    environment:
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_DATA_MONGODB_URI: mongodb://mongosolarpark:27017/solarpark
-
-  mongosolarpark:
-    hostname: mongosolarpark
-    container_name: mongosolarpark
-    image: mongo:latest
-    volumes:
-      - ./database:/datasolarpark
-    ports:
-      - 27017:27017
-
-  weatherservice:
-    build: WeatherService
-    hostname: weatherservice
-    container_name: weatherservice
-    restart: always
-    ports:
-      - 8110:8110
-    environment:
-      RABBIT_HOST: rabbitmq
-    depends_on:
-      - rabbitmq
+#  solarparkservice:
+#    build: SolarParkService
+#    hostname: solarparkservice
+#    container_name: solarparkservice
+#    restart: always
+#    ports:
+#      - 8090:8090
+#    environment:
+#      SPRING_RABBITMQ_HOST: rabbitmq
+#      SPRING_DATA_MONGODB_URI: mongodb://mongosolarpark:27017/solarpark
+#
+#  mongosolarpark:
+#    hostname: mongosolarpark
+#    container_name: mongosolarpark
+#    image: mongo:latest
+#    volumes:
+#      - ./database:/datasolarpark
+#    ports:
+#      - 27017:27017
+#
+#  weatherservice:
+#    build: WeatherService
+#    hostname: weatherservice
+#    container_name: weatherservice
+#    restart: always
+#    ports:
+#      - 8110:8110
+#    environment:
+#      RABBIT_HOST: rabbitmq
+#    depends_on:
+#      - rabbitmq
 
   userservice:
     build: UserService
@@ -121,109 +121,109 @@ services:
     - 8081:80
     restart: always
 
-  regionservice:
-    build: RegionService
-    hostname: regionservice
-    container_name: regionservice
-    restart: always
-    ports:
-      - 8150:8150
-    environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongoregion:27080/region
-
-  mongoregion:
-    hostname: mongoregion
-    container_name: mongoregion
-    image: mongo
-    command: mongod --port 27080
-    volumes:
-      - ./database:/mongoregion
-    ports:
-      - 27080:27080
-
-  simulationwindservice:
-    build: simulationwindservice
-    hostname: simulationwindservice
-    container_name: simulationwindservice
-    restart: always
-    ports:
-      - 8140:8140
-    environment:
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_DATA_MONGODB_URI: mongodb://mongosimulationwindservice:27020/simulation_wind
-
-  mongosimulationwindservice:
-    hostname: mongosimulationwindservice
-    container_name: mongosimulationwindservice
-    image: mongo:latest
-    command: mongod --port 27020
-    volumes:
-      - ./database:/mongosimulationwindservice
-    ports:
-      - 27020:27017
-
-  energyusageservice:
-    build: EnergyUsageService
-    hostname: energyusageservice
-    container_name: energyusageservice
-    restart: always
-    ports:
-      - 8170:8170
-    environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongoenergyusageservice:27050/energyusage
-
-  mongoenergyusageservice:
-    hostname: mongoenergyusageservice
-    container_name: mongoenergyusageservice
-    image: mongo
-    command: mongod --port 27050
-    volumes:
-      - ./database:/mongoenergyusageservice
-    ports:
-      - 27050:27017
-
-  energybalanceservice:
-    build: EnergyBalanceService
-    hostname: energybalanceservice
-    container_name: energybalanceservice
-    depends_on:
-      - rabbitmq
-    restart: always
-    ports:
-    - 8160:8160
-    environment:
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_DATA_MONGODB_URI: mongodb://mongoenergybalanceservice:27030/energybalance
-
-  mongoenergybalanceservice:
-    hostname: mongoenergybalanceservice
-    container_name: mongoenergybalanceservice
-    command: mongod --port 27030
-    image: mongo:latest
-    volumes:
-      - ./database:/mongoenergybalanceservice
-    ports:
-      - 27030:27030
-
-  simulationsolarservice:
-    build: SimulationSolarService
-    hostname: simulationsolarservice
-    container_name: simulationsolarservice
-    depends_on:
-      - rabbitmq
-    restart: always
-    ports:
-      - 8120:8120
-    environment:
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_DATA_MONGODB_URI: mongodb://mongosolarservice:27040/solar
-
-  mongosolarservice:
-    hostname: mongosolarservice
-    container_name: mongosolarservice
-    command: mongod --port 27040
-    image: mongo:latest
-    volumes:
-      - ./database:/mongosolarservice
-    ports:
-      - 27040:27040
+#  regionservice:
+#    build: RegionService
+#    hostname: regionservice
+#    container_name: regionservice
+#    restart: always
+#    ports:
+#      - 8150:8150
+#    environment:
+#      SPRING_DATA_MONGODB_URI: mongodb://mongoregion:27080/region
+#
+#  mongoregion:
+#    hostname: mongoregion
+#    container_name: mongoregion
+#    image: mongo
+#    command: mongod --port 27080
+#    volumes:
+#      - ./database:/mongoregion
+#    ports:
+#      - 27080:27080
+#
+#  simulationwindservice:
+#    build: simulationwindservice
+#    hostname: simulationwindservice
+#    container_name: simulationwindservice
+#    restart: always
+#    ports:
+#      - 8140:8140
+#    environment:
+#      SPRING_RABBITMQ_HOST: rabbitmq
+#      SPRING_DATA_MONGODB_URI: mongodb://mongosimulationwindservice:27020/simulation_wind
+#
+#  mongosimulationwindservice:
+#    hostname: mongosimulationwindservice
+#    container_name: mongosimulationwindservice
+#    image: mongo:latest
+#    command: mongod --port 27020
+#    volumes:
+#      - ./database:/mongosimulationwindservice
+#    ports:
+#      - 27020:27017
+#
+#  energyusageservice:
+#    build: EnergyUsageService
+#    hostname: energyusageservice
+#    container_name: energyusageservice
+#    restart: always
+#    ports:
+#      - 8170:8170
+#    environment:
+#      SPRING_DATA_MONGODB_URI: mongodb://mongoenergyusageservice:27050/energyusage
+#
+#  mongoenergyusageservice:
+#    hostname: mongoenergyusageservice
+#    container_name: mongoenergyusageservice
+#    image: mongo
+#    command: mongod --port 27050
+#    volumes:
+#      - ./database:/mongoenergyusageservice
+#    ports:
+#      - 27050:27017
+#
+#  energybalanceservice:
+#    build: EnergyBalanceService
+#    hostname: energybalanceservice
+#    container_name: energybalanceservice
+#    depends_on:
+#      - rabbitmq
+#    restart: always
+#    ports:
+#    - 8160:8160
+#    environment:
+#      SPRING_RABBITMQ_HOST: rabbitmq
+#      SPRING_DATA_MONGODB_URI: mongodb://mongoenergybalanceservice:27030/energybalance
+#
+#  mongoenergybalanceservice:
+#    hostname: mongoenergybalanceservice
+#    container_name: mongoenergybalanceservice
+#    command: mongod --port 27030
+#    image: mongo:latest
+#    volumes:
+#      - ./database:/mongoenergybalanceservice
+#    ports:
+#      - 27030:27030
+#
+#  simulationsolarservice:
+#    build: SimulationSolarService
+#    hostname: simulationsolarservice
+#    container_name: simulationsolarservice
+#    depends_on:
+#      - rabbitmq
+#    restart: always
+#    ports:
+#      - 8120:8120
+#    environment:
+#      SPRING_RABBITMQ_HOST: rabbitmq
+#      SPRING_DATA_MONGODB_URI: mongodb://mongosolarservice:27040/solar
+#
+#  mongosolarservice:
+#    hostname: mongosolarservice
+#    container_name: mongosolarservice
+#    command: mongod --port 27040
+#    image: mongo:latest
+#    volumes:
+#      - ./database:/mongosolarservice
+#    ports:
+#      - 27040:27040

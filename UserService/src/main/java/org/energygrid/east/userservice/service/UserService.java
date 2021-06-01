@@ -29,20 +29,20 @@ public class UserService {
     @Autowired
     private IJwtService jwtService;
 
-    public void addUser(@NotNull User user) {
+    public void addUser(@NotNull User user, AccountRole role) {
         UserDTO dbUser = userRepo.getUserByUuidOrUsernameOrEmail(null, user.getUsername(), user.getEmail());
         if (dbUser != null) {
             throw new DuplicatedNameException("Username or email already in use");
         }
 
         UserDTO userToStore = mapper.map(user, UserDTO.class);
-        userToStore.setAccountRole(AccountRole.LARGE_SCALE_CUSTOMER);
+        userToStore.setAccountRole(role);
         userToStore.setUuid(UUID.randomUUID());
 
         userRepo.save(userToStore);
         var rabbitMqUser = mapper.map(user, UserRabbitMq.class);
         rabbitMqUser.setUuid(userToStore.getUuid());
-        rabbitMqUser.setAccountRole(AccountRole.LARGE_SCALE_CUSTOMER);
+        rabbitMqUser.setAccountRole(role);
         storeUserInAuthenticationService(rabbitMqUser);
     }
 
