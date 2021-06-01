@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface IEnergyUsageService {
     List<EnergyUsage> getEnergyUsageOfUser(String userId, String date);
+
     List<EnergyUsage> generateHourlyUsage(String userId, String date);
 }

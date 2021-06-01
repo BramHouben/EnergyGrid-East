@@ -19,9 +19,9 @@ import java.util.logging.Logger;
 @Service
 public class EnergyUsageService implements IEnergyUsageService {
 
-    private static final java.util.logging.Logger logger = Logger.getLogger(EnergyUsage.class.getName());
+    private static final java.util.logging.Logger logger = Logger.getLogger(EnergyUsageService.class.getName());
     @Autowired
-    RabbitTemplate rabbitTemplate;
+    private RabbitTemplate rabbitTemplate;
     @Autowired
     private EnergyUsageRepository energyUsageRepository;
 

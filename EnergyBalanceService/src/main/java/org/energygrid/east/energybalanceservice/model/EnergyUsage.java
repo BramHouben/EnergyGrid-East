@@ -1,6 +1,5 @@
 package org.energygrid.east.energybalanceservice.model;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -85,4 +84,5 @@ public class EnergyUsage implements Serializable {
                 ", price=" + price +
                 ", hour=" + hour +
                 '}';
-    }}
+    }
+}
