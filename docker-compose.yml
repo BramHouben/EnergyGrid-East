@@ -76,6 +76,7 @@ services:
       RABBIT_HOST: rabbitmq
     depends_on:
       - mysql_userservice
+      - rabbitmq
 
   authenticationservice:
     build: AuthenticationService
@@ -88,6 +89,7 @@ services:
       RABBIT_HOST: rabbitmq
       MYSQL_DB_HOST: mysql_authservice
     depends_on:
+      - rabbitmq
       - mysql_authservice
 
   mysql_authservice:
@@ -101,6 +103,8 @@ services:
       - 3306
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    depends_on:
+      - rabbitmq
 
   mysql_userservice:
     container_name: mysql_userservice
@@ -113,6 +117,8 @@ services:
       - 3307
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    depends_on:
+      - rabbitmq
 
   gateway_service:
     container_name: gateway
@@ -121,6 +127,8 @@ services:
     ports:
       - 8081:80
     restart: always
+    depends_on:
+      - rabbitmq
 
   regionservice:
     build: RegionService
@@ -131,6 +139,8 @@ services:
       - 8150:8150
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://mongoregion:27080/region
+    depends_on:
+      - rabbitmq
 
   mongoregion:
     hostname: mongoregion
@@ -141,6 +151,8 @@ services:
       - ./database:/mongoregion
     ports:
       - 27080:27080
+    depends_on:
+      - rabbitmq
 
   simulationwindservice:
     build: simulationwindservice
@@ -152,6 +164,8 @@ services:
     environment:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATA_MONGODB_URI: mongodb://mongosimulationwindservice:27020/simulation_wind
+    depends_on:
+      - rabbitmq
 
   mongosimulationwindservice:
     hostname: mongosimulationwindservice
@@ -162,6 +176,8 @@ services:
       - ./database:/mongosimulationwindservice
     ports:
       - 27020:27017
+    depends_on:
+      - rabbitmq
 
   energyusageservice:
     build: EnergyUsageService
@@ -173,6 +189,8 @@ services:
     environment:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATA_MONGODB_URI: mongodb://mongoenergyusageservice:27050/energyusage
+    depends_on:
+      - rabbitmq
 
   mongoenergyusageservice:
     hostname: mongoenergyusageservice
@@ -183,6 +201,8 @@ services:
       - ./database:/mongoenergyusageservice
     ports:
       - 27050:27017
+    depends_on:
+      - rabbitmq
 
   energybalanceservice:
     build: EnergyBalanceService
@@ -197,6 +217,7 @@ services:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATA_MONGODB_URI: mongodb://mongoenergybalanceservice:27030/energybalance
 
+
   mongoenergybalanceservice:
     hostname: mongoenergybalanceservice
     container_name: mongoenergybalanceservice
@@ -206,7 +227,8 @@ services:
       - ./database:/mongoenergybalanceservice
     ports:
       - 27030:27030
-
+    depends_on:
+      - rabbitmq
 
   simulationsolarservice:
     build: SimulationSolarService
@@ -230,6 +252,8 @@ services:
       - ./database:/mongosolarservice
     ports:
       - 27040:27040
+    depends_on:
+      - rabbitmq
 
   simulationnuclearservice:
     build: SimulationNuclearService
@@ -239,7 +263,22 @@ services:
     ports:
       - 8180:8180
     environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATA_MONGODB_URI: mongodb://mongosimulationnuclearservice:27060/simulation_nuclear
+    depends_on:
+      - rabbitmq
+
+  websocketservice:
+    build: Websockets-Service
+    hostname: websocketservice
+    container_name: websocketservice
+    restart: always
+    ports:
+      - 8443:8443
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+    depends_on:
+      - rabbitmq
 
   mongosimulationnuclearservice:
     hostname: mongosimulationnuclearservice
@@ -250,4 +289,5 @@ services:
       - ./database:/mongosimulationnuclearservice
     ports:
       -  27060:27060
-
+    depends_on:
+      - rabbitmq
