@@ -19,7 +19,7 @@ public class Receiver {
         rabbitService.addLatestWind(message);
     }
 
-    public void receiveMessageSolar(String message) {
+    public void receiveMessageSolar(double message) {
         logger.log(Level.INFO,  ()-> "Got message in receiver Solar" + message);
         rabbitService.addLatestSolar(message);
     }

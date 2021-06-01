@@ -10,7 +10,7 @@ public interface IRabbitService {
     /**
      * @param message with latest solar details
      */
-    void addLatestSolar(String message);
+    void addLatestSolar(double message);
 
     /**
      * @param message with latest nuclear details

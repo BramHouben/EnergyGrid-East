@@ -103,7 +103,7 @@ public class SimulationSolarService implements ISimulationSolarService {
 
     //@Scheduled(fixedDelay = 3600000)
     //@Scheduled(fixedDelay = 600000)
-    @Scheduled(fixedDelay = 300000)
+    @Scheduled(fixedDelay = 5000)
     private void sendSolarProduction() {
         try {
             var simulationExpectationResult = new SimulationExpectationResult();
@@ -123,7 +123,7 @@ public class SimulationSolarService implements ISimulationSolarService {
             }
             results.add(simulationResult);
             simulationExpectationResult.setKwTotalResult(simulationLogic.calculateKwProduction(results, true));
-
+            rabbitTemplate.convertAndSend("EnergyBalance", "balance.create.solar", simulationExpectationResult.getKwTotalResult());
             sendProductionResults();
         }
         catch (Exception ex) {
