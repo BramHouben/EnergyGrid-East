@@ -16,9 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,7 +24,7 @@ import java.util.logging.Logger;
 public class EnergyService implements IEnergyService {
 
     private static final java.util.logging.Logger logger = Logger.getLogger(EnergyService.class.getName());
-  
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
@@ -54,46 +51,45 @@ public class EnergyService implements IEnergyService {
     public void updateNewestBalance() {
 
         try {
-        logger.log(Level.INFO, () -> "update NewestBalance called");
-        var lastEnergyUsageMinute = energyUsageRepo.findFirstByOrderByDayDesc().getKwh();
-        var usagePerMinute = (lastEnergyUsageMinute * 1000000);
-        long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
+            logger.log(Level.INFO, () -> "update NewestBalance called");
+            var lastEnergyUsageMinute = energyUsageRepo.findFirstByOrderByDayDesc().getKwh();
+            var usagePerMinute = (lastEnergyUsageMinute * 1000000);
+            long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
 
-        long latestWind = energyBalanceStoreRepo.findFirstByType(Type.WIND).getProduction();
-        long latestNuclear = 6300;
+            long latestWind = energyBalanceStoreRepo.findFirstByType(Type.WIND).getProduction();
+            long latestNuclear = 6300;
 
-        long total = +latestNuclear + latestSolar + latestWind;
+            long total = +latestNuclear + latestSolar + latestWind;
 
-        long leverage = 25000;
-        total += leverage;
+            long leverage = 25000;
+            total += leverage;
 
-        double balance = ((float) total / usagePerMinute) * 100;
-        //per minute
+            double balance = ((float) total / usagePerMinute) * 100;
+            //per minute
+            var energyBalance = new EnergyBalance();
+            if (balance <= 99) {
+                double kwhNeeded = 100 - balance;
+                rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.buy", kwhNeeded);
+                energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SHORTAGE, LocalDateTime.now(ZoneOffset.UTC));
+                energyBalanceRepo.save(energyBalance);
+            }
 
-        if (balance <= 99) {
-            double kwhNeeded = 100 - balance;
-            rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.buy", kwhNeeded);
-            var energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SHORTAGE, LocalDateTime.now(ZoneOffset.UTC));
-            energyBalanceRepo.save(energyBalance);
-        }
+            if (balance > 100) {
+                double kwhSell = balance - 100;
+                rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.sell", kwhSell);
+                energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SURPLUS, LocalDateTime.now(ZoneOffset.UTC));
+                energyBalanceRepo.save(energyBalance);
+            }
 
-        if (balance > 100) {
-            double kwhSell = balance - 100;
-            rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.sell", kwhSell);
-            var energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SURPLUS, LocalDateTime.now(ZoneOffset.UTC));
-            energyBalanceRepo.save(energyBalance);
-        }
+            if (balance >= 99 && balance <= 100) {
+                energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.NORMAL, LocalDateTime.now(ZoneOffset.UTC));
+                energyBalanceRepo.save(energyBalance);
+            }
 
-        if (balance >= 99 && balance <= 100) {
-            var energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.NORMAL, LocalDateTime.now(ZoneOffset.UTC));
-            energyBalanceRepo.save(energyBalance);
-        }
- 
             var energyBalanceDTO = new EnergyBalanceDTO(energyBalance.getConsume(), energyBalance.getProduction(), energyBalance.getBalance(), energyBalance.getTime().toString());
             var message = objectMapper.writeValueAsString(energyBalanceDTO);
             rabbitTemplate.convertAndSend("websockets", "websocket.balance.update", message);
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             logger.log(Level.WARNING, ex.getMessage(), ex);
         }
 
