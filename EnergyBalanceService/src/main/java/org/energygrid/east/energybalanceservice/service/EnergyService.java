@@ -6,6 +6,7 @@ import org.energygrid.east.energybalanceservice.model.Type;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceRepo;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceStoreRepo;
 import org.energygrid.east.energybalanceservice.repo.EnergyUsageRepo;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -60,7 +61,6 @@ public class EnergyService implements IEnergyService {
         double balance = ((float) total / usagePerMinute) * 100;
         //per minute
 
-
         if (balance <= 99) {
             double kwhNeeded = 100 - balance;
             rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.buy", kwhNeeded);
@@ -80,8 +80,5 @@ public class EnergyService implements IEnergyService {
             energyBalanceRepo.save(energyBalance);
         }
 
-
-//         var energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, LocalDateTime.now(ZoneOffset.UTC));
-//         energyBalanceRepo.save(energyBalance);
     }
 }
