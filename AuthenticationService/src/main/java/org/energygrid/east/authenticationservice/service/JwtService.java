@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.apache.tomcat.util.net.openssl.ciphers.Cipher;
 import org.energygrid.east.authenticationservice.model.dto.UserDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -16,6 +17,9 @@ import java.util.Map;
 @Service
 public class JwtService implements IJwtService {
     private Key key;
+
+    @Value("${JWTSECRET}")
+    private String jwtSecret;
 
     public JwtService() {
         key = getKey();
@@ -59,8 +63,7 @@ public class JwtService implements IJwtService {
 
     private Key getKey() {
         if (key == null) {
-            String secret = "g343g45qa5gaer";
-            key = new SecretKeySpec(secret.getBytes(), "AES");
+            key = new SecretKeySpec(jwtSecret.getBytes(), "AES");
             return key;
         }
         return key;
