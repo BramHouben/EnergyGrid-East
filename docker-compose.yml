@@ -28,20 +28,20 @@ services:
     restart: always
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://rabbitmq:5672" ]
-      interval: 5s
-      timeout: 15s
-      retries: 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
-  solarparkservice:
-    build: SolarParkService
-    hostname: solarparkservice
-    container_name: solarparkservice
-    restart: always
-    ports:
-      - 8090:8090
-    environment:
-      SPRING_RABBITMQ_HOST: rabbitmq
-      SPRING_DATA_MONGODB_URI: mongodb://mongosolarpark:27017/solarpark
+#  solarparkservice:
+#    build: SolarParkService
+#    hostname: solarparkservice
+#    container_name: solarparkservice
+#    restart: always
+#    ports:
+#      - 8090:8090
+#    environment:
+#      SPRING_RABBITMQ_HOST: rabbitmq
+#      SPRING_DATA_MONGODB_URI: mongodb://mongosolarpark:27017/solarpark
 
   mongosolarpark:
     hostname: mongosolarpark
@@ -63,6 +63,8 @@ services:
       RABBIT_HOST: rabbitmq
     depends_on:
       - rabbitmq
+    links:
+      - rabbitmq
 
   userservice:
     build: UserService
@@ -76,6 +78,8 @@ services:
       RABBIT_HOST: rabbitmq
     depends_on:
       - mysql_userservice
+      - rabbitmq
+    links:
       - rabbitmq
 
   authenticationservice:
@@ -91,6 +95,8 @@ services:
     depends_on:
       - rabbitmq
       - mysql_authservice
+    links:
+      - rabbitmq
 
   mysql_authservice:
     container_name: mysql_authservice
@@ -104,6 +110,8 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
     depends_on:
+      - rabbitmq
+    links:
       - rabbitmq
 
   mysql_userservice:
@@ -129,6 +137,10 @@ services:
     restart: always
     depends_on:
       - rabbitmq
+    links:
+      - rabbitmq
+    environment:
+      JWTSECRET: dLTIsQs09U6hWgLWNpuumlyxo1LMLIb4
 
   regionservice:
     build: RegionService
@@ -140,6 +152,8 @@ services:
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://mongoregion:27080/region
     depends_on:
+      - rabbitmq
+    links:
       - rabbitmq
 
   mongoregion:
@@ -166,6 +180,8 @@ services:
       SPRING_DATA_MONGODB_URI: mongodb://mongosimulationwindservice:27020/simulation_wind
     depends_on:
       - rabbitmq
+    links:
+      - rabbitmq
 
   mongosimulationwindservice:
     hostname: mongosimulationwindservice
@@ -191,6 +207,8 @@ services:
       SPRING_DATA_MONGODB_URI: mongodb://mongoenergyusageservice:27050/energyusage
     depends_on:
       - rabbitmq
+    links:
+      - rabbitmq
 
   mongoenergyusageservice:
     hostname: mongoenergyusageservice
@@ -209,6 +227,8 @@ services:
     hostname: energybalanceservice
     container_name: energybalanceservice
     depends_on:
+      - rabbitmq
+    links:
       - rabbitmq
     restart: always
     ports:
@@ -235,6 +255,8 @@ services:
     hostname: simulationsolarservice
     container_name: simulationsolarservice
     depends_on:
+      - rabbitmq
+    links:
       - rabbitmq
     restart: always
     ports:
@@ -267,6 +289,8 @@ services:
       SPRING_DATA_MONGODB_URI: mongodb://mongosimulationnuclearservice:27060/simulation_nuclear
     depends_on:
       - rabbitmq
+    links:
+      - rabbitmq
 
   websocketservice:
     build: Websockets-Service
@@ -278,6 +302,8 @@ services:
     environment:
       SPRING_RABBITMQ_HOST: rabbitmq
     depends_on:
+      - rabbitmq
+    links:
       - rabbitmq
 
   mongosimulationnuclearservice:
