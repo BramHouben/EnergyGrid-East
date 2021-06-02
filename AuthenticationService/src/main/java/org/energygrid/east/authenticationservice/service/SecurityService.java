@@ -21,7 +21,7 @@ public class SecurityService implements ISecurityService {
 
     @Override
     public String hashPassword(@NotNull String password) {
-            return argon2.hash(22, 65536,1, password.getBytes(StandardCharsets.UTF_8));
+        return argon2.hash(22, 65536, 1, password.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override

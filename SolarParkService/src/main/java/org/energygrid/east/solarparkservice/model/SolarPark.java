@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Document(collection = "solarparkdetails")
-public class SolarPark {
+public class    SolarPark {
 
     @Id
     private UUID solarParkId;

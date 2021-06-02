@@ -13,13 +13,15 @@ public class EnergyBalance {
     private long consume;
     private long production;
     private double balance;
+    private BalanceType balanceType;
     private LocalDateTime time;
 
-    public EnergyBalance(UUID uuid, long consume, long production, double balance, LocalDateTime time) {
+    public EnergyBalance(UUID uuid, long consume, long production, double balance, BalanceType balanceType, LocalDateTime time) {
         this.uuid = uuid;
         this.consume = consume;
         this.production = production;
         this.balance = balance;
+        this.balanceType = balanceType;
         this.time = time;
     }
 
@@ -61,5 +63,13 @@ public class EnergyBalance {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    public BalanceType getBalanceType() {
+        return balanceType;
+    }
+
+    public void setBalanceType(BalanceType balanceType) {
+        this.balanceType = balanceType;
     }
 }
