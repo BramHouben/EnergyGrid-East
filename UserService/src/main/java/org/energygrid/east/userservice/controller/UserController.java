@@ -2,6 +2,8 @@ package org.energygrid.east.userservice.controller;
 
 import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
+import org.energygrid.east.userservice.model.enums.AccountRole;
+import org.energygrid.east.userservice.model.fromFrontend.Operator;
 import org.energygrid.east.userservice.model.fromFrontend.User;
 import org.energygrid.east.userservice.model.viewmodel.UserViewModel;
 import org.energygrid.east.userservice.service.UserService;
@@ -35,7 +37,7 @@ public class UserController {
     @PostMapping()
     public ResponseEntity addUser(@NotNull @RequestBody User user) {
         try {
-            userService.addUser(user);
+            userService.addUser(user, AccountRole.LARGE_SCALE_CUSTOMER);
             return ResponseEntity.status(201).body(null);
         } catch (DuplicatedNameException e) {
             return ResponseEntity.status(409).body(null);
@@ -107,4 +109,60 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    @GetMapping("/operator")
+    public ResponseEntity getGridOperators(){
+        try {
+            String jwt = request.getHeader("jwt");
+            if(jwt == null || jwt.isEmpty()) {
+                throw new IllegalAccessException();
+            }
+
+            var operators = userService.getGridOperators();
+
+            return ResponseEntity.ok(operators);
+        } catch (NullPointerException e) {
+            return ResponseEntity.status(404).body(null);
+        } catch (Exception e) {
+            logger.log(Level.ALL, e.getMessage());
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @PostMapping("/operator")
+    public ResponseEntity addGridOperator(@NotNull @RequestBody User user){
+        try {
+            String jwt = request.getHeader("jwt");
+            if(jwt == null || jwt.isEmpty()) {
+                throw new IllegalAccessException();
+            }
+
+            userService.addUser(user, AccountRole.GRID_OPERATOR);
+            return ResponseEntity.status(201).body(null);
+        } catch (DuplicatedNameException e) {
+            return ResponseEntity.status(409).body(null);
+        } catch (Exception e) {
+            logger.log(Level.ALL, e.getMessage());
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    @DeleteMapping("/operator")
+    public ResponseEntity deleteGridOperator(@NotNull @RequestBody Operator operator){
+        try{
+            String jwt = request.getHeader("jwt");
+            if(jwt == null || jwt.isEmpty()) {
+                throw new IllegalAccessException();
+            }
+
+            userService.deleteOperator(operator);
+            return ResponseEntity.status(201).body(null);
+        } catch (DuplicatedNameException e) {
+            return ResponseEntity.status(409).body(null);
+        } catch (Exception e) {
+            logger.log(Level.ALL, e.getMessage());
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
 }
