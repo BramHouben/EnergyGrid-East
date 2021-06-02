@@ -29,7 +29,7 @@ import java.util.TimeZone;
 @Service
 public class ScenarioWindService implements IScenarioWindService {
 
-    private ISimulationLogic simulationLogic;
+    private final ISimulationLogic simulationLogic;
     private final RestTemplate template;
     private final HttpHeaders headers;
 

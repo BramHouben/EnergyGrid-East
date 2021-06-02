@@ -1,9 +1,11 @@
 package org.energygrid.east.energybalanceservice.service;
 
+import org.energygrid.east.energybalanceservice.model.BalanceType;
 import org.energygrid.east.energybalanceservice.model.EnergyBalance;
 import org.energygrid.east.energybalanceservice.model.Type;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceRepo;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceStoreRepo;
+import org.energygrid.east.energybalanceservice.repo.EnergyUsageRepo;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,12 +21,18 @@ import java.util.logging.Logger;
 public class EnergyService implements IEnergyService {
 
     private static final java.util.logging.Logger logger = Logger.getLogger(EnergyService.class.getName());
+
     @Autowired
-    RabbitTemplate rabbitTemplate;
+    private RabbitTemplate rabbitTemplate;
+
     @Autowired
     private EnergyBalanceStoreRepo energyBalanceStoreRepo;
+
     @Autowired
     private EnergyBalanceRepo energyBalanceRepo;
+
+    @Autowired
+    private EnergyUsageRepo energyUsageRepo;
 
     @Override
     public EnergyBalance getLatestBalance() {
@@ -37,18 +45,42 @@ public class EnergyService implements IEnergyService {
     @Scheduled(fixedDelay = 60000, initialDelay = 20000)
     public void updateNewestBalance() {
         logger.log(Level.INFO, () -> "update NewestBalance called");
-        long usagePerMinute = 190000;
+        var lastEnergyUsageMinute = energyUsageRepo.findFirstByOrderByDayDesc().getKwh();
+
+        var usagePerMinute = (lastEnergyUsageMinute * 1000000);
         long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
-        long latestNuclear = 6300;
+
         long latestWind = energyBalanceStoreRepo.findFirstByType(Type.WIND).getProduction();
-        long total = +latestNuclear + latestWind + latestSolar;
-//        long leverage = usagePerMinute-total;
-        long leverage = 156150;
+        long latestNuclear = 6300;
+
+        long total = +latestNuclear + latestSolar + latestWind;
+
+        long leverage = 25000;
         total += leverage;
 
         double balance = ((float) total / usagePerMinute) * 100;
         //per minute
-        var energyBalance = new EnergyBalance(UUID.randomUUID(), usagePerMinute, total, balance, LocalDateTime.now(ZoneOffset.UTC));
-        energyBalanceRepo.save(energyBalance);
+
+        if (balance <= 99) {
+            double balanceShortage = 100 - balance;
+            double kwhNeeded = (usagePerMinute/100) *balanceShortage;
+            rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.buy", kwhNeeded);
+            var energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SHORTAGE, LocalDateTime.now(ZoneOffset.UTC));
+            energyBalanceRepo.save(energyBalance);
+        }
+
+        if (balance > 100) {
+            double balanceSurplus = balance - 100;
+            double kwhSell = (usagePerMinute/100) *balanceSurplus;
+            rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.sell", kwhSell);
+            var energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SURPLUS, LocalDateTime.now(ZoneOffset.UTC));
+            energyBalanceRepo.save(energyBalance);
+        }
+
+        if (balance >= 99 && balance <= 100) {
+            var energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.NORMAL, LocalDateTime.now(ZoneOffset.UTC));
+            energyBalanceRepo.save(energyBalance);
+        }
+
     }
 }

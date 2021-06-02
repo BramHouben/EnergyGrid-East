@@ -1,6 +1,13 @@
 version: '3'
 services:
 
+  website:
+    container_name: frontend
+    hostname: website
+    image: energygrideast/energygrid
+    ports:
+      - 3000:80
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin
