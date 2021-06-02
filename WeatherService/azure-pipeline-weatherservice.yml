@@ -4,7 +4,7 @@ trigger:
       - dev
   paths:
     include:
-      - simulationwindservice/*
+      - WeatherService/*
 
 pool:
   vmImage: ubuntu-latest
@@ -12,7 +12,7 @@ pool:
 steps:
   - task: Maven@3
     inputs:
-      mavenPomFile: 'simulationwindservice/pom.xml'
+      mavenPomFile: 'WeatherService/pom.xml'
       goals: 'clean package'
       publishJUnitResults: true
       javaHomeOption: 'JDKVersion'
@@ -27,8 +27,8 @@ steps:
   - task: Docker@2
     inputs:
       containerRegistry: 'dockerhub'
-      repository: 'energygrideast/simulationwindservice'
+      repository: 'energygrideast/WeatherService'
       command: 'buildAndPush'
-      Dockerfile: 'simulationwindservice/Dockerfile'
+      Dockerfile: 'WeatherService/Dockerfile'
       tags: 'latest'
       addPipelineData: false
