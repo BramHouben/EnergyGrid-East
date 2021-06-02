@@ -1,10 +1,14 @@
 package org.energygrid.east.authenticationservice.service;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.Jwts;
 import org.energygrid.east.authenticationservice.model.dto.UserDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,11 +17,11 @@ import java.util.Map;
 
 @Service
 public class JwtService implements IJwtService {
+
     private Key key;
 
-    public JwtService() {
-        key = getKey();
-    }
+    @Value("${JWTSECRET}")
+    private String jwtSecret;
 
     @Override
     public String create(UserDto user) {
@@ -55,11 +59,12 @@ public class JwtService implements IJwtService {
                 .getBody();
     }
 
-    private Key getKey() {
+    @PostConstruct
+    private void setKey() {
         if (key == null) {
-            key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-            return key;
+            key = new SecretKeySpec(jwtSecret.getBytes(), "AES");
+
         }
-        return key;
+
     }
 }

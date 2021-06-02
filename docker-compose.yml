@@ -3,6 +3,7 @@
 # 2. docker compose build
 # 3. docker compose up
 # 4. docker compose down --rmi all -v
+
 version: '3'
 services:
 
@@ -122,7 +123,7 @@ services:
     hostname: gateway
     image: vincentdarwinkel/gateway
     ports:
-    - 8081:80
+      - 8081:80
     restart: always
 
   regionservice:
@@ -197,7 +198,7 @@ services:
       - rabbitmq
     restart: always
     ports:
-    - 8160:8160
+      - 8160:8160
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
       SPRING_RABBITMQ_HOST: rabbitmq
@@ -253,3 +254,24 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+
+  simulationnuclearservice:
+    build: SimulationNuclearService
+    hostname: simulationnuclearservice
+    container_name: SimulationNuclearService
+    restart: always
+    ports:
+      - 8180:8180
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongosimulationnuclearservice:27060/simulation_nuclear
+
+  mongosimulationnuclearservice:
+    hostname: mongosimulationnuclearservice
+    container_name: mongosimulationnuclearservice
+    image: mongo
+    command: mongod --port 27060
+    volumes:
+      - ./database:/mongosimulationnuclearservice
+    ports:
+      -  27060:27060
+
