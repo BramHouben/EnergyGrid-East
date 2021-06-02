@@ -27,16 +27,16 @@ class WeatherProducerTest {
 //        Assertions.assertTrue(w.isStarted());
 //    }
 
-    @Test
-    void testTimer() throws InterruptedException, IOException, TimeoutException {
-
-        Channel channel = RabbitConfiguration.getInstance().getChannel();
-        WeatherTimer weatherTimer = new WeatherTimer(channel, "weather_exchange");
-        Timer timer = new Timer();
-        timer.schedule(weatherTimer, 0);
-
-        Thread.sleep(1000);
-
-        assertTrue(weatherTimer.isStarted());
-    }
+//    @Test
+//    void testTimer() throws InterruptedException, IOException, TimeoutException {
+//
+//        Channel channel = RabbitConfiguration.getInstance().getChannel();
+//        WeatherTimer weatherTimer = new WeatherTimer(channel, "weather_exchange");
+//        Timer timer = new Timer();
+//        timer.schedule(weatherTimer, 0);
+//
+//        Thread.sleep(1000);
+//
+//        assertTrue(weatherTimer.isStarted());
+//    }
 }
