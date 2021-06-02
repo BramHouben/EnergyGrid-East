@@ -14,15 +14,19 @@ steps:
     inputs:
       mavenPomFile: 'simulationwindservice/pom.xml'
       goals: 'clean package'
-      publishJUnitResults: false
+      publishJUnitResults: true
       javaHomeOption: 'JDKVersion'
       mavenVersionOption: 'Default'
       mavenAuthenticateFeed: false
       effectivePomSkip: false
 
+  - task: DockerInstaller@0
+    inputs:
+      dockerVersion: '17.09.0-ce'
+
   - task: Docker@2
     inputs:
-      containerRegistry: 'energygrideast'
+      containerRegistry: 'dockerhub'
       repository: 'energygrideast/simulationwindservice'
       command: 'buildAndPush'
       Dockerfile: 'simulationwindservice/Dockerfile'
