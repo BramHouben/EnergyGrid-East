@@ -4,7 +4,7 @@ trigger:
       - dev
   paths:
     include:
-      - simulationwindservice/*
+      - RegionService/*
 
 pool:
   vmImage: ubuntu-latest
@@ -12,19 +12,23 @@ pool:
 steps:
   - task: Maven@3
     inputs:
-      mavenPomFile: 'simulationwindservice/pom.xml'
+      mavenPomFile: 'RegionService/pom.xml'
       goals: 'clean package'
-      publishJUnitResults: false
+      publishJUnitResults: true
       javaHomeOption: 'JDKVersion'
       mavenVersionOption: 'Default'
       mavenAuthenticateFeed: false
       effectivePomSkip: false
 
+  - task: DockerInstaller@0
+    inputs:
+      dockerVersion: '17.09.0-ce'
+
   - task: Docker@2
     inputs:
-      containerRegistry: 'energygrideast'
-      repository: 'energygrideast/simulationwindservice'
+      containerRegistry: 'dockerhub'
+      repository: 'energygrideast/RegionService'
       command: 'buildAndPush'
-      Dockerfile: 'simulationwindservice/Dockerfile'
+      Dockerfile: 'RegionService/Dockerfile'
       tags: 'latest'
       addPipelineData: false
