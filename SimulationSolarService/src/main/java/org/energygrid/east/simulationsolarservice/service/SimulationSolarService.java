@@ -194,6 +194,34 @@ public class SimulationSolarService implements ISimulationSolarService {
 
     @Override
     public List<SolarParkProduction> getOverviewProductionSolarParks() {
-        return solarParkProductionRepository.findAll();
+        return solarParkProductionRepository.findAllByOrderByTodayProductionDesc();
+    }
+
+    @Override
+    public Double getYearProduction() {
+        var solarProduction = solarParkProductionRepository.findAll();
+        var result = 0.0;
+
+        if (!solarProduction.isEmpty()) {
+            for (var production : solarProduction) {
+                result = result + production.getYearProduction();
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public Double getTodayProduction() {
+        var solarProduction = solarParkProductionRepository.findAll();
+        var result = 0.0;
+
+        if (!solarProduction.isEmpty()) {
+            for (var production : solarProduction) {
+                result = result + production.getTodayProduction();
+            }
+        }
+
+        return result;
     }
 }

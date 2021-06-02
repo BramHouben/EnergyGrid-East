@@ -12,4 +12,16 @@ public interface ISimulationSolarService {
      * @return List of solar park productions
      */
     List<SolarParkProduction> getOverviewProductionSolarParks();
+
+    /**
+     * Get a number of the total production this year
+     * @return A number of annual production
+     */
+    Double getYearProduction();
+
+    /**
+     * Get a number of the total production of today
+     * @return A number of todays production
+     */
+    Double getTodayProduction();
 }

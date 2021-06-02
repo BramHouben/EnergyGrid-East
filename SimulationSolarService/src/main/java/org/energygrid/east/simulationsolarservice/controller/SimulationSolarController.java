@@ -1,5 +1,6 @@
 package org.energygrid.east.simulationsolarservice.controller;
 
+import org.energygrid.east.simulationsolarservice.model.ProductionResponse;
 import org.energygrid.east.simulationsolarservice.model.SolarParkProduction;
 import org.energygrid.east.simulationsolarservice.service.ISimulationSolarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,12 @@ public class SimulationSolarController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/results")
+    public ResponseEntity<ProductionResponse> getProductionResultsInNumbers() {
+        var today = simulationSolarService.getTodayProduction();
+        var annual = simulationSolarService.getYearProduction();
+        return ResponseEntity.ok().body(new ProductionResponse(today, annual));
     }
 }
