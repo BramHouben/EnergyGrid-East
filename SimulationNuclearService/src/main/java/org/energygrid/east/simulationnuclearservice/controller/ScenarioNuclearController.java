@@ -2,6 +2,7 @@ package org.energygrid.east.simulationnuclearservice.controller;
 
 import org.energygrid.east.simulationnuclearservice.model.Scenario;
 import org.energygrid.east.simulationnuclearservice.model.dto.ScenarioDTO;
+import org.energygrid.east.simulationnuclearservice.model.results.ScenarioExpectationResult;
 import org.energygrid.east.simulationnuclearservice.service.IScenarioNuclearService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class ScenarioNuclearController {
     private IScenarioNuclearService scenarioNuclearService;
 
     @PostMapping("/create")
-    public ResponseEntity<Scenario> createScenario(@RequestBody ScenarioDTO scenarioDTO) {
+    public ResponseEntity<ScenarioExpectationResult> createScenario(@RequestBody ScenarioDTO scenarioDTO) {
 
         if (scenarioDTO == null) {
             return ResponseEntity.badRequest().build();
@@ -29,8 +30,14 @@ public class ScenarioNuclearController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Scenario>> getScenarios() {
+    public ResponseEntity<List<ScenarioExpectationResult>> getScenarios() {
         var scenarios = scenarioNuclearService.getScenarios();
         return ResponseEntity.ok().body(scenarios);
+    }
+
+    @GetMapping("/latest")
+    public ResponseEntity<List<ScenarioExpectationResult>> getLatestScenarios() {
+        var result = scenarioNuclearService.getLatestScenarios();
+        return ResponseEntity.ok(result);
     }
 }
