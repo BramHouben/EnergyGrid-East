@@ -1,13 +1,11 @@
 package org.energygrid.east.userservice.controller;
 
-import io.jsonwebtoken.Claims;
 import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.enums.AccountRole;
 import org.energygrid.east.userservice.model.fromFrontend.Operator;
 import org.energygrid.east.userservice.model.fromFrontend.User;
 import org.energygrid.east.userservice.model.viewmodel.UserViewModel;
-import org.energygrid.east.userservice.service.IJwtService;
 import org.energygrid.east.userservice.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +23,6 @@ import java.util.logging.Logger;
 public class UserController {
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private IJwtService jwtService;
 
     private final ModelMapper modelMapper;
 
@@ -118,11 +113,13 @@ public class UserController {
     @GetMapping("/operator")
     public ResponseEntity getGridOperators(){
         try {
-            //if(checkForNotAdmin(request.getHeader("jwt"))) return ResponseEntity.status(401).body(null);
+            String jwt = request.getHeader("jwt");
+            if(jwt == null || jwt.isEmpty()) {
+                throw new IllegalAccessException();
+            }
 
             var operators = userService.getGridOperators();
 
-            //var operatorViewModel = modelMapper.map(operators, UserViewModel.class);
             return ResponseEntity.ok(operators);
         } catch (NullPointerException e) {
             return ResponseEntity.status(404).body(null);
@@ -135,7 +132,10 @@ public class UserController {
     @PostMapping("/operator")
     public ResponseEntity addGridOperator(@NotNull @RequestBody User user){
         try {
-            //if(checkForNotAdmin(request.getHeader("jwt"))) return ResponseEntity.status(401).body(null);
+            String jwt = request.getHeader("jwt");
+            if(jwt == null || jwt.isEmpty()) {
+                throw new IllegalAccessException();
+            }
 
             userService.addUser(user, AccountRole.GRID_OPERATOR);
             return ResponseEntity.status(201).body(null);
@@ -150,7 +150,10 @@ public class UserController {
     @DeleteMapping("/operator")
     public ResponseEntity deleteGridOperator(@NotNull @RequestBody Operator operator){
         try{
-            //if(checkForNotAdmin(request.getHeader("jwt"))) return ResponseEntity.status(401).body(null);
+            String jwt = request.getHeader("jwt");
+            if(jwt == null || jwt.isEmpty()) {
+                throw new IllegalAccessException();
+            }
 
             userService.deleteOperator(operator);
             return ResponseEntity.status(201).body(null);
@@ -160,15 +163,6 @@ public class UserController {
             logger.log(Level.ALL, e.getMessage());
             return ResponseEntity.status(500).body(null);
         }
-    }
-
-    private boolean checkForNotAdmin(String jwt){
-        if(jwt == null || jwt.isEmpty()) return true;
-
-        Claims jwtClaims = jwtService.getClaims(jwt);
-        var userRole = jwtClaims.get("role");
-
-        return userRole != "ADMIN";
     }
 
 }
