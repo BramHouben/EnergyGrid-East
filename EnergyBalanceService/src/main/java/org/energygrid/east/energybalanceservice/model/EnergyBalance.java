@@ -16,6 +16,8 @@ public class EnergyBalance {
     private BalanceType balanceType;
     private LocalDateTime time;
 
+    public EnergyBalance(){}
+
     public EnergyBalance(UUID uuid, long consume, long production, double balance, BalanceType balanceType, LocalDateTime time) {
         this.uuid = uuid;
         this.consume = consume;

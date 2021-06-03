@@ -1,33 +1,27 @@
 package org.energygrid.east.simulationsolarservice.service;
 
-import org.energygrid.east.simulationsolarservice.model.EnergyRegionSolarParksInput;
-import org.energygrid.east.simulationsolarservice.model.EnergyRegionSolarParksOutput;
-import org.energygrid.east.simulationsolarservice.model.SimulationSolar;
+import org.energygrid.east.simulationsolarservice.model.SolarParkProduction;
 
 import java.util.List;
 
 public interface ISimulationSolarService {
 
     /**
-     * @param id from simulation
-     * @return simulation from id
+     * Get an overview of all solar parks
+     * In this overview you can see the daily and annual production
+     * @return List of solar park productions
      */
-    SimulationSolar getSimulationById(String id);
+    List<SolarParkProduction> getOverviewProductionSolarParks();
 
     /**
-     * @param simulationSolar model that is added in db
+     * Get a number of the total production this year
+     * @return A number of annual production
      */
-    void addSimulation(SimulationSolar simulationSolar);
+    Double getYearProduction();
 
     /**
-     * @param id from simulation
-     *
+     * Get a number of the total production of today
+     * @return A number of todays production
      */
-    void deleteSimulation(String id);
-
-    /**
-     * @param energyRegionSolarParksInput list of solar parks
-     * @return output from solar parks from region
-     */
-    EnergyRegionSolarParksOutput simulateEnergyGrid(List<EnergyRegionSolarParksInput> energyRegionSolarParksInput);
+    Double getTodayProduction();
 }

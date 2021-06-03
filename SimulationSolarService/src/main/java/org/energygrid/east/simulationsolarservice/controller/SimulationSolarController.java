@@ -1,65 +1,37 @@
 package org.energygrid.east.simulationsolarservice.controller;
 
-import org.energygrid.east.simulationsolarservice.model.EnergyRegionSolarParksInput;
-import org.energygrid.east.simulationsolarservice.model.EnergyRegionSolarParksOutput;
-import org.energygrid.east.simulationsolarservice.model.SimulationSolar;
-import org.energygrid.east.simulationsolarservice.rabbit.RabbitConsumer;
-import org.energygrid.east.simulationsolarservice.rabbit.consumer.SolarParkConsumer;
+import org.energygrid.east.simulationsolarservice.model.ProductionResponse;
+import org.energygrid.east.simulationsolarservice.model.SolarParkProduction;
 import org.energygrid.east.simulationsolarservice.service.ISimulationSolarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
-@RequestMapping("simulationsolar")
+@RequestMapping("solar/production")
 public class SimulationSolarController {
 
     @Autowired
-    private ISimulationSolarService simulationService;
+    private ISimulationSolarService simulationSolarService;
 
-    @GetMapping("")
-    public ResponseEntity<SimulationSolar> getSimulation(@NotNull @RequestParam(name = "id") String id) {
-        SimulationSolar simulationSolar = simulationService.getSimulationById(id);
-
-        return ResponseEntity.status(200).body(simulationSolar);
-    }
-
-    //test
-    @GetMapping("/solar")
-    public ResponseEntity<String> getSolar() {
-        RabbitConsumer<String> rabbitConsumer = new RabbitConsumer<>();
-        SolarParkConsumer solarParkConsumer = new SolarParkConsumer();
-
-        String jsonSolar = rabbitConsumer.consume(solarParkConsumer);
-
-        if (jsonSolar == null) {
-            return ResponseEntity.badRequest().build();
+    @GetMapping("/overview")
+    public ResponseEntity<List<SolarParkProduction>> getProductionOverview() {
+        var result = simulationSolarService.getOverviewProductionSolarParks();
+        if (result.isEmpty()) {
+            return ResponseEntity.noContent().build();
         }
-
-        return ResponseEntity.status(200).body(jsonSolar);
+        return ResponseEntity.ok().body(result);
     }
 
-    @GetMapping("/add")
-    public ResponseEntity<SimulationSolar> addSimulation() {
-        SimulationSolar simulationSolar = new SimulationSolar();
-        simulationService.addSimulation(simulationSolar);
-        return ResponseEntity.status(200).body(simulationSolar);
-    }
-
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteSimulation(@RequestParam(name = "id") String id) {
-        simulationService.deleteSimulation(id);
-        return ResponseEntity.status(200).body("Simulation: " + id + " stopped!");
-    }
-
-    @PostMapping("/getLatestSimulation")
-    public ResponseEntity<EnergyRegionSolarParksOutput> simulationEnergyGrid(@RequestBody List<EnergyRegionSolarParksInput> energyRegionSolarParksInput) {
-
-        EnergyRegionSolarParksOutput energyRegionSolarParksOutput = simulationService.simulateEnergyGrid(energyRegionSolarParksInput);
-
-        return ResponseEntity.ok().body(energyRegionSolarParksOutput);
+    @GetMapping("/results")
+    public ResponseEntity<ProductionResponse> getProductionResultsInNumbers() {
+        var today = simulationSolarService.getTodayProduction();
+        var annual = simulationSolarService.getYearProduction();
+        return ResponseEntity.ok().body(new ProductionResponse(today, annual));
     }
 }
