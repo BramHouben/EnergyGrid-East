@@ -1,0 +1,34 @@
+trigger:
+  branches:
+    include:
+      - dev
+  paths:
+    include:
+      - RegionService/*
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'RegionService/pom.xml'
+      goals: 'clean package'
+      publishJUnitResults: true
+      javaHomeOption: 'JDKVersion'
+      mavenVersionOption: 'Default'
+      mavenAuthenticateFeed: false
+      effectivePomSkip: false
+
+  - task: DockerInstaller@0
+    inputs:
+      dockerVersion: '17.09.0-ce'
+
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'dockerhub'
+      repository: 'energygrideast/RegionService'
+      command: 'buildAndPush'
+      Dockerfile: 'RegionService/Dockerfile'
+      tags: 'latest'
+      addPipelineData: false

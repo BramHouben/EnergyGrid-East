@@ -12,4 +12,5 @@ public class SimulationWindServiceApplication {
         SpringApplication.run(SimulationWindServiceApplication.class, args);
     }
 
+
 }

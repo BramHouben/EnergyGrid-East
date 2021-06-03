@@ -3,8 +3,10 @@ package com.enerygrid.east.energyusageservice.entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.Serializable;
+
 @Document(collection = "usage")
-public class EnergyUsage {
+public class EnergyUsage implements Serializable {
 
     @Id
     private String id;
@@ -72,5 +74,17 @@ public class EnergyUsage {
 
     public void setHour(int hour) {
         this.hour = hour;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id='" + id + '\'' +
+                ", userId='" + userId + '\'' +
+                ", day='" + day + '\'' +
+                ", kwh=" + kwh +
+                ", price=" + price +
+                ", hour=" + hour +
+                '}';
     }
 }

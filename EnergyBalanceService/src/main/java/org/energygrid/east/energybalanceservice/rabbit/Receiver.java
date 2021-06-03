@@ -14,12 +14,12 @@ public class Receiver {
     @Autowired
     private IRabbitService rabbitService;
 
-    public void receiveMessageWind(String message) {
+    public void receiveMessageWind(double message) {
         logger.log(Level.INFO, ()-> "Got message in receiver Wind" + message);
         rabbitService.addLatestWind(message);
     }
 
-    public void receiveMessageSolar(String message) {
+    public void receiveMessageSolar(double message) {
         logger.log(Level.INFO,  ()-> "Got message in receiver Solar" + message);
         rabbitService.addLatestSolar(message);
     }
@@ -27,5 +27,10 @@ public class Receiver {
     public void receiveMessageNuclear(String message) {
         logger.log(Level.INFO, ()->  "Got message in receiver Nuclear" + message);
         rabbitService.addLatestNuclear(message);
+    }
+
+    public void receiveMessageUsage(String message){
+        logger.log(Level.INFO,()-> "Got message in receiver Usage"+ message);
+        rabbitService.addLatestUsage(message);
     }
 }
