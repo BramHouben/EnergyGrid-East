@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("scenario/nuclear")
 public class ScenarioNuclearController {
@@ -38,6 +38,11 @@ public class ScenarioNuclearController {
     @GetMapping("/latest")
     public ResponseEntity<List<ScenarioExpectationResult>> getLatestScenarios() {
         var result = scenarioNuclearService.getLatestScenarios();
-        return ResponseEntity.ok(result);
+
+        if (!result.isEmpty()) {
+            return ResponseEntity.ok(result);
+        }
+
+        return ResponseEntity.badRequest().build();
     }
 }
