@@ -103,7 +103,7 @@ public class RabbitConfig {
 
     @Bean
     SimpleMessageListenerContainer containerUsage(ConnectionFactory connectionFactory,
-                                                    @Qualifier("listenerAdapterUsage") MessageListenerAdapter listenerAdapterNuclear) {
+                                                  @Qualifier("listenerAdapterUsage") MessageListenerAdapter listenerAdapterNuclear) {
         var container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         container.setQueueNames(QUEUE_NAME_USAGE);

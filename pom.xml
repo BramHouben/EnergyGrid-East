@@ -87,6 +87,7 @@
         <module>RegionService</module>
         <module>EnergyUsageService</module>
         <module>EnergyBalanceService</module>
+        <module>Websockets-Service</module>
         <module>SimulationNuclearService</module>
     </modules>
 </project>

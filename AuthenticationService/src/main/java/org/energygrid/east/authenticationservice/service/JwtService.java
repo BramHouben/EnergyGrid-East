@@ -3,6 +3,8 @@ package org.energygrid.east.authenticationservice.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.energygrid.east.authenticationservice.model.dto.UserDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -62,9 +64,7 @@ public class JwtService implements IJwtService {
     @PostConstruct
     private void setKey() {
         if (key == null) {
-            key = new SecretKeySpec(jwtSecret.getBytes(), "AES");
-
+            key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         }
-
     }
 }
