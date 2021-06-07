@@ -28,8 +28,8 @@ public class RabbitConfiguration {
     }
 
     private Connection createConnection() {
-        int count = 0;
-        int maxCount = 3;
+        var count = 0;
+        var maxCount = 3;
 
         while(true) {
             try {

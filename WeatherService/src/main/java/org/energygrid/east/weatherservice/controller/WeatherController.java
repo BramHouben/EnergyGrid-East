@@ -23,7 +23,7 @@ public class WeatherController {
 
     @PostMapping("/current")
     public ResponseEntity<Weather> getCurrentWeather(@NotNull @RequestBody Coordinates coordinates) {
-        Weather currentWeather = weatherService.getCurrentWeather(coordinates);
+        var currentWeather = weatherService.getCurrentWeather(coordinates);
 
         if (currentWeather == null) return ResponseEntity.badRequest().build();
 

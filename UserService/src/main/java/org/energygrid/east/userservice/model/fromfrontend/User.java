@@ -1,4 +1,4 @@
-package org.energygrid.east.userservice.model.fromFrontend;
+package org.energygrid.east.userservice.model.fromfrontend;
 
 import java.util.UUID;
 
@@ -11,6 +11,7 @@ public class User {
     private String language;
 
     public User() {
+        //Supposed to be empty
     }
 
     public UUID getUuid() {
