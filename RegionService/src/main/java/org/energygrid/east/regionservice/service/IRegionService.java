@@ -27,11 +27,10 @@ public interface IRegionService {
 
     /**
      * @param streetName name of the street
-     * @param page       page of request
      * @param city       Need city for extra check
      * @return all houses in a street
      */
-    StreetRequest getAllHousesStreet(String streetName, String city, long page);
+    StreetRequest getAllHousesStreet(String streetName, String city);
 
     /**
      * @param region gelderland, flevoland or overijssel
