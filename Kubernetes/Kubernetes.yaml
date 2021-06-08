@@ -1,26 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql_userservice
+  name: mysql-userservice
 spec:
   selector:
     matchLabels:
-      app: mysql_userservice
+      app: mysql-userservice
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: mysql_userservice
+        app: mysql-userservice
     spec:
       containers:
         - image: mysql
-          name: mysql_userservice
+          name: mysql-userservice
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql_userservice
+                  name: mysql-userservice
                   key: root-password
           ports:
             - containerPort: 3306
@@ -29,37 +29,37 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql_userservice
+  name: mysql-userservice
 spec:
   ports:
     - port: 3306
   selector:
-    app: mysql_userservice
+    app: mysql-userservice
   clusterIP: None
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql_authservice
+  name: mysql-authservice
 spec:
   selector:
     matchLabels:
-      app: mysql_authservice
+      app: mysql-authservice
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: mysql_authservice
+        app: mysql-authservice
     spec:
       containers:
         - image: mysql
-          name: mysql_authservice
+          name: mysql-authservice
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql_authservice
+                  name: mysql-authservice
                   key: root-password
           ports:
             - containerPort: 3306
@@ -68,12 +68,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql_authservice
+  name: mysql-authservice
 spec:
   ports:
     - port: 3306
   selector:
-    app: mysql_authservice
+    app: mysql-authservice
   clusterIP: None
 ---
 apiVersion: apps/v1
