@@ -13,7 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class FactoryURL {
 
     public JsonArray getWeatherData(HttpHeaders headers, RestTemplate template, String url) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+        var builder = UriComponentsBuilder.fromHttpUrl(url);
         HttpEntity<?> entity = new HttpEntity<>(headers);
         ResponseEntity<String> response = template.exchange(builder.toUriString(), HttpMethod.GET, entity, String.class);
         var weatherData = new Gson().fromJson(response.getBody(), JsonObject.class);

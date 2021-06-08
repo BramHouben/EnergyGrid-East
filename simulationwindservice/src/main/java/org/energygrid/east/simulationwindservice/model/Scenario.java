@@ -15,7 +15,7 @@ public class Scenario {
     private String description;
 
     public Scenario() {
-
+        //Supposed to be empty
     }
 
     public String getName() {
