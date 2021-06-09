@@ -75,11 +75,12 @@ public class UserController {
     @PutMapping()
     public ResponseEntity editUser(@NotNull @RequestBody User user) {
         try {
-            String jwt = request.getHeader("jwt");
-            if(jwt == null || jwt.isEmpty()) {
+            String bearer = request.getHeader("Authorization");
+            if(bearer == null || bearer.isEmpty()) {
                 throw new IllegalAccessException();
             }
 
+            String jwt = bearer.replace("Bearer ", bearer);
             userService.editUser(user, jwt);
             return ResponseEntity.ok(null);
         } catch (IllegalAccessException e){
@@ -95,11 +96,12 @@ public class UserController {
     @DeleteMapping()
     public ResponseEntity deleteUser() {
         try {
-            String jwt = request.getHeader("jwt");
-            if(jwt == null || jwt.isEmpty()) {
+            String bearer = request.getHeader("Authorization");
+            if(bearer == null || bearer.isEmpty()) {
                 throw new IllegalAccessException();
             }
 
+            String jwt = bearer.replace("Bearer ", bearer);
             userService.deleteUser(jwt);
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (IllegalAccessException e) {
@@ -113,13 +115,12 @@ public class UserController {
     @GetMapping("/operator")
     public ResponseEntity getGridOperators(){
         try {
-            String jwt = request.getHeader("jwt");
-            if(jwt == null || jwt.isEmpty()) {
+            String bearer = request.getHeader("Authorization");
+            if(bearer == null || bearer.isEmpty()) {
                 throw new IllegalAccessException();
             }
 
             var operators = userService.getGridOperators();
-
             return ResponseEntity.ok(operators);
         } catch (NullPointerException e) {
             return ResponseEntity.status(404).body(null);
@@ -132,8 +133,8 @@ public class UserController {
     @PostMapping("/operator")
     public ResponseEntity addGridOperator(@NotNull @RequestBody User user){
         try {
-            String jwt = request.getHeader("jwt");
-            if(jwt == null || jwt.isEmpty()) {
+            String bearer = request.getHeader("Authorization");
+            if(bearer == null || bearer.isEmpty()) {
                 throw new IllegalAccessException();
             }
 
@@ -150,8 +151,8 @@ public class UserController {
     @DeleteMapping("/operator")
     public ResponseEntity deleteGridOperator(@NotNull @RequestBody Operator operator){
         try{
-            String jwt = request.getHeader("jwt");
-            if(jwt == null || jwt.isEmpty()) {
+            String bearer = request.getHeader("Authorization");
+            if(bearer == null || bearer.isEmpty()) {
                 throw new IllegalAccessException();
             }
 
