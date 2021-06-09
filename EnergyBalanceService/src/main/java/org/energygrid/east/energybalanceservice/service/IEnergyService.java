@@ -8,4 +8,9 @@ public interface IEnergyService {
      * @return Latest balance of energy in the region
      */
     EnergyBalance getLatestBalance();
+
+    /**
+     *
+     */
+    void updateNewestBalance();
 }

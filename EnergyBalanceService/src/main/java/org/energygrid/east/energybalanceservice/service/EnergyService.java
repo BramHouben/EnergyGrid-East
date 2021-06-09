@@ -47,6 +47,7 @@ public class EnergyService implements IEnergyService {
 
     }
 
+    @Override
     @Scheduled(fixedDelay = 60000, initialDelay = 20000)
     public void updateNewestBalance() {
 
@@ -61,29 +62,29 @@ public class EnergyService implements IEnergyService {
             //  usage per minute and total has extra kwh
             //  now its everything from the region not only houses. Now the
 
-            usagePerMinute+=170000;
+            usagePerMinute += 170000;
             long total = +latestNuclear + latestSolar + latestWind;
-            total+=160000;
+            total += 160000;
 
             double balance = ((float) total / usagePerMinute) * 100;
             //per minute
             var energyBalance = new EnergyBalance();
-          
-          if (balance <= 99) {
-            double balanceShortage = 100 - balance;
-            double kwhNeeded = (usagePerMinute/100) *balanceShortage;
-            rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.buy", kwhNeeded);
-            energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SHORTAGE, LocalDateTime.now(ZoneOffset.UTC));
-            energyBalanceRepo.save(energyBalance);
-        }
 
-        if (balance > 100) {
-            double balanceSurplus = balance - 100;
-            double kwhSell = (usagePerMinute/100) *balanceSurplus;
-            rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.sell", kwhSell);
-            energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SURPLUS, LocalDateTime.now(ZoneOffset.UTC));
-            energyBalanceRepo.save(energyBalance);
-        }
+            if (balance <= 99) {
+                double balanceShortage = 100 - balance;
+                double kwhNeeded = (usagePerMinute / 100) * balanceShortage;
+//            rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.buy", kwhNeeded);
+                energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SHORTAGE, LocalDateTime.now(ZoneOffset.UTC));
+                energyBalanceRepo.save(energyBalance);
+            }
+
+            if (balance > 100) {
+                double balanceSurplus = balance - 100;
+                double kwhSell = (usagePerMinute / 100) * balanceSurplus;
+//            rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.sell", kwhSell);
+                energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SURPLUS, LocalDateTime.now(ZoneOffset.UTC));
+                energyBalanceRepo.save(energyBalance);
+            }
 
             if (balance >= 99 && balance <= 100) {
                 energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.NORMAL, LocalDateTime.now(ZoneOffset.UTC));
