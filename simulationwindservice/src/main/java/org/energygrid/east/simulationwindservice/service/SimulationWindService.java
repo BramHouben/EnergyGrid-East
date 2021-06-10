@@ -101,6 +101,6 @@ public class SimulationWindService implements ISimulationWindService {
     }
 
     private String getUrl(double x, double y) {
-        return "https://api.openweathermap.org/data/2.5/onecall?lat=" + x + "&lon=" + y + "&exclude=current,minutely,daily,hourly,alerts&appid=da713c7b97d2a6f912d9266ec49a30d8";
+        return "https://api.openweathermap.org/data/2.5/onecall?lat=" + x + "&lon=" + y + "&exclude=current,minutely,daily,hourly,alerts&appid=00db843b9b6a113888e4743d04823bd3";
     }
 }

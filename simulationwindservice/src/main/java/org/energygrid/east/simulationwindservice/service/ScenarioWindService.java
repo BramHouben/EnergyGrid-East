@@ -43,6 +43,13 @@ public class ScenarioWindService implements IScenarioWindService {
         this.headers = new HttpHeaders();
     }
 
+    public ScenarioWindService(ScenarioWindRepository scenarioWindRepository) {
+        this.scenarioWindRepository = scenarioWindRepository;
+        this.simulationLogic = new SimulationLogic();
+        this.template = new RestTemplate();
+        this.headers = new HttpHeaders();
+    }
+
     @Override
     public ScenarioExpectationResult createScenario(Scenario scenario) {
         var scenarioExpectationResult = new ScenarioExpectationResult();
@@ -180,6 +187,6 @@ public class ScenarioWindService implements IScenarioWindService {
     }
 
     private String getUrl(double x, double y) {
-        return "https://api.openweathermap.org/data/2.5/onecall?lat="+x+"&lon="+y+"&exclude=current,minutely,daily,alerts&appid=da713c7b97d2a6f912d9266ec49a30d8";
+        return "https://api.openweathermap.org/data/2.5/onecall?lat="+x+"&lon="+y+"&exclude=current,minutely,daily,alerts&appid=00db843b9b6a113888e4743d04823bd3";
     }
 }
