@@ -5,8 +5,6 @@ import org.energygrid.east.regionservice.model.House;
 import org.energygrid.east.regionservice.model.StreetRequest;
 import org.energygrid.east.regionservice.repo.IRegionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -24,6 +22,7 @@ public class RegionService implements IRegionService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
     @Autowired
     private IRegionRepo regionRepo;
 
@@ -35,7 +34,6 @@ public class RegionService implements IRegionService {
     public List<House> getAllHousesProvince(String regionName, long page) {
         logger.log(Level.INFO, "getAllHousesProvince method called");
         page *= 10;
-
         return regionRepo.getAllByRegion(regionName).stream().skip(page).limit(10).collect(Collectors.toList());
     }
 
@@ -47,17 +45,13 @@ public class RegionService implements IRegionService {
     }
 
     @Override
-    public StreetRequest getAllHousesStreet(String streetName, String city, long page) {
+    public StreetRequest getAllHousesStreet(String streetName, String city) {
         logger.log(Level.INFO, "getAllHousesStreet method called");
-        if (page > 0) {
-            page--;
-        }
 
-        StreetRequest streetRequest = new StreetRequest();
+        var streetRequest = new StreetRequest();
         streetRequest.setTotalStreet(regionRepo.getAllByStreetAndCity(streetName, city).size());
 
-        Pageable pageable = PageRequest.of((int) page, 10);
-        List<House> houses = regionRepo.getAllByStreetAndCityOrderByNumberAsc(streetName, city, pageable).toList();
+        List<House> houses = regionRepo.getAllByStreetAndCityOrderByNumberAsc(streetName, city);
         streetRequest.setHouses(houses);
 
         logger.log(Level.INFO, "street request made by user");
@@ -69,10 +63,10 @@ public class RegionService implements IRegionService {
         if (!regions.contains(region)) {
             throw new IllegalArgumentException();
         }
-        logger.log(Level.INFO, "getAllCitiesRegion method called" + region);
+        logger.log(Level.INFO, () -> "getAllCitiesRegion method called" + region);
 
-        Criteria criteria = new Criteria("Region").is(region);
-        Query query = new Query();
+        var criteria = new Criteria("Region").is(region);
+        var query = new Query();
         query.addCriteria(criteria);
 
         return mongoTemplate.findDistinct(query, "city", House.class, String.class).stream().collect(Collectors.toUnmodifiableList());
@@ -86,10 +80,10 @@ public class RegionService implements IRegionService {
         }
 
 
-        logger.log(Level.INFO, "CityInfoRequest method called" + city);
+        logger.log(Level.INFO, () -> "CityInfoRequest method called" + city);
 
-        Criteria criteria = new Criteria("city").is(city);
-        Query query = new Query();
+        var criteria = new Criteria("city").is(city);
+        var query = new Query();
         query.addCriteria(criteria);
 
         int totalCountHouses = regionRepo.countAllByCity(city);
