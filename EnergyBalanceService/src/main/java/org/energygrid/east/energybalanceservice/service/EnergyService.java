@@ -47,7 +47,7 @@ public class EnergyService implements IEnergyService {
 
     }
 
-    @Scheduled(fixedDelay = 60000, initialDelay = 20000)
+    @Scheduled(fixedDelay = 60000, initialDelay = 40000)
     public void updateNewestBalance() {
 
         try {
