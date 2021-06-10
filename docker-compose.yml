@@ -73,10 +73,10 @@ services:
     ports:
       - 8130:8130
     environment:
-      MYSQL_DB_HOST: mysql_userservice
+      MYSQL_DB_HOST: mysqluserservice
       RABBIT_HOST: rabbitmq
     depends_on:
-      - mysql_userservice
+      - mysqluserservice
       - rabbitmq
     links:
       - rabbitmq
@@ -90,16 +90,16 @@ services:
       - 8100:8100
     environment:
       RABBIT_HOST: rabbitmq
-      MYSQL_DB_HOST: mysql_authservice
+      MYSQL_DB_HOST: mysqlauthservice
     depends_on:
       - rabbitmq
-      - mysql_authservice
+      - mysqlauthservice
     links:
       - rabbitmq
 
-  mysql_authservice:
-    container_name: mysql_authservice
-    hostname: mysql_authservice
+  mysqlauthservice:
+    container_name: mysqlauthservice
+    hostname: mysqlauthservice
     image: mysql:latest
     ports:
       - 3306:3306
@@ -108,14 +108,10 @@ services:
       - 3306
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
-    depends_on:
-      - rabbitmq
-    links:
-      - rabbitmq
 
-  mysql_userservice:
-    container_name: mysql_userservice
-    hostname: mysql_userservice
+  mysqluserservice:
+    container_name: mysqluserservice
+    hostname: mysqluserservice
     image: mysql:latest
     ports:
       - 3307:3306
@@ -124,12 +120,10 @@ services:
       - 3307
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
-    depends_on:
-      - rabbitmq
 
-  mysql_energymarketservice:
-    container_name: mysql_energymarketservice
-    hostname: mysql_energymarketservice
+  mysqlenergymarketservice:
+    container_name: mysqlenergymarketservice
+    hostname: mysqlenergymarketservice
     image: mysql:latest
     ports:
       - 3308:3306
@@ -146,8 +140,6 @@ services:
     ports:
       - 8081:80
     restart: always
-    depends_on:
-      - rabbitmq
     environment:
       JWTSECRET: dLTIsQs09U6hWgLWNpuumlyxo1LMLIb4
 
@@ -163,10 +155,10 @@ services:
     links:
       - rabbitmq
     environment:
-      CONNECTIONSTRING: database=energymarket;keepalive=5;server=mysql_energymarketservice;user id=root;password=;connectiontimeout=5
+      CONNECTIONSTRING: database=energymarket;keepalive=5;server=mysqlenergymarketservice;user id=root;password=;connectiontimeout=5
       ENERGYMARKET_USERNAME: NLOost 
       ENERGYMARKET_PASSWORD: "#NLOost2"
-      ENERGYMARKET_APIURL: http://shielded-bastion-42632.herokuapp.com/swagger/index.html
+      ENERGYMARKET_APIURL: http://shielded-bastion-42632.herokuapp.com/api/
       RABBITMQ_HOSTNAME: rabbitmq
       RABBITMQ_USERNAME: guest
       RABBITMQ_PASSWORD: guest
