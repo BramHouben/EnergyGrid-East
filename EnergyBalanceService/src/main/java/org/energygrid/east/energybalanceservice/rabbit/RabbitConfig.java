@@ -26,25 +26,25 @@ public class RabbitConfig {
     @Bean
     @Qualifier("queueNameWind")
     Queue queueWind() {
-        return new Queue(QUEUE_NAME_WIND, false);
+        return new Queue(QUEUE_NAME_WIND, true);
     }
 
     @Bean
     @Qualifier("queueNameSolar")
     Queue queueSolar() {
-        return new Queue(QUEUE_NAME_SOLAR, false);
+        return new Queue(QUEUE_NAME_SOLAR, true);
     }
 
     @Bean
     @Qualifier("queueNameNuclear")
     Queue queueNuclear() {
-        return new Queue(QUEUE_NAME_NUCLEAR, false);
+        return new Queue(QUEUE_NAME_NUCLEAR, true);
     }
 
     @Bean
     @Qualifier("queueNameUsage")
     Queue queueHouse() {
-        return new Queue(QUEUE_NAME_USAGE, false);
+        return new Queue(QUEUE_NAME_USAGE, true);
     }
 
     @Bean

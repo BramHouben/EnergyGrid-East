@@ -3,7 +3,6 @@ package org.energygrid.east.energybalanceservice;
 import org.energygrid.east.energybalanceservice.controller.EnergyBalanceController;
 import org.energygrid.east.energybalanceservice.model.BalanceType;
 import org.energygrid.east.energybalanceservice.model.EnergyBalance;
-import org.energygrid.east.energybalanceservice.model.EnergyUsage;
 import org.energygrid.east.energybalanceservice.service.IEnergyService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,4 +52,12 @@ class BalanceIntegrationTest {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void returnBadGetLatestBalance() throws Exception {
+
+        when(energyService.getLatestBalance()).thenReturn(null);
+
+        mockMvc.perform(get("/energybalance/currentbalance"))
+                .andExpect(status().isBadRequest());
+    }
 }

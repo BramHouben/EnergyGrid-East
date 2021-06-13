@@ -28,23 +28,30 @@ public class EnergyService implements IEnergyService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    private EnergyBalanceStoreRepo energyBalanceStoreRepo;
+    private final EnergyBalanceStoreRepo energyBalanceStoreRepo;
 
     @Autowired
-    private EnergyBalanceRepo energyBalanceRepo;
+    private final EnergyBalanceRepo energyBalanceRepo;
 
     @Autowired
-    private EnergyUsageRepo energyUsageRepo;
+    private final EnergyUsageRepo energyUsageRepo;
+
+    //  for testing purposes
+    public EnergyService(EnergyBalanceRepo energyBalanceRepo, EnergyBalanceStoreRepo energyBalanceStoreRepo, EnergyUsageRepo energyUsageRepo, RabbitTemplate rabbitTemplate) {
+        this.energyBalanceRepo = energyBalanceRepo;
+        this.energyBalanceStoreRepo = energyBalanceStoreRepo;
+        this.energyUsageRepo = energyUsageRepo;
+        this.rabbitTemplate = rabbitTemplate;
+    }
 
     @Override
     public EnergyBalance getLatestBalance() {
         logger.log(Level.INFO, () -> "latest balance called");
 
         return energyBalanceRepo.findFirstByOrderByTimeDesc();
-
     }
 
     @Override
@@ -52,11 +59,17 @@ public class EnergyService implements IEnergyService {
     public void updateNewestBalance() {
 
         try {
+            long latestSolar = 0;
+            long latestWind = 0;
             logger.log(Level.INFO, () -> "update NewestBalance called");
             var lastEnergyUsageMinute = energyUsageRepo.findFirstByOrderByDayDesc().getKwh();
             var usagePerMinute = (lastEnergyUsageMinute * 1844100);
-            long latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
-            long latestWind = energyBalanceStoreRepo.findFirstByType(Type.WIND).getProduction();
+            if (energyBalanceStoreRepo.existsByType(Type.SOLAR)) {
+                latestSolar = energyBalanceStoreRepo.findFirstByType(Type.SOLAR).getProduction();
+            }
+            if (energyBalanceStoreRepo.existsByType(Type.WIND)) {
+                latestWind = energyBalanceStoreRepo.findFirstByType(Type.WIND).getProduction();
+            }
             long latestNuclear = 6300;
 
             //  usage per minute and total has extra kwh
@@ -73,7 +86,7 @@ public class EnergyService implements IEnergyService {
             if (balance <= 99) {
                 double balanceShortage = 100 - balance;
                 double kwhNeeded = (usagePerMinute / 100) * balanceShortage;
-//            rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.buy", kwhNeeded);
+                rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.buy", kwhNeeded);
                 energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SHORTAGE, LocalDateTime.now(ZoneOffset.UTC));
                 energyBalanceRepo.save(energyBalance);
             }
@@ -81,7 +94,7 @@ public class EnergyService implements IEnergyService {
             if (balance > 100) {
                 double balanceSurplus = balance - 100;
                 double kwhSell = (usagePerMinute / 100) * balanceSurplus;
-//            rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.sell", kwhSell);
+                rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.sell", kwhSell);
                 energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SURPLUS, LocalDateTime.now(ZoneOffset.UTC));
                 energyBalanceRepo.save(energyBalance);
             }

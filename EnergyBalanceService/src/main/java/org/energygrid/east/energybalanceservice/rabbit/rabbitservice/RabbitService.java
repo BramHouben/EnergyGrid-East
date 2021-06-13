@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import org.energygrid.east.energybalanceservice.model.EnergyBalanceStore;
 import org.energygrid.east.energybalanceservice.model.EnergyUsage;
 import org.energygrid.east.energybalanceservice.model.Type;
+import org.energygrid.east.energybalanceservice.repo.EnergyBalanceRepo;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceStoreRepo;
 import org.energygrid.east.energybalanceservice.repo.EnergyUsageRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,15 @@ import java.util.UUID;
 public class RabbitService implements IRabbitService {
 
     @Autowired
-    private EnergyUsageRepo energyUsageRepo;
+    private final EnergyUsageRepo energyUsageRepo;
 
     @Autowired
-    private EnergyBalanceStoreRepo energyBalanceStoreRepo;
+    private final EnergyBalanceStoreRepo energyBalanceStoreRepo;
+
+    public RabbitService(EnergyBalanceStoreRepo energyBalanceRepo, EnergyUsageRepo energyUsageRepo) {
+        this.energyBalanceStoreRepo= energyBalanceRepo;
+        this.energyUsageRepo = energyUsageRepo;
+    }
 
     @Override
     public void addLatestWind(double message) {
