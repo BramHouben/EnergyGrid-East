@@ -3,6 +3,7 @@ package org.energygrid.east.simulationwindservice.service;
 import org.energygrid.east.simulationwindservice.factory.FactoryURL;
 import org.energygrid.east.simulationwindservice.logic.ISimulationLogic;
 import org.energygrid.east.simulationwindservice.logic.SimulationLogic;
+import org.energygrid.east.simulationwindservice.model.Point;
 import org.energygrid.east.simulationwindservice.model.WindTurbine;
 import org.energygrid.east.simulationwindservice.model.results.SimulationExpectationResult;
 import org.energygrid.east.simulationwindservice.model.results.SimulationResult;
@@ -10,7 +11,6 @@ import org.energygrid.east.simulationwindservice.repository.SimulationWindReposi
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.geo.Point;
 import org.springframework.http.HttpHeaders;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

@@ -3,16 +3,12 @@ package org.energygrid.east.simulationwindservice.service;
 import org.energygrid.east.simulationwindservice.factory.FactoryURL;
 import org.energygrid.east.simulationwindservice.logic.ISimulationLogic;
 import org.energygrid.east.simulationwindservice.logic.SimulationLogic;
-import org.energygrid.east.simulationwindservice.model.ProductionExpectation;
-import org.energygrid.east.simulationwindservice.model.Scenario;
-import org.energygrid.east.simulationwindservice.model.ScenarioWindResponse;
+import org.energygrid.east.simulationwindservice.model.*;
 import org.energygrid.east.simulationwindservice.model.results.ScenarioExpectationResult;
-import org.energygrid.east.simulationwindservice.model.WindTurbine;
 import org.energygrid.east.simulationwindservice.model.results.SimulationExpectationResult;
 import org.energygrid.east.simulationwindservice.model.results.SimulationResult;
 import org.energygrid.east.simulationwindservice.repository.ScenarioWindRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.geo.Point;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -36,15 +32,7 @@ public class ScenarioWindService implements IScenarioWindService {
     @Autowired
     private ScenarioWindRepository scenarioWindRepository;
 
-    @Autowired
     public ScenarioWindService() {
-        this.simulationLogic = new SimulationLogic();
-        this.template = new RestTemplate();
-        this.headers = new HttpHeaders();
-    }
-
-    public ScenarioWindService(ScenarioWindRepository scenarioWindRepository) {
-        this.scenarioWindRepository = scenarioWindRepository;
         this.simulationLogic = new SimulationLogic();
         this.template = new RestTemplate();
         this.headers = new HttpHeaders();

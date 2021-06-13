@@ -1,7 +1,6 @@
 package org.energygrid.east.simulationwindservice.model;
 
 import org.energygrid.east.simulationwindservice.model.enums.EScenarioType;
-import org.springframework.data.geo.Point;
 
 public class Scenario {
 
@@ -9,13 +8,13 @@ public class Scenario {
     private EScenarioType scenarioType;
     private String amount;
     private Double type;
+
     private Point coordinates;
     private WindTurbine windTurbine;
     private String windTurbineOffTimes;
     private String description;
 
     public Scenario() {
-
     }
 
     public String getName() {

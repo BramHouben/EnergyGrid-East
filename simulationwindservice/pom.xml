@@ -14,6 +14,7 @@
     <description>Simulation service for wind parks</description>
     <properties>
         <java.version>11</java.version>
+        <sonar.coverage.exclusions>model/**, factory/**</sonar.coverage.exclusions>
     </properties>
     <dependencies>
         <dependency>
