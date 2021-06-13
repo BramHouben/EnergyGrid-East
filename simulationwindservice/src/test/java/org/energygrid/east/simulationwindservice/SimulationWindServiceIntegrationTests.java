@@ -1,52 +1,42 @@
 package org.energygrid.east.simulationwindservice;
 
-import com.google.gson.JsonArray;
 import org.energygrid.east.simulationwindservice.controller.ScenarioWindController;
-import org.energygrid.east.simulationwindservice.factory.FactoryURL;
 import org.energygrid.east.simulationwindservice.model.Point;
 import org.energygrid.east.simulationwindservice.model.Scenario;
 import org.energygrid.east.simulationwindservice.model.WindTurbine;
 import org.energygrid.east.simulationwindservice.model.results.ScenarioExpectationResult;
 import org.energygrid.east.simulationwindservice.model.results.SimulationExpectationResult;
 import org.energygrid.east.simulationwindservice.repository.ScenarioWindRepository;
-import org.energygrid.east.simulationwindservice.service.IScenarioWindService;
+import org.energygrid.east.simulationwindservice.service.ScenarioWindService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.energygrid.east.simulationwindservice.model.enums.EScenarioType.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 @SpringBootTest
 public class SimulationWindServiceIntegrationTests {
 
@@ -55,17 +45,14 @@ public class SimulationWindServiceIntegrationTests {
     @InjectMocks
     private ScenarioWindController scenarioWindController;
 
-    @Autowired
-    private IScenarioWindService scenarioWindService;
+    @InjectMocks
+    private ScenarioWindService scenarioWindService;
 
     @MockBean
     ScenarioWindRepository scenarioWindRepository;
 
     @Autowired
     ApplicationContext context;
-
-    @Mock
-    private RestTemplate restTemplate;
 
     private MockMvc mockMvc;
 
@@ -117,6 +104,7 @@ public class SimulationWindServiceIntegrationTests {
     @Test
     void testFailedGetScenariosOfToday() {
         when(scenarioWindRepository.count()).thenReturn(20L);
+        when(scenarioWindService.getLatestScenarios()).thenReturn(new ArrayList<>());
 
         ScenarioWindRepository scenarioWindFromContext = context.getBean(ScenarioWindRepository.class);
         long scenarioCount = scenarioWindFromContext.count();
@@ -136,20 +124,16 @@ public class SimulationWindServiceIntegrationTests {
                 new SimulationExpectationResult(), "Test 2", new Point(51.965177468519435, 5.854872754972738)));
 
         when(scenarioWindService.getLatestScenarios()).thenReturn(scenarios);
+        when(scenarioWindRepository.saveAll(scenarios)).thenReturn(scenarios);
 
         ScenarioWindRepository scenarioWindFormContext = context.getBean(ScenarioWindRepository.class);
         var expectedScenarios = scenarioWindFormContext.findTop3ByOrderByCreatedAtDesc();
-
         assertEquals(expectedScenarios.size(), 2);
         verify(scenarioWindRepository).findTop3ByOrderByCreatedAtDesc();
-
-
-        //mockMvc.perform(get("/scenario/wind/latest")).andExpect(status().isNoContent());
     }
 
     @Test
     void testAddScenario() {
-        //var result = new ScenarioExpectationResult("Production", EScenarioType.ADD_WIND_PARK, DateTimeFormatter.ISO_INSTANT.format(Instant.now()), new SimulationExpectationResult(), "Test Add windpark", new Point(51.965177468519435, 5.854872754972738)
         var resultToReturnFromRepository = new ScenarioExpectationResult();
         when(scenarioWindRepository.save(any(ScenarioExpectationResult.class))).thenReturn(resultToReturnFromRepository);
         LOG.info("Scenario Saved!");
@@ -166,7 +150,6 @@ public class SimulationWindServiceIntegrationTests {
     @Test
     void testAddScenarioAddWindPark() {
         var dateString = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
-        //var result = new ScenarioExpectationResult("Production", EScenarioType.ADD_WIND_PARK, DateTimeFormatter.ISO_INSTANT.format(Instant.now()), new SimulationExpectationResult(), "Test Add windpark", new Point(51.965177468519435, 5.854872754972738)
         var resultToReturnFromRepository = new ScenarioExpectationResult("Production", ADD_WIND_PARK, dateString, new SimulationExpectationResult("1", dateString, new ArrayList<>(), 120.00), "Test Add windpark", new Point(51.965177468519435, 5.854872754972738));
         when(scenarioWindRepository.save(any(ScenarioExpectationResult.class))).thenReturn(resultToReturnFromRepository);
         LOG.info("Scenario Saved!");
@@ -177,24 +160,18 @@ public class SimulationWindServiceIntegrationTests {
 
         assertEquals(1L, scenarioCount);
         LOG.info("Number of scenarios: {}", scenarioCount);
-
         LOG.info("Scenario Details: ");
         assertEquals("Production", resultToReturnFromRepository.getName());
         LOG.info("Name: " + resultToReturnFromRepository.getName());
-
         assertEquals(ADD_WIND_PARK, resultToReturnFromRepository.getScenarioType());
         LOG.info("Scenario Type: " + resultToReturnFromRepository.getScenarioType());
-
         assertEquals(dateString, resultToReturnFromRepository.getCreatedAt());
         assertEquals(resultToReturnFromRepository.getCreatedAt(), resultToReturnFromRepository.getSimulationExpectationResult().getCreatedAt());
         LOG.info("Date: " + dateString);
-
         assertEquals("Test Add windpark", resultToReturnFromRepository.getDescription());
         LOG.info("Description: " + resultToReturnFromRepository.getName());
-
         assertEquals(120.00, resultToReturnFromRepository.getSimulationExpectationResult().getKwTotalResult());
         LOG.info("Kilowatt: " + resultToReturnFromRepository.getSimulationExpectationResult().getKwTotalResult());
-
         when(scenarioWindRepository.count()).thenReturn(1L);
         verify(scenarioWindRepository).count();
     }
@@ -210,81 +187,102 @@ public class SimulationWindServiceIntegrationTests {
         verify(scenarios).add(resultToReturnFromRepository);
     }
 
-//    @Test
-//    void testAddScenarioRemoveTurbineSuccess() {
-//        var windTurbine = new WindTurbine(7, "Windturbine 7", new Point(52.39138, 5.36222), 1.8);
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//
-//        MultiValueMap<String, Object> map= new LinkedMultiValueMap<>();
-//        map.add("name", "Remove turbine 7 Flevoland");
-//        map.add("scenarioType", "REMOVE_WIND_TURBINE");
-//        map.add("description", "Old turbine with low energy generation");
-//        map.add("windTurbine", windTurbine);
-//
-//        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(map, headers);
-//        ResponseEntity<String> responseEntity = restTemplate.exchange("http://localhost:8140/scenario/wind/create", HttpMethod.POST, httpEntity, String.class);
-//
-//        Gson gson = new Gson();
-//        JsonObject jsonObject = gson.fromJson(responseEntity.getBody(), JsonObject.class);
-//
-//        Assertions.assertEquals(200, responseEntity.getStatusCode().value());
-//    }
-//
-//    @Test
-//    void testTurnOffTemporarilyTurbine() throws Exception {
-//        var windTurbine = new WindTurbine(7, "Windturbine 7", new Point(52.39138, 5.36222), 1.8);
-//        var localDate = LocalDate.now();
-//        String dateString = localDate.getYear() + "-" + localDate.getMonthValue() + 1 + "-" + localDate.getDayOfMonth() + "T";
-//        var scenario = new Scenario();
-//        scenario.setName("Remove turbine 7 Flevoland");
-//        scenario.setScenarioType(REMOVE_WIND_TURBINE);
-//        scenario.setDescription("Maintenance");
-//        scenario.setWindTurbine(windTurbine);
-//        scenario.setCoordinates(new Point(52.39138, 5.36222));
-//        scenario.setWindTurbineOffTimes(dateString + "18:00, " + dateString + "19:00, " + dateString + "20:00");
-//
-//        MultiValueMap<String, Object> map= new LinkedMultiValueMap<>();
-//        map.add("name", scenario.getName());
-//        map.add("scenarioType", scenario.getScenarioType());
-//        map.add("description", scenario.getDescription());
-//        map.add("windTurbine", scenario.getWindTurbine());
-//        map.add("windTurbineOffTimes", scenario.getWindTurbineOffTimes());
-//
-//        when(scenarioWindService.createScenario(scenario)).thenReturn(new ScenarioExpectationResult());
-//
-//        mockMvc.perform(post("/scenario/wind/create").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-//                .content(asJsonString(scenario))).andDo(print())
-//                .andExpect(status().isOk());
-//    }
-//
     @Test
-    void testCalculateProductionInKilowattSuccess() throws Exception {
+    void testAddScenarioRemoveTurbineSuccess() {
+        var windTurbine = new WindTurbine(7, "Windturbine 7", new Point(52.39138, 5.36222), 1.8);
         var scenario = new Scenario();
-        var point = new Point(52.39138, 5.36222);
-        var dateString = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
-        var scenarioExpectationResult = new ScenarioExpectationResult("Production", ADD_WIND_TURBINE, dateString, new SimulationExpectationResult("1", dateString, new ArrayList<>(), 120.00), "Test Add windpark", new Point(51.965177468519435, 5.854872754972738));
+        var currentDate = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
+        var scenarioExpectationResult = new ScenarioExpectationResult("Production", REMOVE_WIND_TURBINE, currentDate, new SimulationExpectationResult("1", currentDate, new ArrayList<>(), 120.00), "Test Add windpark", new Point(52.39138, 5.36222));
 
+        scenario.setName("Remove turbine 7 Flevoland");
+        scenario.setScenarioType(REMOVE_WIND_TURBINE);
+        scenario.setDescription("Maintenance");
+        scenario.setWindTurbine(windTurbine);
+        scenario.setCoordinates(new Point(52.39138, 5.36222));
+
+        when(scenarioWindRepository.save(scenarioExpectationResult)).thenReturn(scenarioExpectationResult);
+        when(scenarioWindService.createScenario(scenario)).thenReturn(scenarioExpectationResult);
+    }
+
+    @Test
+    void testTurnOffTemporarilyTurbine() throws Exception {
+        var windTurbine = new WindTurbine(7, "Windturbine 7", new Point(52.39138, 5.36222), 1.8);
+        var currentDate = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
+        var scenarioExpectationResult = new ScenarioExpectationResult("Production", TURN_OFF_WIND_TURBINE, currentDate, new SimulationExpectationResult("1", currentDate, new ArrayList<>(), 120.00), "Test Add windpark", new Point(52.39138, 5.36222));
+        var localDate = LocalDate.now();
+        String dateString = localDate.getYear() + "-" + localDate.getMonthValue() + 1 + "-" + localDate.getDayOfMonth() + "T";
+        var scenario = new Scenario();
+        scenario.setName("Remove turbine 7 Flevoland");
+        scenario.setScenarioType(TURN_OFF_WIND_TURBINE);
+        scenario.setDescription("Maintenance");
+        scenario.setWindTurbine(windTurbine);
+        scenario.setCoordinates(new Point(52.39138, 5.36222));
+        scenario.setWindTurbineOffTimes(dateString + "18:00, " + dateString + "19:00, " + dateString + "20:00");
+
+        when(scenarioWindRepository.save(scenarioExpectationResult)).thenReturn(scenarioExpectationResult);
+        when(scenarioWindService.createScenario(scenario)).thenReturn(scenarioExpectationResult);
+    }
+
+    @Test
+    void testCalculateProductionRemoveTurbine() {
+        var scenario = new Scenario();
         scenario.setName("Remove turbine 7 Flevoland");
         scenario.setScenarioType(REMOVE_WIND_TURBINE);
         scenario.setDescription("Old turbine with low energy generation");
         scenario.setWindTurbine(new WindTurbine(7, "Windturbine 7", new Point(52.39138, 5.36222), 1.8));
-        scenario.setCoordinates(new Point(point.getX(), point.getY()));
-        //when(scenarioWindService.createScenario(scenario)).thenReturn(new ScenarioExpectationResult("Production", ADD_WIND_TURBINE, dateString, new SimulationExpectationResult("1", dateString, new ArrayList<>(), 120.00), "Test Add windpark", new Point(51.965177468519435, 5.854872754972738)));
+        scenario.setCoordinates(new Point(52.39138, 5.36222));
 
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonStr = mapper.writeValueAsString(scenario);
-
-        when(scenarioWindRepository.save(scenarioExpectationResult)).thenReturn(scenarioExpectationResult);
-
-//        mockMvc.perform(post("http://localhost:8140/scenario/wind/create").contextPath("/scenario/wind/create").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
-//                .andExpect(status().isOk()).andExpect(jsonPath("$[0].name", is("Production")));
-        mockMvc.perform(post("/scenario/wind/create").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-                .content(jsonStr)).andDo(print())
-                .andExpect(status().isOk()).andExpect((ResultMatcher) jsonPath("$[0].name", is("Production")));
+        var result = scenarioWindService.createScenario(scenario);
+        assertNotNull(result);
+        assertNotNull(result.getSimulationExpectationResult().getKwTotalResult());
+        verify(scenarioWindRepository).save(any(ScenarioExpectationResult.class));
     }
 
-    private JsonArray getWeather() {
-        return new FactoryURL().getWeatherData(new HttpHeaders(), new RestTemplate(), "https://api.openweathermap.org/data/2.5/onecall?lat=52.39138&lon=5.36222&exclude=current,minutely,daily,alerts&appid=00db843b9b6a113888e4743d04823bd3");
+    @Test
+    void testCalculateProductionAddTurbine()  {
+        var scenario = new Scenario();
+        scenario.setName("New turbine for Flevoland");
+        scenario.setScenarioType(ADD_WIND_TURBINE);
+        scenario.setDescription("New 3.0 turbine in Flevoland");
+        scenario.setWindTurbine(new WindTurbine(111, "Windturbine 111", new Point(52.39138, 5.36222), 3.0));
+        scenario.setCoordinates(new Point(52.39138, 5.36222));
+
+        var result = scenarioWindService.createScenario(scenario);
+        assertNotNull(result);
+        assertNotNull(result.getSimulationExpectationResult().getKwTotalResult());
+        verify(scenarioWindRepository).save(any(ScenarioExpectationResult.class));
+    }
+
+    @Test
+    void testCalculateProductionAddPark()  {
+        var scenario = new Scenario();
+        scenario.setName("5 New turbines for Flevoland");
+        scenario.setScenarioType(ADD_WIND_PARK);
+        scenario.setDescription("New 5x 3.0 turbines in Flevoland");
+        scenario.setType(3.0);
+        scenario.setCoordinates(new Point(52.39138, 5.36222));
+        scenario.setAmount("5");
+
+        var result = scenarioWindService.createScenario(scenario);
+        assertNotNull(result);
+        verify(scenarioWindRepository).save(any(ScenarioExpectationResult.class));
+    }
+
+    @Test
+    void testCalculateProductionTurnOffWindPark()  {
+        var windTurbine = new WindTurbine(7, "Windturbine 7", new Point(52.39138, 5.36222), 3.0);
+        var localDate = LocalDate.now();
+        var dateString = localDate.getYear() + "-" + localDate.getMonthValue() + 1 + "-" + localDate.getDayOfMonth() + "T";
+        var scenario = new Scenario();
+        scenario.setName("5 New turbines for Flevoland");
+        scenario.setScenarioType(ADD_WIND_PARK);
+        scenario.setDescription("New 5x 3.0 turbines in Flevoland");
+        scenario.setCoordinates(new Point(52.39138, 5.36222));
+        scenario.setWindTurbine(windTurbine);
+        scenario.setWindTurbineOffTimes(dateString + "18:00, " + dateString + "19:00, " + dateString + "20:00");
+
+        var result = scenarioWindService.createScenario(scenario);
+        assertNotNull(result);
+        verify(scenarioWindRepository).save(any(ScenarioExpectationResult.class));
     }
 }

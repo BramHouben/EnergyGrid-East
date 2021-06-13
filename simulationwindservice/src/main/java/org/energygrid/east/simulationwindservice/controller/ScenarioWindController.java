@@ -3,7 +3,6 @@ package org.energygrid.east.simulationwindservice.controller;
 import org.energygrid.east.simulationwindservice.model.Scenario;
 import org.energygrid.east.simulationwindservice.model.results.ScenarioExpectationResult;
 import org.energygrid.east.simulationwindservice.service.IScenarioWindService;
-import org.energygrid.east.simulationwindservice.service.ScenarioWindService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

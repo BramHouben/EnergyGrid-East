@@ -51,11 +51,11 @@ public class SimulationLogic implements ISimulationLogic {
     private double getWindSpeedFactor(double windSpeed) {
         double factor = 0;
 
-        if (windSpeed >= 10 || windSpeed < 25) {
+        if (windSpeed >= 10 && windSpeed < 25) {
             factor = 1;
         }
 
-        if (windSpeed >= 3 || windSpeed < 10) {
+        if (windSpeed >= 3 && windSpeed < 10) {
             factor = 1 * (windSpeed / 10);
         }
 

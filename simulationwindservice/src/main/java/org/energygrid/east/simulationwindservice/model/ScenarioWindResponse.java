@@ -5,9 +5,7 @@ public class ScenarioWindResponse {
     public double kilowatt;
     public int count;
 
-    public ScenarioWindResponse() {
-
-    }
+    public ScenarioWindResponse() { }
 
     public ScenarioWindResponse(double kilowatt, int count) {
         this.kilowatt = kilowatt;
