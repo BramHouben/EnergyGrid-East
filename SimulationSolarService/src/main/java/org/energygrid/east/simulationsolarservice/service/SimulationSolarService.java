@@ -39,8 +39,6 @@ public class SimulationSolarService implements ISimulationSolarService {
     @Value("${URL}")
     private String url ;
 
-//    @Value("${APIKEY_SIMULATION}")
-//    private String apiKey;
 
     private final RestTemplate template;
     private final HttpHeaders headers;
