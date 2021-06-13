@@ -43,6 +43,11 @@ services:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATA_MONGODB_URI: mongodb://mongosolarpark:27017/solarpark
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+
 
   mongosolarpark:
     hostname: mongosolarpark
@@ -65,6 +70,8 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
     depends_on:
       - rabbitmq
+    links:
+      - rabbitmq
 
   userservice:
     build: UserService
@@ -79,6 +86,9 @@ services:
       RABBIT_HOST: rabbitmq
     depends_on:
       - mysql_userservice
+      - rabbitmq
+    links:
+      - rabbitmq
 
   authenticationservice:
     build: AuthenticationService
@@ -92,7 +102,10 @@ services:
       RABBIT_HOST: rabbitmq
       MYSQL_DB_HOST: mysql_authservice
     depends_on:
+      - rabbitmq
       - mysql_authservice
+    links:
+      - rabbitmq
 
   mysql_authservice:
     container_name: mysql_authservice
@@ -105,6 +118,10 @@ services:
       - 3306
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
 
   mysql_userservice:
     container_name: mysql_userservice
@@ -117,6 +134,8 @@ services:
       - 3307
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    depends_on:
+      - rabbitmq
 
   gateway_service:
     container_name: gateway
@@ -125,6 +144,12 @@ services:
     ports:
       - 8081:80
     restart: always
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    environment:
+      JWTSECRET: dLTIsQs09U6hWgLWNpuumlyxo1LMLIb4
 
   regionservice:
     build: RegionService
@@ -136,16 +161,22 @@ services:
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
       SPRING_DATA_MONGODB_URI: mongodb://mongoregion:27080/region
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
 
   mongoregion:
     hostname: mongoregion
     container_name: mongoregion
-    image: mongo
+    image: mongo:latest
     command: mongod --port 27080
     volumes:
       - ./database:/mongoregion
     ports:
       - 27080:27080
+    depends_on:
+      - rabbitmq
 
   simulationwindservice:
     build: simulationwindservice
@@ -158,6 +189,10 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATA_MONGODB_URI: mongodb://mongosimulationwindservice:27020/simulation_wind
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
 
   mongosimulationwindservice:
     hostname: mongosimulationwindservice
@@ -168,6 +203,8 @@ services:
       - ./database:/mongosimulationwindservice
     ports:
       - 27020:27017
+    depends_on:
+      - rabbitmq
 
   energyusageservice:
     build: EnergyUsageService
@@ -178,23 +215,32 @@ services:
       - 8170:8170
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
+      SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATA_MONGODB_URI: mongodb://mongoenergyusageservice:27050/energyusage
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
 
   mongoenergyusageservice:
     hostname: mongoenergyusageservice
     container_name: mongoenergyusageservice
-    image: mongo
+    image: mongo:latest
     command: mongod --port 27050
     volumes:
       - ./database:/mongoenergyusageservice
     ports:
       - 27050:27017
+    depends_on:
+      - rabbitmq
 
   energybalanceservice:
     build: EnergyBalanceService
     hostname: energybalanceservice
     container_name: energybalanceservice
     depends_on:
+      - rabbitmq
+    links:
       - rabbitmq
     restart: always
     ports:
@@ -203,6 +249,7 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka:8761/eureka/
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATA_MONGODB_URI: mongodb://mongoenergybalanceservice:27030/energybalance
+
 
   mongoenergybalanceservice:
     hostname: mongoenergybalanceservice
@@ -213,12 +260,16 @@ services:
       - ./database:/mongoenergybalanceservice
     ports:
       - 27030:27030
+    depends_on:
+      - rabbitmq
 
   simulationsolarservice:
     build: SimulationSolarService
     hostname: simulationsolarservice
     container_name: simulationsolarservice
     depends_on:
+      - rabbitmq
+    links:
       - rabbitmq
     restart: always
     ports:
@@ -237,6 +288,8 @@ services:
       - ./database:/mongosolarservice
     ports:
       - 27040:27040
+    depends_on:
+      - rabbitmq
 
   eureka:
     mem_limit: 512m
@@ -263,15 +316,36 @@ services:
     ports:
       - 8180:8180
     environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATA_MONGODB_URI: mongodb://mongosimulationnuclearservice:27060/simulation_nuclear
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+
+  websocketservice:
+    build: Websockets-Service
+    hostname: websocketservice
+    container_name: websocketservice
+    restart: always
+    ports:
+      - 8443:8443
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
 
   mongosimulationnuclearservice:
     hostname: mongosimulationnuclearservice
     container_name: mongosimulationnuclearservice
-    image: mongo
+    image: mongo:latest
     command: mongod --port 27060
     volumes:
       - ./database:/mongosimulationnuclearservice
     ports:
       -  27060:27060
+    depends_on:
+      - rabbitmq
 

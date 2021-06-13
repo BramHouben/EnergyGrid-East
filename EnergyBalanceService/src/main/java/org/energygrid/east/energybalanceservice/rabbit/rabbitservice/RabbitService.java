@@ -34,11 +34,12 @@ public class RabbitService implements IRabbitService {
     }
 
     @Override
-    public void addLatestSolar(String message) {
+    public void addLatestSolar(double message) {
         var energyBalanceStore = new EnergyBalanceStore();
         energyBalanceStore.setUuid(UUID.randomUUID());
         energyBalanceStore.setType(Type.SOLAR);
-        energyBalanceStore.setProduction(Long.parseLong(message));
+        var newBalance10Minutes = (long) message / 10;
+        energyBalanceStore.setProduction(newBalance10Minutes);
         energyBalanceStore.setTime(LocalDateTime.now(ZoneOffset.UTC));
         energyBalanceStoreRepo.save(energyBalanceStore);
     }

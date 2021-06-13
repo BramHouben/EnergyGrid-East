@@ -1,5 +1,6 @@
 package org.energygrid.east.userservice.model.dto;
 
+import org.energygrid.east.userservice.model.enums.AccountRole;
 import org.hibernate.annotations.Type;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,6 +16,7 @@ public class UserDTO {
     private String username;
     private String email;
     private String language;
+    private AccountRole accountRole;
 
     public UUID getUuid() {
         return uuid;
@@ -46,5 +48,13 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public AccountRole getAccountRole() {
+        return accountRole;
+    }
+
+    public void setAccountRole(AccountRole accountRole) {
+        this.accountRole = accountRole;
     }
 }
