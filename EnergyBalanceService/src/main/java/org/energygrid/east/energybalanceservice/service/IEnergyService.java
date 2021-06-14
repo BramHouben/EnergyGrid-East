@@ -10,7 +10,7 @@ public interface IEnergyService {
     EnergyBalance getLatestBalance();
 
     /**
-     *
+     * updates balance to newest values
      */
     void updateNewestBalance();
 }

@@ -77,17 +77,15 @@ class BalanceTests {
         String energyUsage = new EnergyUsage(UUID.randomUUID().toString(), "1", "1", 0.004333333333333333, 0.22, 1).toString();
         rabbitService.addLatestUsage(energyUsage);
         var energyUsage2 = new EnergyUsage(UUID.randomUUID().toString(), "1", "1", 0.004333333333333333, 0.22, 1);
-//        rabbitService.addLatestUsage(energyUsage);
         Mockito.when(energyUsageRepo.findFirstByOrderByDayDesc()).thenReturn(energyUsage2);
         Mockito.when(energyBalanceRepo.findFirstByOrderByTimeDesc()).thenReturn(new EnergyBalance(UUID.randomUUID(), 100, 120, 120, BalanceType.SURPLUS, LocalDateTime.now()));
-//        Mockito.when(energyBalanceStoreRepo.findFirstByType(Type.SOLAR)).thenReturn(new EnergyBalanceStore(UUID.randomUUID(), LocalDateTime.now(), 6000, Type.SOLAR));
-//        Mockito.when(energyBalanceStoreRepo.findFirstByType(Type.WIND)).thenReturn(new EnergyBalanceStore(UUID.randomUUID(), LocalDateTime.now(), 6000, Type.WIND));
+
         Mockito.when(energyBalanceRepo.findFirstByOrderByTimeDesc()).thenReturn(new EnergyBalance(UUID.randomUUID(), 100, 100, 100, BalanceType.NORMAL, LocalDateTime.now()));
         EnergyBalance energyBalance = energyBalanceRepo.findFirstByOrderByTimeDesc();
         Assertions.assertDoesNotThrow(() -> energyService.updateNewestBalance());
 
         Assertions.assertEquals(BalanceType.NORMAL, energyBalance.getBalanceType());
-//        Assertions.assertDoesNotThrow(()-> energyService.updateNewestBalance());
+
     }
 
     @Test
@@ -97,11 +95,9 @@ class BalanceTests {
         rabbitService.addLatestSolar(600000);
         rabbitService.addLatestNuclear("600000");
         var energyUsage = new EnergyUsage(UUID.randomUUID().toString(), "1", "1", 0.004333333333333333, 0.22, 1);
-//        rabbitService.addLatestUsage(energyUsage);
         Mockito.when(energyUsageRepo.findFirstByOrderByDayDesc()).thenReturn(energyUsage);
         Mockito.when(energyBalanceRepo.findFirstByOrderByTimeDesc()).thenReturn(new EnergyBalance(UUID.randomUUID(), 100, 120, 120, BalanceType.SURPLUS, LocalDateTime.now()));
-//        Mockito.when(energyBalanceStoreRepo.findFirstByType(Type.SOLAR)).thenReturn(new EnergyBalanceStore(UUID.randomUUID(), LocalDateTime.now(), 6000, Type.SOLAR));
-//        Mockito.when(energyBalanceStoreRepo.findFirstByType(Type.WIND)).thenReturn(new EnergyBalanceStore(UUID.randomUUID(), LocalDateTime.now(), 6000, Type.WIND));
+
 
         Assertions.assertDoesNotThrow(() -> energyService.updateNewestBalance());
 
@@ -114,8 +110,6 @@ class BalanceTests {
         var energyUsage = new EnergyUsage(UUID.randomUUID().toString(), "1", "1", 0.004333333333333333, 0.22, 1);
         Mockito.when(energyUsageRepo.findFirstByOrderByDayDesc()).thenReturn(energyUsage);
         Mockito.when(energyBalanceRepo.findFirstByOrderByTimeDesc()).thenReturn(new EnergyBalance(UUID.randomUUID(), 100, 99, 99, BalanceType.SHORTAGE, LocalDateTime.now()));
-//        Mockito.when(energyBalanceStoreRepo.findFirstByType(Type.SOLAR)).thenReturn(new EnergyBalanceStore(UUID.randomUUID(), LocalDateTime.now(), 1000, Type.SOLAR));
-//        Mockito.when(energyBalanceStoreRepo.findFirstByType(Type.WIND)).thenReturn(new EnergyBalanceStore(UUID.randomUUID(), LocalDateTime.now(), 1000, Type.WIND));
         Assertions.assertDoesNotThrow(() -> energyService.updateNewestBalance());
 
         EnergyBalance energyBalance = energyService.getLatestBalance();
