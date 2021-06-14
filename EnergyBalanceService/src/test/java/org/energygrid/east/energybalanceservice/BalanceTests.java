@@ -1,7 +1,9 @@
 package org.energygrid.east.energybalanceservice;
 
 
-import org.energygrid.east.energybalanceservice.model.*;
+import org.energygrid.east.energybalanceservice.model.BalanceType;
+import org.energygrid.east.energybalanceservice.model.EnergyBalance;
+import org.energygrid.east.energybalanceservice.model.EnergyUsage;
 import org.energygrid.east.energybalanceservice.rabbit.rabbitservice.IRabbitService;
 import org.energygrid.east.energybalanceservice.rabbit.rabbitservice.RabbitService;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceRepo;
@@ -28,7 +30,7 @@ import java.util.UUID;
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
-class balanceTests {
+class BalanceTests {
 
     // 0.004333333333333333 per min kwh
     @Mock
