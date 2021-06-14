@@ -7,10 +7,7 @@ import org.energygrid.east.regionservice.model.StreetRequest;
 import org.energygrid.east.regionservice.service.IRegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -46,14 +43,13 @@ public class RegionController {
     }
 
     @GetMapping("street/info")
-    public ResponseEntity<StreetRequest> getStreetInfo(@RequestParam(name = "streetname") String streetname, @RequestParam(name = "city") String city, @RequestParam(name = "page") long page) {
-        if (page == 0) {
+    public ResponseEntity<StreetRequest> getStreetInfo(@RequestParam(name = "streetname") String streetName, @RequestParam(name = "city") String city) {
+
+
+        if (streetName.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        if (streetname.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-        StreetRequest streetRequest = regionService.getAllHousesStreet(streetname, city, page);
+        var streetRequest = regionService.getAllHousesStreet(streetName, city);
 
         return ResponseEntity.ok().body(streetRequest);
 
