@@ -1,4 +1,4 @@
-package org.energygrid.east.userservice.rabbit.Producer;
+package org.energygrid.east.userservice.rabbit.producer;
 
 import com.rabbitmq.client.Channel;
 

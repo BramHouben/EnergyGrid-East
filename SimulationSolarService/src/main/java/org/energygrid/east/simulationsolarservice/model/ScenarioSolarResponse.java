@@ -2,8 +2,8 @@ package org.energygrid.east.simulationsolarservice.model;
 
 public class ScenarioSolarResponse {
 
-    public double kilowatt;
-    public int count;
+    private double kilowatt;
+    private int count;
 
     public ScenarioSolarResponse() {
 

@@ -95,7 +95,7 @@ public class SimulationWindService implements ISimulationWindService {
         }
         //  this is temporary!
         var totalPerMinute = total * 3;
-//       var totalPerMinute = total /60;
+
         rabbittemplate.convertAndSend("EnergyBalance", "balance.create.wind", totalPerMinute);
         logger.log(Level.INFO, () -> "Send wind message to queue: " + totalPerMinute);
     }
