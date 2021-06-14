@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 @Component
 public class Receiver {
+
     private static final java.util.logging.Logger logger = Logger.getLogger(Receiver.class.getName());
 
     @Autowired

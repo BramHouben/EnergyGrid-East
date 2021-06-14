@@ -46,11 +46,18 @@ class BalanceIntegrationTest {
     @Test
     void returnOkGetLatestBalance() throws Exception {
 
-
         when(energyService.getLatestBalance()).thenReturn(new EnergyBalance(UUID.randomUUID(), 100, 100, 100, BalanceType.NORMAL, LocalDateTime.now()));
 
         mockMvc.perform(get("/energybalance/currentbalance"))
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void returnBadGetLatestBalance() throws Exception {
+
+        when(energyService.getLatestBalance()).thenReturn(null);
+
+        mockMvc.perform(get("/energybalance/currentbalance"))
+                .andExpect(status().isBadRequest());
+    }
 }
