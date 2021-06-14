@@ -1,27 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql_userservice
+  name: mysql-userservice
 spec:
   selector:
     matchLabels:
-      app: mysql_userservice
+      app: mysql-userservice
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: mysql_userservice
+        app: mysql-userservice
     spec:
       containers:
         - image: mysql
-          name: mysql_userservice
+          name: mysql-userservice
           env:
-            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mysql_userservice
-                  key: root-password
+            - name: MYSQL_ALLOW_EMPTY_PASSWORD
+              value: "yes"
           ports:
             - containerPort: 3306
               name: user-db
@@ -29,38 +26,35 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql_userservice
+  name: mysql-userservice
 spec:
   ports:
     - port: 3306
   selector:
-    app: mysql_userservice
+    app: mysql-userservice
   clusterIP: None
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql_authservice
+  name: mysql-authservice
 spec:
   selector:
     matchLabels:
-      app: mysql_authservice
+      app: mysql-authservice
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: mysql_authservice
+        app: mysql-authservice
     spec:
       containers:
         - image: mysql
-          name: mysql_authservice
+          name: mysql-authservice
           env:
-            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mysql_authservice
-                  key: root-password
+            - name: MYSQL_ALLOW_EMPTY_PASSWORD
+              value: "yes"
           ports:
             - containerPort: 3306
               name: auth-db
@@ -68,12 +62,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql_authservice
+  name: mysql-authservice
 spec:
   ports:
     - port: 3306
   selector:
-    app: mysql_authservice
+    app: mysql-authservice
   clusterIP: None
 ---
 apiVersion: apps/v1
@@ -382,7 +376,7 @@ spec:
             - containerPort: 8150
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://mongo-regionservice:27020/solarpark
+              value: mongodb://mongo-regionservice:27017/region
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
@@ -456,7 +450,7 @@ spec:
             - containerPort: 8140
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://mongo-simulationwindservice:27021/simulation_wind
+              value: mongodb://mongo-simulationwindservice:27017/simulation_wind
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
@@ -530,7 +524,7 @@ spec:
             - containerPort: 8170
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://mongo-energyusageservice:27021/energyusage
+              value: mongodb://mongo-energyusageservice:27017/energyusage
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
@@ -604,7 +598,7 @@ spec:
             - containerPort: 8160
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://mongo-energybalanceservice:27023/energybalance
+              value: mongodb://mongo-energybalanceservice:27017/energybalance
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
@@ -678,7 +672,7 @@ spec:
             - containerPort: 8120
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://mongo-simulationsolarservice:27024/solar
+              value: mongodb://mongo-simulationsolarservice:27017/solar
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
