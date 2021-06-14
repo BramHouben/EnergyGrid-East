@@ -118,47 +118,47 @@ spec:
     app: rabbitmq
   type: LoadBalancer
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: solarparkservice-deployment
-  namespace: default
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: solarparkservice
-  template:
-    metadata:
-      labels:
-        app: solarparkservice
-    spec:
-      containers:
-        - name: solarparkservice
-          image: energygrideast/solarparkservice
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8090
-          env:
-            - name: RABBIT_HOST
-              value: rabbitmq
-            - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://mongo-solarparkservice:27017/solarpark
-      restartPolicy: Always
-      env:
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: solarparkservice
-  namespace: default
-spec:
-  type: ClusterIP
-  selector:
-    app: solarparkservice
-  ports:
-    - port: 8090
-      targetPort: 8090
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: solarparkservice-deployment
+#  namespace: default
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: solarparkservice
+#  template:
+#    metadata:
+#      labels:
+#        app: solarparkservice
+#    spec:
+#      containers:
+#        - name: solarparkservice
+#          image: energygrideast/solarparkservice
+#          imagePullPolicy: Always
+#          ports:
+#            - containerPort: 8090
+#          env:
+#            - name: RABBIT_HOST
+#              value: rabbitmq
+#            - name: SPRING_DATA_MONGODB_URI
+#              value: mongodb://mongo-solarparkservice:27017/solarpark
+#      restartPolicy: Always
+#      env:
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: solarparkservice
+#  namespace: default
+#spec:
+#  type: ClusterIP
+#  selector:
+#    app: solarparkservice
+#  ports:
+#    - port: 8090
+#      targetPort: 8090
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -218,7 +218,6 @@ spec:
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
 ---
 apiVersion: v1
 kind: Service
@@ -258,7 +257,6 @@ spec:
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
 ---
 apiVersion: v1
 kind: Service
@@ -298,7 +296,6 @@ spec:
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
 ---
 apiVersion: v1
 kind: Service
@@ -338,7 +335,6 @@ spec:
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
 ---
 apiVersion: v1
 kind: Service
@@ -377,10 +373,9 @@ spec:
           env:
             - name: SPRING_DATA_MONGODB_URI
               value: mongodb://mongo-regionservice:27017/region
-            - name: RABBIT_HOST
+            - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
 ---
 apiVersion: v1
 kind: Service
@@ -451,10 +446,10 @@ spec:
           env:
             - name: SPRING_DATA_MONGODB_URI
               value: mongodb://mongo-simulationwindservice:27017/simulation_wind
-            - name: RABBIT_HOST
+            - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
+
 ---
 apiVersion: v1
 kind: Service
@@ -525,10 +520,10 @@ spec:
           env:
             - name: SPRING_DATA_MONGODB_URI
               value: mongodb://mongo-energyusageservice:27017/energyusage
-            - name: RABBIT_HOST
+            - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
+
 ---
 apiVersion: v1
 kind: Service
@@ -599,10 +594,9 @@ spec:
           env:
             - name: SPRING_DATA_MONGODB_URI
               value: mongodb://mongo-energybalanceservice:27017/energybalance
-            - name: RABBIT_HOST
+            - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
 ---
 apiVersion: v1
 kind: Service
@@ -673,7 +667,7 @@ spec:
           env:
             - name: SPRING_DATA_MONGODB_URI
               value: mongodb://mongo-simulationsolarservice:27017/solar
-            - name: RABBIT_HOST
+            - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
       restartPolicy: Always
       env:
