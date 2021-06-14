@@ -67,7 +67,7 @@ class ScenarioNuclearUnitTests {
 
         var result = scenarioNuclearService.createScenario(scenarioDTO);
 
-        assertEquals(result.getName(), "Test");
+        assertEquals("Test", result.getName());
 
     }
 
@@ -88,6 +88,6 @@ class ScenarioNuclearUnitTests {
 
         var result = scenarioNuclearService.createScenario(scenarioDTO);
 
-        assertEquals(result.getName(), "Test");
+        assertEquals("Test", result.getName());
     }
 }
