@@ -32,7 +32,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
-public class SimulationNuclearServiceIntegrationTests {
+class SimulationNuclearServiceIntegrationTests {
 
     @InjectMocks
     private SimulationNuclearController simulationNuclearController;
