@@ -3,16 +3,14 @@ package com.enerygrid.east.energyusageservice;
 import com.enerygrid.east.energyusageservice.controller.EnergyUsageController;
 import com.enerygrid.east.energyusageservice.entity.EnergyUsage;
 import com.enerygrid.east.energyusageservice.service.IEnergyUsageService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,6 +34,9 @@ public class EnergyUsageIntegrationTests {
 
     @Mock
     private IEnergyUsageService energyUsageService;
+
+    @Mock
+    private RabbitTemplate rabbitTemplate;
 
     private MockMvc mockMvc;
 
