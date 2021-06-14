@@ -62,9 +62,9 @@ public class SimulationWindService implements ISimulationWindService {
             var productionExpectation = simulationLogic.createSimulationForWindTurbine(turbine.getType(), data.get(0));
             total = +productionExpectation.getKw();
         }
-        // this is temporary!
+        //  this is temporary!
         var totalPerMinute = total * 3;
-        // var totalPerMinute = total /60;
+
         rabbittemplate.convertAndSend("EnergyBalance", "balance.create.wind", totalPerMinute);
         logger.log(Level.INFO, () -> "Send wind message to queue: " + totalPerMinute);
     }

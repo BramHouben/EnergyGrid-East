@@ -1,7 +1,6 @@
 package org.energygrid.east.simulationsolarservice.logic;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import org.energygrid.east.simulationsolarservice.model.Factor;
 import org.energygrid.east.simulationsolarservice.model.ProductionExpectation;
 import org.energygrid.east.simulationsolarservice.model.SolarUnit;
@@ -11,8 +10,6 @@ import org.energygrid.east.simulationsolarservice.model.results.SimulationResult
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.TimeZone;
 
 public class SimulationLogic implements ISimulationLogic {
@@ -30,7 +27,7 @@ public class SimulationLogic implements ISimulationLogic {
     @Override
     public ProductionExpectation createSimulationForSolarUnit(JsonElement weather, SolarUnit solarUnit, int amount) {
         double factor = getSolarPanelFactor(weather, solarUnit, amount);
-        LocalDateTime dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(weather.getAsJsonObject().get("dt").getAsInt()), TimeZone.getDefault().toZoneId());
+        var dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(weather.getAsJsonObject().get("dt").getAsInt()), TimeZone.getDefault().toZoneId());
         return new ProductionExpectation(factor, dateTime);
     }
 
@@ -69,7 +66,7 @@ public class SimulationLogic implements ISimulationLogic {
 
     private double calculateFactor(JsonElement weather, double coefficient, SolarUnit solarUnit, int amount) {
         double result = 0;
-        double temperature = weather.getAsJsonObject().get("temp").getAsDouble();
+        var temperature = weather.getAsJsonObject().get("temp").getAsDouble();
         var uvi = weather.getAsJsonObject().get("uvi").getAsDouble();
         var correction = 0.85;
 

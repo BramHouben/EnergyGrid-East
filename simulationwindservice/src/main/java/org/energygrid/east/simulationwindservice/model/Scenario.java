@@ -8,13 +8,13 @@ public class Scenario {
     private EScenarioType scenarioType;
     private String amount;
     private Double type;
-
     private Point coordinates;
     private WindTurbine windTurbine;
     private String windTurbineOffTimes;
     private String description;
 
     public Scenario() {
+        //Supposed to be empty
     }
 
     public String getName() {

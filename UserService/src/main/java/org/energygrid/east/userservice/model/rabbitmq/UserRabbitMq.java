@@ -1,4 +1,4 @@
-package org.energygrid.east.userservice.model.rabbitMq;
+package org.energygrid.east.userservice.model.rabbitmq;
 
 import org.energygrid.east.userservice.model.enums.AccountRole;
 

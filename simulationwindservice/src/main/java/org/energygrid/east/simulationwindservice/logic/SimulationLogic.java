@@ -25,11 +25,11 @@ public class SimulationLogic implements ISimulationLogic {
 
     @Override
     public ProductionExpectation createSimulationForWindTurbine(double type, JsonElement weather) {
-        double value = weather.getAsJsonObject().get("wind_speed").getAsDouble();
+        var value = weather.getAsJsonObject().get("wind_speed").getAsDouble();
         var factor = calculateFactor("Wind Speed", value);
         var dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(weather.getAsJsonObject().get("dt").getAsInt()), TimeZone.getDefault().toZoneId());
 
-        return getProductionExpectationInKw(factor.getFactor(), type, dateTime);
+        return getProductionExpectationInKw(factor.getFactorValue(), type, dateTime);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.energygrid.east.simulationsolarservice.controller;
 
 import org.energygrid.east.simulationsolarservice.model.Scenario;
+import org.energygrid.east.simulationsolarservice.model.ScenarioSolarResponse;
 import org.energygrid.east.simulationsolarservice.model.results.ScenarioExpectationResult;
 import org.energygrid.east.simulationsolarservice.service.IScenarioSolarScenario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class ScenarioSolarController {
     }
 
     @GetMapping("/today")
-    public ResponseEntity<?> getTodayScenarios() {
+    public ResponseEntity<ScenarioSolarResponse> getTodayScenarios() {
         return ResponseEntity.ok().body(scenarioSolarScenario.countScenariosToday());
     }
 }

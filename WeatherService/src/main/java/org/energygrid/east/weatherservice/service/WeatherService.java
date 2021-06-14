@@ -92,10 +92,10 @@ public class WeatherService implements IWeatherService {
             double minTemp = Math.round(kelvinToCelsius(day.getAsJsonObject().get("temp").getAsJsonObject().get("min").getAsDouble()));
             double maxTemp = Math.round(kelvinToCelsius(day.getAsJsonObject().get("temp").getAsJsonObject().get("max").getAsDouble()));
 
-            String icon = day.getAsJsonObject().get("weather").getAsJsonArray().get(0).getAsJsonObject().get("icon").getAsString();
+            var icon = day.getAsJsonObject().get("weather").getAsJsonArray().get(0).getAsJsonObject().get("icon").getAsString();
             String date = formatDate(day.getAsJsonObject().get("dt").getAsLong());
 
-            double windSpeed = day.getAsJsonObject().get("wind_speed").getAsDouble();
+            var windSpeed = day.getAsJsonObject().get("wind_speed").getAsDouble();
             int windDirection = day.getAsJsonObject().get("wind_deg").getAsInt() + 90;
             int sunPercentage = 100 - day.getAsJsonObject().get("clouds").getAsInt();
 

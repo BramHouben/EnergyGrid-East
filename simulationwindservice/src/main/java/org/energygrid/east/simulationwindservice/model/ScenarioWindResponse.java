@@ -2,8 +2,8 @@ package org.energygrid.east.simulationwindservice.model;
 
 public class ScenarioWindResponse {
 
-    public double kilowatt;
-    public int count;
+    private double kilowatt;
+    private int count;
 
     public ScenarioWindResponse() { }
 
