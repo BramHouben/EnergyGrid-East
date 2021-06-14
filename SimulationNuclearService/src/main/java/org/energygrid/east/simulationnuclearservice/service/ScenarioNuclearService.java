@@ -88,6 +88,7 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
         var simulationResult = scenarioExpectationResult.getSimulationExpectationResult().getSimulationResults();
         simulationResult.add(new SimulationResult());
         scenarioExpectationResult.getSimulationExpectationResult().setSimulationResults(simulationResult);
+        scenarioExpectationResult.getSimulationExpectationResult().setKwTotalResult(0.0);
 
         int kw = 0;
 
@@ -124,6 +125,7 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
         var simulationResult = scenarioExpectationResult.getSimulationExpectationResult().getSimulationResults();
         simulationResult.add(new SimulationResult());
         scenarioExpectationResult.getSimulationExpectationResult().setSimulationResults(simulationResult);
+        scenarioExpectationResult.getSimulationExpectationResult().setKwTotalResult(0.0);
 
         var simulation = simulationNuclearRepository.getSimulationBySimulationId(scenarioDTO.getId());
         simulations.remove(simulation);
