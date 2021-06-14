@@ -19,7 +19,6 @@ class WeatherServiceTests {
     @Value("${APIKEY}")
     private String apiKey;
 
-
     @Test
     void convertKelvinToCelsiusTest() {
         assertEquals(2, weatherService.kelvinToCelsius(275.15), 0.001);

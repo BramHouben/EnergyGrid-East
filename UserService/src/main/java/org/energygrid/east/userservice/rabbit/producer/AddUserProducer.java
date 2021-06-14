@@ -1,9 +1,8 @@
-package org.energygrid.east.userservice.rabbit.Producer;
+package org.energygrid.east.userservice.rabbit.producer;
 
 import com.google.gson.Gson;
 import com.rabbitmq.client.Channel;
-import org.energygrid.east.userservice.model.rabbitMq.UserRabbitMq;
-import org.energygrid.east.userservice.rabbit.RabbitProducer;
+import org.energygrid.east.userservice.model.rabbitmq.UserRabbitMq;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -12,7 +11,7 @@ import java.util.logging.Logger;
 public class AddUserProducer implements Producer {
 
     private UserRabbitMq user;
-    private static final String exchangeName = "add_user_exchange";
+    private static final String EXCHANGE_NAME = "add_user_exchange";
     private static final Logger logger = Logger.getLogger(AddUserProducer.class.getName());
 
     public AddUserProducer(UserRabbitMq user) {
@@ -22,9 +21,9 @@ public class AddUserProducer implements Producer {
     @Override
     public void produce(Channel channel) {
         try {
-            channel.exchangeDeclare(exchangeName, "direct", true);
+            channel.exchangeDeclare(EXCHANGE_NAME, "direct", true);
             String json = new Gson().toJson(user);
-            channel.basicPublish(exchangeName, "", null, json.getBytes());
+            channel.basicPublish(EXCHANGE_NAME, "", null, json.getBytes());
         } catch (IOException e) {
             logger.log(Level.ALL, e.getMessage());
         }
