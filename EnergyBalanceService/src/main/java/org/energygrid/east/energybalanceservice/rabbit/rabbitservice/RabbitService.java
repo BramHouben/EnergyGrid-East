@@ -17,10 +17,15 @@ import java.util.UUID;
 public class RabbitService implements IRabbitService {
 
     @Autowired
-    private EnergyUsageRepo energyUsageRepo;
+    private final EnergyUsageRepo energyUsageRepo;
 
     @Autowired
-    private EnergyBalanceStoreRepo energyBalanceStoreRepo;
+    private final EnergyBalanceStoreRepo energyBalanceStoreRepo;
+
+    public RabbitService(EnergyBalanceStoreRepo energyBalanceRepo, EnergyUsageRepo energyUsageRepo) {
+        this.energyBalanceStoreRepo = energyBalanceRepo;
+        this.energyUsageRepo = energyUsageRepo;
+    }
 
     @Override
     public void addLatestWind(double message) {
@@ -60,7 +65,6 @@ public class RabbitService implements IRabbitService {
         var energyUsagePerHour = gson.fromJson(message, EnergyUsage.class);
         energyUsagePerHour.setKwh(energyUsagePerHour.getKwh() / 60);
         energyUsageRepo.save(energyUsagePerHour);
-
 
     }
 }
