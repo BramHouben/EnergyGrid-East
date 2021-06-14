@@ -1,8 +1,8 @@
 package org.energygrid.east.simulationwindservice.model.results;
 
+import org.energygrid.east.simulationwindservice.model.Point;
 import org.energygrid.east.simulationwindservice.model.enums.EScenarioType;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
