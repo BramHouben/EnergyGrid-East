@@ -5,9 +5,6 @@ import org.energygrid.east.simulationwindservice.logic.ISimulationLogic;
 import org.energygrid.east.simulationwindservice.logic.SimulationLogic;
 import org.energygrid.east.simulationwindservice.model.Point;
 import org.energygrid.east.simulationwindservice.model.WindTurbine;
-import org.energygrid.east.simulationwindservice.model.results.SimulationExpectationResult;
-import org.energygrid.east.simulationwindservice.model.results.SimulationResult;
-import org.energygrid.east.simulationwindservice.repository.SimulationWindRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,8 +13,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;

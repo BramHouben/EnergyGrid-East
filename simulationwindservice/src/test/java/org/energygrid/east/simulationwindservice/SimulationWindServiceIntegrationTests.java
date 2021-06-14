@@ -21,13 +21,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.energygrid.east.simulationwindservice.model.enums.EScenarioType.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,7 +39,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 @SpringBootTest
-public class SimulationWindServiceIntegrationTests {
+class SimulationWindServiceIntegrationTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(SimulationWindServiceIntegrationTests.class);
 
@@ -54,8 +55,6 @@ public class SimulationWindServiceIntegrationTests {
     @Autowired
     ApplicationContext context;
 
-    private MockMvc mockMvc;
-
     @BeforeAll
     static void setupAll() {
         LOG.info("Logic Tests");
@@ -64,7 +63,6 @@ public class SimulationWindServiceIntegrationTests {
     @BeforeEach
     void setup() {
         LOG.info("[Begin test]");
-        this.mockMvc = MockMvcBuilders.standaloneSetup(scenarioWindController).build();
     }
 
     @AfterEach
@@ -90,7 +88,7 @@ public class SimulationWindServiceIntegrationTests {
     }
 
     @Test
-    void testGetALotOfScenariosOfToday() {
+    void testGetALotOfScenariosOfToday() throws Exception {
         when(scenarioWindRepository.count()).thenReturn(20L);
 
         ScenarioWindRepository scenarioWindFromContext = context.getBean(ScenarioWindRepository.class);
@@ -128,7 +126,7 @@ public class SimulationWindServiceIntegrationTests {
 
         ScenarioWindRepository scenarioWindFormContext = context.getBean(ScenarioWindRepository.class);
         var expectedScenarios = scenarioWindFormContext.findTop3ByOrderByCreatedAtDesc();
-        assertEquals(expectedScenarios.size(), 2);
+        assertEquals(2, expectedScenarios.size());
         verify(scenarioWindRepository).findTop3ByOrderByCreatedAtDesc();
     }
 
@@ -202,10 +200,11 @@ public class SimulationWindServiceIntegrationTests {
 
         when(scenarioWindRepository.save(scenarioExpectationResult)).thenReturn(scenarioExpectationResult);
         when(scenarioWindService.createScenario(scenario)).thenReturn(scenarioExpectationResult);
+        assertNotNull(scenario);
     }
 
     @Test
-    void testTurnOffTemporarilyTurbine() throws Exception {
+    void testTurnOffTemporarilyTurbine() {
         var windTurbine = new WindTurbine(7, "Windturbine 7", new Point(52.39138, 5.36222), 1.8);
         var currentDate = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
         var scenarioExpectationResult = new ScenarioExpectationResult("Production", TURN_OFF_WIND_TURBINE, currentDate, new SimulationExpectationResult("1", currentDate, new ArrayList<>(), 120.00), "Test Add windpark", new Point(52.39138, 5.36222));
@@ -221,6 +220,7 @@ public class SimulationWindServiceIntegrationTests {
 
         when(scenarioWindRepository.save(scenarioExpectationResult)).thenReturn(scenarioExpectationResult);
         when(scenarioWindService.createScenario(scenario)).thenReturn(scenarioExpectationResult);
+        assertNotNull(scenario);
     }
 
     @Test
@@ -284,5 +284,34 @@ public class SimulationWindServiceIntegrationTests {
         var result = scenarioWindService.createScenario(scenario);
         assertNotNull(result);
         verify(scenarioWindRepository).save(any(ScenarioExpectationResult.class));
+    }
+
+    @Test
+    void testCountScenariosTodayNull() {
+        var result = scenarioWindService.countScenariosToday();
+        assertNull(result);
+    }
+
+    @Test
+    void testCountScenariosToday() {
+        var dateString = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
+        List<ScenarioExpectationResult> scenarios = new ArrayList<>();
+
+        for (var i = 1; i <= 3; i++) {
+            scenarios.add(new ScenarioExpectationResult("Test " + i, ADD_WIND_PARK, dateString,
+                    new SimulationExpectationResult(String.valueOf(i), dateString, new ArrayList<>(), 1200.0 * i), "Test " + i, new Point(51.965177468519435, 5.854872754972738)));
+        }
+
+        var date = LocalDate.now();
+        String startDate = date + "T00:00:00Z";
+        String endDate = date + "T23:59:59Z";
+
+        when(scenarioWindRepository.findAllByCreatedAtBetween(startDate, endDate)).thenReturn(scenarios);
+
+        var result = scenarioWindService.countScenariosToday();
+
+        LOG.info("Result: KWH : {}", result.getKilowatt());
+        assertNotNull(result);
+        assertThat(result.getKilowatt(), greaterThan(0.0));
     }
 }

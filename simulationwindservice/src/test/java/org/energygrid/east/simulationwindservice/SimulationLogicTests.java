@@ -3,6 +3,7 @@ package org.energygrid.east.simulationwindservice;
 import org.energygrid.east.simulationwindservice.factory.FactoryURL;
 import org.energygrid.east.simulationwindservice.logic.ISimulationLogic;
 import org.energygrid.east.simulationwindservice.logic.SimulationLogic;
+import org.energygrid.east.simulationwindservice.model.Factor;
 import org.energygrid.east.simulationwindservice.model.ProductionExpectation;
 import org.energygrid.east.simulationwindservice.model.results.SimulationResult;
 import org.junit.jupiter.api.*;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ActiveProfiles("test")
 @SpringBootTest
-public class SimulationLogicTests {
+class SimulationLogicTests {
 
     private static final Logger LOG = LoggerFactory.getLogger(SimulationLogicTests.class);
 
@@ -55,93 +56,63 @@ public class SimulationLogicTests {
 
     @Test
     void testFactorForWindSpeedGreaterThan3LowerThan10() {
-        var factorValue = simulationLogic.calculateFactor("Test wind speed Factor", 8);
         var expected = 0.8;
-        LOG.info("-- Test if wind speed > 3  & < 10 --");
-        LOG.info("Expected factor: {}, Actual factor: {} ", expected, factorValue.getFactor());
-        assertEquals(expected, factorValue.getFactor());
+        assertEquals(expected, calculateFactor(8).getFactorValue());
     }
 
     @Test
     void testFactorForWindSpeedGreaterThan10LowerThan25() {
-        var factorValue = simulationLogic.calculateFactor("Test wind speed Factor", 20);
         var expected = 1.0;
-        LOG.info("-- Test if wind speed > 10 & < 25 --");
-        LOG.info("Expected factor: {}, Actual factor: {} ", expected, factorValue.getFactor());
-        assertEquals(expected, factorValue.getFactor());
+        assertEquals(expected, calculateFactor(20).getFactorValue());
     }
 
     @Test
     void testFactorForWindSpeedGreaterThan25() {
-        var factorValue = simulationLogic.calculateFactor("Test wind speed Factor", 26);
         var expected = 0.0;
-        LOG.info("-- Test if wind speed > 25 --");
-        LOG.info("Expected factor: {}, Actual factor: {} ", expected, factorValue.getFactor());
-        assertEquals(expected, factorValue.getFactor());
+        assertEquals(expected, calculateFactor(26).getFactorValue());
     }
 
     @Test
     void testFactorForWindSpeedLowerThan3() {
-        var factorValue = simulationLogic.calculateFactor("Test wind speed Factor", 26);
         var expected = 0.0;
-        LOG.info("-- Test if wind speed < 3 --");
-        LOG.info("Expected factor: {}, Actual factor: {} ", expected, factorValue.getFactor());
-        assertEquals(expected, factorValue.getFactor());
+        assertEquals(expected, calculateFactor(2).getFactorValue());
     }
 
     @Test
     void testGetProductionInKwhWindSpeed20TurbineType18() {
-        var productionExpectation = simulationLogic.getProductionExpectationInKw(1, 1.8, LocalDateTime.now());
         var expected = 1800.0;
-        LOG.info("-- Test if wind speed = 20 && turbine type = 1.8 --");
-        LOG.info("Expected production: {}, Actual production: {} ", expected, productionExpectation.getKw());
-        assertEquals(expected, productionExpectation.getKw());
+        assertEquals(expected, getProductionExpectationInKilowatt(1, 1.8).getKw());
     }
 
     @Test
     void testGetProductionInKwhWindSpeed20TurbineType20() {
-        var productionExpectation = simulationLogic.getProductionExpectationInKw(1, 2.0, LocalDateTime.now());
         var expected = 2000.0;
-        LOG.info("-- Test if wind speed = 20 && turbine type = 2.0 --");
-        LOG.info("Expected production: {}, Actual production: {} ", expected, productionExpectation.getKw());
-        assertEquals(expected, productionExpectation.getKw());
+        assertEquals(expected, getProductionExpectationInKilowatt(1, 2.0).getKw());
     }
 
     @Test
     void testGetProductionInKwhWindSpeed20TurbineType30() {
-        var productionExpectation = simulationLogic.getProductionExpectationInKw(1, 3.0, LocalDateTime.now());
         var expected = 3000.0;
-        LOG.info("-- Test if wind speed = 20 && turbine type = 3.0 --");
-        LOG.info("Expected production: {}, Actual production: {} ", expected, productionExpectation.getKw());
-        assertEquals(expected, productionExpectation.getKw());
+        assertEquals(expected, getProductionExpectationInKilowatt(1, 3.0).getKw());
     }
 
     @Test
     void testGetProductionInKwhWindSpeed6TurbineType30() {
-        var productionExpectation = simulationLogic.getProductionExpectationInKw(0.6, 3.0, LocalDateTime.now());
         var expected = 1800.0;
-        var actual = Math.round(productionExpectation.getKw() * 100) / 100;
-        LOG.info("-- Test if wind speed = 6 && turbine type = 3.0 --");
-        LOG.info("Expected production: {}, Actual production: {} ", expected, actual);
+        var actual = Math.round(getProductionExpectationInKilowatt(0.6, 3.0).getKw() * 100) / 100;
         assertEquals(expected, actual);
     }
 
     @Test
     void testGetProductionInKwhWindSpeed2TurbineType30() {
-        var productionExpectation = simulationLogic.getProductionExpectationInKw(0.0, 3.0, LocalDateTime.now());
         var expected = 0.0;
-        LOG.info("-- Test if wind speed = 6 && turbine type = 3.0 --");
-        LOG.info("Expected production: {}, Actual production: {} ", expected, productionExpectation.getKw());
-        assertEquals(expected, productionExpectation.getKw());
+        assertEquals(expected, getProductionExpectationInKilowatt(0.0, 3.0).getKw());
     }
 
     @Test
     void testGetProductionInKwhWindSpeed28TurbineType30() {
-        var productionExpectation = simulationLogic.getProductionExpectationInKw(0.0, 3.0, LocalDateTime.now());
         var expected = 0.0;
-        LOG.info("-- Test if wind speed = 6 && turbine type = 3.0 --");
-        LOG.info("Expected production: {}, Actual production: {} ", expected, productionExpectation.getKw());
-        assertEquals(expected, productionExpectation.getKw());
+        assertEquals(expected, getProductionExpectationInKilowatt(0.0, 3.0).getKw());
     }
 
     @Test
@@ -182,5 +153,13 @@ public class SimulationLogicTests {
 
         assertNotNull(productionExpectation);
         LOG.info("-- Kilowatt production = {}", productionExpectation.getKw());
+    }
+
+    private Factor calculateFactor(double windSpeed) {
+        return simulationLogic.calculateFactor("Test wind speed Factor", windSpeed);
+    }
+
+    private ProductionExpectation getProductionExpectationInKilowatt(double factor, double type) {
+        return simulationLogic.getProductionExpectationInKw(factor, type, LocalDateTime.now());
     }
 }
