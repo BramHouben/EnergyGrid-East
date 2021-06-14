@@ -15,26 +15,26 @@ public class SolarParkConsumer implements Consumer<String> {
 
     private static final Logger logger = Logger.getLogger(SolarParkConsumer.class.getName());
 
-    private final String queue_name;
-    private final String exchange_name;
+    private final String queueName;
+    private final String exchangeName;
 
     public SolarParkConsumer() {
-        queue_name = "simulation_solar_queue";
-        exchange_name = "solarpark_exchange";
+        queueName = "simulation_solar_queue";
+        exchangeName = "solarpark_exchange";
     }
 
 
     @Override
     public String consume(Channel channel) {
         try {
-            channel.queueDeclare(queue_name, false, false, false, null);
-            channel.exchangeDeclare(exchange_name, "direct", true);
-            channel.queueBind(queue_name, exchange_name, "");
+            channel.queueDeclare(queueName, false, false, false, null);
+            channel.exchangeDeclare(exchangeName, "direct", true);
+            channel.queueBind(queueName, exchangeName, "");
 
             BlockingQueue<String> blockingQueue = new ArrayBlockingQueue<>(1);
             com.rabbitmq.client.Consumer consumer = new DefaultRabbitConsumer(channel, blockingQueue);
 
-            channel.basicConsume(queue_name, true, consumer);
+            channel.basicConsume(queueName, true, consumer);
 
             return blockingQueue.poll(3000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException | IOException e) {

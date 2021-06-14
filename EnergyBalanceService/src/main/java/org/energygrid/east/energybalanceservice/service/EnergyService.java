@@ -54,8 +54,10 @@ public class EnergyService implements IEnergyService {
         return energyBalanceRepo.findFirstByOrderByTimeDesc();
     }
 
+
     @Override
-    @Scheduled(fixedDelay = 60000, initialDelay = 20000)
+    @Scheduled(fixedDelay = 60000, initialDelay = 40000)
+
     public void updateNewestBalance() {
 
         try {

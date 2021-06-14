@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class SimulationWindService implements ISimulationWindService {
         simulationWindRepository.save(simulationExpectationResult);
         return simulationExpectationResult;
     }
-
+    @PostConstruct
     @Scheduled(fixedDelay = 60000, initialDelay = 10000)
     private void sendLatestWindInfo() {
         double total = 0;
@@ -95,12 +96,12 @@ public class SimulationWindService implements ISimulationWindService {
         }
         //  this is temporary!
         var totalPerMinute = total * 3;
-//       var totalPerMinute = total /60;
+
         rabbittemplate.convertAndSend("EnergyBalance", "balance.create.wind", totalPerMinute);
         logger.log(Level.INFO, () -> "Send wind message to queue: " + totalPerMinute);
     }
 
     private String getUrl(double x, double y) {
-        return "https://api.openweathermap.org/data/2.5/onecall?lat=" + x + "&lon=" + y + "&exclude=current,minutely,daily,hourly,alerts&appid=da713c7b97d2a6f912d9266ec49a30d8";
+        return "https://api.openweathermap.org/data/2.5/onecall?lat=" + x + "&lon=" + y + "&exclude=current,minutely,daily,hourly,alerts&appid=49a9e8c085fe370f35bb3ff8bc855f40";
     }
 }
