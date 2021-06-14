@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.annotation.PostConstruct;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -38,8 +39,6 @@ public class SimulationSolarService implements ISimulationSolarService {
     @Value("${URL}")
     private String url ;
 
-    @Value("${APIKEY_SIMULATION}")
-    private String apiKey;
 
     private final RestTemplate template;
     private final HttpHeaders headers;
@@ -100,8 +99,8 @@ public class SimulationSolarService implements ISimulationSolarService {
         this.headers = headers;
         this.simulationLogic = new SimulationLogic();
     }
-
-    @Scheduled(fixedDelay = 600000, initialDelay = 5000)
+    @PostConstruct
+    @Scheduled(fixedDelay = 600000)
     private void sendSolarProduction() {
         try {
             var simulationExpectationResult = new SimulationExpectationResult();
@@ -149,11 +148,11 @@ public class SimulationSolarService implements ISimulationSolarService {
     }
 
     private String getUrl(double x, double y) {
-        return "https://api.openweathermap.org/data/2.5/onecall?lat="+x+"&lon="+y+"&exclude=current,minutely,daily,alerts&appid=da713c7b97d2a6f912d9266ec49a30d8";
+        return "https://api.openweathermap.org/data/2.5/onecall?lat="+x+"&lon="+y+"&exclude=current,minutely,daily,alerts&appid=49a9e8c085fe370f35bb3ff8bc855f40";
     }
 
     private String currentWeatherStringBuilder(Point coordinates) {
-        return url + "weather?lat=" + coordinates.getX() + "&lon=" + coordinates.getY() + "&appid=" + apiKey;
+        return url + "weather?lat=" + coordinates.getX() + "&lon=" + coordinates.getY() + "&appid=49a9e8c085fe370f35bb3ff8bc855f40";
     }
 
     public JsonObject getCurrentWeather(Point coordinates) {
