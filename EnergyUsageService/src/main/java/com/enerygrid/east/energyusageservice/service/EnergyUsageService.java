@@ -4,6 +4,7 @@ import com.enerygrid.east.energyusageservice.entity.EnergyUsage;
 import com.enerygrid.east.energyusageservice.repository.EnergyUsageRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,11 @@ public class EnergyUsageService implements IEnergyUsageService {
     private RabbitTemplate rabbitTemplate;
     @Autowired
     private EnergyUsageRepository energyUsageRepository;
+
+    public EnergyUsageService(EnergyUsageRepository energyUsageRepository, RabbitTemplate rabbitTemplate){
+        this.energyUsageRepository = energyUsageRepository;
+        this.rabbitTemplate = rabbitTemplate;
+    }
 
     @Override
     public List<EnergyUsage> getEnergyUsageOfUser(String userId, String date) {
@@ -110,8 +116,7 @@ public class EnergyUsageService implements IEnergyUsageService {
         return bd.doubleValue();
     }
 
-    @PostConstruct
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 60000,initialDelay = 10000)
     private void sendDailyUsageToEnergyBalance() {
         logger.info("sendDailyUsageToEnergyBalance");
         var localDateDay = LocalDate.now().toString();
