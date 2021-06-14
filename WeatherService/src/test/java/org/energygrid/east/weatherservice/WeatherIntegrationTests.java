@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
-public class WeatherIntegrationTests {
+class WeatherIntegrationTests {
 
     @InjectMocks
     private WeatherController weatherController;

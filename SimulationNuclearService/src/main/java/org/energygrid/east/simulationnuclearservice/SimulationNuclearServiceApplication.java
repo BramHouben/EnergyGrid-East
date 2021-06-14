@@ -1,11 +1,12 @@
 package org.energygrid.east.simulationnuclearservice;
 
+import org.energygrid.east.simulationnuclearservice.repository.ScenarioNuclearRepository;
 import org.energygrid.east.simulationnuclearservice.repository.SimulationNuclearRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-@EnableMongoRepositories(basePackageClasses = SimulationNuclearRepository.class)
+@EnableMongoRepositories(basePackageClasses = {SimulationNuclearRepository.class, ScenarioNuclearRepository.class})
 @SpringBootApplication
 public class SimulationNuclearServiceApplication {
 
