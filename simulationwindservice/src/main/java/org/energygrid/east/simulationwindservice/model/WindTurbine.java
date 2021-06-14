@@ -1,7 +1,5 @@
 package org.energygrid.east.simulationwindservice.model;
 
-import org.springframework.data.geo.Point;
-
 public class WindTurbine {
 
     private int turbineId;
