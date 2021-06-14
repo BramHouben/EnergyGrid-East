@@ -32,6 +32,7 @@ public class ScenarioWindService implements IScenarioWindService {
     @Autowired
     private ScenarioWindRepository scenarioWindRepository;
 
+    @Autowired
     public ScenarioWindService() {
         this.simulationLogic = new SimulationLogic();
         this.template = new RestTemplate();
