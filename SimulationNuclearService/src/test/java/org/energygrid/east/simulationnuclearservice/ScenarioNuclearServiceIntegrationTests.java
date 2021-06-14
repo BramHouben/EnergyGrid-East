@@ -52,21 +52,6 @@ class ScenarioNuclearServiceIntegrationTests {
         this.mockMvc = MockMvcBuilders.standaloneSetup(scenarioNuclearController).build();
     }
 
-//    @Test
-//    void createScenarioTest() throws Exception {
-//        var time = LocalDateTime.now();
-//        var id = UUID.randomUUID();
-//
-//        ScenarioDTO scenarioDTO = new ScenarioDTO(id, "Test", time, time, 8, ScenarioType.ADD_REACTOR, 1000);
-//        var scenarioExpectationResult = new ScenarioExpectationResult(id.toString(), "Test", ScenarioType.ADD_REACTOR, time.toString(), new SimulationExpectationResult(), "", new Point(2,2));
-//
-//        when(scenarioNuclearService.createScenario(scenarioDTO)).thenReturn(scenarioExpectationResult);
-//
-//        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-//        String json = ow.writeValueAsString(scenarioDTO);
-//
-//        mockMvc.perform(post("/scenario/nuclear/create").contentType(MediaType.APPLICATION_JSON).content(json).characterEncoding("utf-8")).andExpect(status().isOk());
-//    }
 
     @Test
     void getScenariosTest() throws Exception {

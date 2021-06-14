@@ -26,6 +26,11 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
     @Autowired
     private ScenarioNuclearRepository scenarioNuclearRepository;
 
+    public ScenarioNuclearService(SimulationNuclearRepository simulationNuclearRepository,ScenarioNuclearRepository scenarioNuclearRepository){
+        this.scenarioNuclearRepository= scenarioNuclearRepository;
+        this.simulationNuclearRepository = simulationNuclearRepository;
+    }
+
     @Override
     public ScenarioExpectationResult createScenario(ScenarioDTO scenarioDTO) {
         var scenarioExpectationResult = new ScenarioExpectationResult(UUID.randomUUID().toString(), scenarioDTO.getName(), scenarioDTO.getScenarioType(), LocalDateTime.now().toString(), new SimulationExpectationResult(), "Nuclear Scenario", new Point(20, 20));
