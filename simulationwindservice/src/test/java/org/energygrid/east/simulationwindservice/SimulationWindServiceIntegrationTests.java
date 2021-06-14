@@ -1,6 +1,5 @@
 package org.energygrid.east.simulationwindservice;
 
-import org.energygrid.east.simulationwindservice.controller.ScenarioWindController;
 import org.energygrid.east.simulationwindservice.model.Point;
 import org.energygrid.east.simulationwindservice.model.Scenario;
 import org.energygrid.east.simulationwindservice.model.WindTurbine;
@@ -44,9 +43,6 @@ class SimulationWindServiceIntegrationTests {
     private static final Logger LOG = LoggerFactory.getLogger(SimulationWindServiceIntegrationTests.class);
 
     @InjectMocks
-    private ScenarioWindController scenarioWindController;
-
-    @InjectMocks
     private ScenarioWindService scenarioWindService;
 
     @MockBean
@@ -88,7 +84,7 @@ class SimulationWindServiceIntegrationTests {
     }
 
     @Test
-    void testGetALotOfScenariosOfToday() throws Exception {
+    void testGetALotOfScenariosOfToday() {
         when(scenarioWindRepository.count()).thenReturn(20L);
 
         ScenarioWindRepository scenarioWindFromContext = context.getBean(ScenarioWindRepository.class);
@@ -113,7 +109,7 @@ class SimulationWindServiceIntegrationTests {
     }
 
     @Test
-    void testLatestScenarios() throws Exception {
+    void testLatestScenarios() {
         var dateString = DateTimeFormatter.ISO_INSTANT.format(Instant.now());
         List<ScenarioExpectationResult> scenarios = new ArrayList<>();
         scenarios.add(new ScenarioExpectationResult("Test 1", ADD_WIND_PARK, dateString,
@@ -309,7 +305,6 @@ class SimulationWindServiceIntegrationTests {
         when(scenarioWindRepository.findAllByCreatedAtBetween(startDate, endDate)).thenReturn(scenarios);
 
         var result = scenarioWindService.countScenariosToday();
-
         LOG.info("Result: KWH : {}", result.getKilowatt());
         assertNotNull(result);
         assertThat(result.getKilowatt(), greaterThan(0.0));
