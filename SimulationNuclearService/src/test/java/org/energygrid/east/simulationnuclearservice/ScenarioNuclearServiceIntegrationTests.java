@@ -1,9 +1,6 @@
 package org.energygrid.east.simulationnuclearservice;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import org.energygrid.east.simulationnuclearservice.controller.ScenarioNuclearController;
-import org.energygrid.east.simulationnuclearservice.model.dto.ScenarioDTO;
 import org.energygrid.east.simulationnuclearservice.model.enums.ScenarioType;
 import org.energygrid.east.simulationnuclearservice.model.results.ScenarioExpectationResult;
 import org.energygrid.east.simulationnuclearservice.model.results.SimulationExpectationResult;
@@ -16,11 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.geo.Point;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import com.fasterxml.jackson.databind.ObjectWriter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,7 +24,6 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
