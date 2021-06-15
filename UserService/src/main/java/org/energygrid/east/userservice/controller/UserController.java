@@ -24,21 +24,24 @@ import java.util.logging.Logger;
 @RestController
 @RequestMapping("user")
 public class UserController {
+
     @Autowired
     private UserService userService;
 
-    private final ModelMapper modelMapper;
+//    @Autowired
+//    private ModelMapper modelMapper;
 
     @Value("${HEADER}")
     private String authorization;
 
-    @Autowired
-    private HttpServletRequest request;
+//    @Autowired
+//    private HttpServletRequest request;
     private static final Logger logger = Logger.getLogger(UserController.class.getName());
 
-    public UserController() {
-        this.modelMapper = new ModelMapper();
-    }
+
+//    public UserController() {
+//        this.modelMapper = new ModelMapper();
+//    }
 
     @PostMapping()
     public ResponseEntity<UserViewModel> addUser(@NotNull @RequestBody User user) {
@@ -54,7 +57,7 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<UserViewModel> getUserByUuidOrUsernameOrEmail(@RequestParam(required = false) UUID uuid, @RequestParam(required = false) String username, @RequestParam(required = false) String email) {
+    public ResponseEntity<UserViewModel> getUserByUuidOrUsernameOrEmail(@RequestParam(required = false) UUID uuid, @RequestParam(required = false) String username, @RequestParam(required = false) String email,HttpServletRequest request) {
         try {
             String jwt = request.getHeader(authorization);
             if(jwt == null || jwt.isEmpty()) {
@@ -65,7 +68,7 @@ public class UserController {
             if (user == null) {
                 return ResponseEntity.status(404).body(null);
             }
-
+            ModelMapper modelMapper = new ModelMapper();
             var userViewmodel = modelMapper.map(user, UserViewModel.class);
             return ResponseEntity.ok(userViewmodel);
         } catch (IllegalAccessException e){
@@ -79,7 +82,7 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity<UserViewModel> editUser(@NotNull @RequestBody User user) {
+    public ResponseEntity<UserViewModel> editUser(@NotNull @RequestBody User user,HttpServletRequest request) {
         try {
             String bearer = request.getHeader(authorization);
             if(bearer == null || bearer.isEmpty()) {
@@ -100,7 +103,7 @@ public class UserController {
     }
 
     @DeleteMapping()
-    public ResponseEntity<UserViewModel> deleteUser() {
+    public ResponseEntity<UserViewModel> deleteUser(HttpServletRequest request) {
         try {
             String bearer = request.getHeader(authorization);
             if(bearer == null || bearer.isEmpty()) {
@@ -119,7 +122,7 @@ public class UserController {
     }
 
     @GetMapping("/operator")
-    public ResponseEntity<List<UserDTO>> getGridOperators(){
+    public ResponseEntity<List<UserDTO>> getGridOperators(HttpServletRequest request){
         try {
             String bearer = request.getHeader(authorization);
             if(bearer == null || bearer.isEmpty()) {
@@ -137,7 +140,7 @@ public class UserController {
     }
 
     @PostMapping("/operator")
-    public ResponseEntity<GridOperatorViewModel> addGridOperator(@NotNull @RequestBody User user){
+    public ResponseEntity<GridOperatorViewModel> addGridOperator(@NotNull @RequestBody User user,HttpServletRequest request){
         try {
             String bearer = request.getHeader(authorization);
             if(bearer == null || bearer.isEmpty()) {
@@ -155,7 +158,7 @@ public class UserController {
     }
 
     @DeleteMapping("/operator")
-    public ResponseEntity<UserViewModel> deleteGridOperator(@NotNull @RequestBody Operator operator){
+    public ResponseEntity<UserViewModel> deleteGridOperator(@NotNull @RequestBody Operator operator,HttpServletRequest request){
         try{
             String bearer = request.getHeader(authorization);
             if(bearer == null || bearer.isEmpty()) {
