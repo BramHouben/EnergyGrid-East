@@ -17,11 +17,8 @@ spec:
         - image: mysql
           name: mysql-userservice
           env:
-            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-userservice
-                  key: root-password
+            - name: MYSQL_ALLOW_EMPTY_PASSWORD
+              value: "yes"
           ports:
             - containerPort: 3306
               name: user-db
@@ -56,11 +53,8 @@ spec:
         - image: mysql
           name: mysql-authservice
           env:
-            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mysql-authservice
-                  key: root-password
+            - name: MYSQL_ALLOW_EMPTY_PASSWORD
+              value: "yes"
           ports:
             - containerPort: 3306
               name: auth-db
@@ -98,6 +92,8 @@ spec:
           ports:
             - containerPort: 15672
               name: http-port
+            - containerPort: 5672
+              name: service
           volumeMounts:
             - mountPath: /var/rabbitmqapp_home
               name: rabbitmqapp-home
@@ -151,7 +147,6 @@ spec:
             - name: SPRING_DATA_MONGODB_URI
               value: mongodb://mongo-solarparkservice:27017/solarpark
       restartPolicy: Always
-      env:
 ---
 apiVersion: v1
 kind: Service
@@ -224,7 +219,6 @@ spec:
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
 ---
 apiVersion: v1
 kind: Service
@@ -264,7 +258,6 @@ spec:
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
 ---
 apiVersion: v1
 kind: Service
@@ -278,6 +271,45 @@ spec:
   ports:
     - port: 8130
       targetPort: 8130
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: energymarket-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: energymarket
+  template:
+    metadata:
+      labels:
+        app: energymarket
+    spec:
+      containers:
+        - name: energymarket
+          image: vincentdarwinkel/energymarketapi
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: energymarketservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: energymarket
+  ports:
+    - port: 8195
+      targetPort: 80
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -301,10 +333,11 @@ spec:
           ports:
             - containerPort: 8100
           env:
-            - name: RABBIT_HOST
+            - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql-authservice:3306/authservice?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
       restartPolicy: Always
-      env:
 ---
 apiVersion: v1
 kind: Service
@@ -344,7 +377,6 @@ spec:
             - name: RABBIT_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
 ---
 apiVersion: v1
 kind: Service
@@ -382,11 +414,10 @@ spec:
             - containerPort: 8150
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://mongo-regionservice:27020/solarpark
-            - name: RABBIT_HOST
+              value: mongodb://mongo-regionservice:27017/region
+            - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
 ---
 apiVersion: v1
 kind: Service
@@ -456,11 +487,11 @@ spec:
             - containerPort: 8140
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://mongo-simulationwindservice:27021/simulation_wind
-            - name: RABBIT_HOST
+              value: mongodb://mongo-simulationwindservice:27017/simulation_wind
+            - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
+
 ---
 apiVersion: v1
 kind: Service
@@ -530,11 +561,11 @@ spec:
             - containerPort: 8170
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://mongo-energyusageservice:27021/energyusage
-            - name: RABBIT_HOST
+              value: mongodb://mongo-energyusageservice:27017/energyusage
+            - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
+
 ---
 apiVersion: v1
 kind: Service
@@ -604,11 +635,10 @@ spec:
             - containerPort: 8160
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://mongo-energybalanceservice:27023/energybalance
-            - name: RABBIT_HOST
+              value: mongodb://mongo-energybalanceservice:27017/energybalance
+            - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
 ---
 apiVersion: v1
 kind: Service
@@ -678,11 +708,10 @@ spec:
             - containerPort: 8120
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://mongo-simulationsolarservice:27024/solar
-            - name: RABBIT_HOST
+              value: mongodb://mongo-simulationsolarservice:27017/solar
+            - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
 ---
 apiVersion: v1
 kind: Service
@@ -728,3 +757,81 @@ spec:
   ports:
     - port: 27017
       targetPort: 27017
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: websocketservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: websocketservice
+  ports:
+    - port: 8443
+      targetPort: 8443
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocketservice-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: websocketservice
+  template:
+    metadata:
+      labels:
+        app: websocketservice
+    spec:
+      containers:
+        - name: websocketservice
+          image: energygrideast/websockets-service
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8443
+          env:
+            - name: SPRING_RABBITMQ_HOST
+              value: rabbitmq
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: website
+  namespace: default
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 80
+  selector:
+    app: website
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: website-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: website
+  template:
+    metadata:
+      labels:
+        app: website
+    spec:
+      containers:
+        - name: website
+          image: energygrideast/website
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+      restartPolicy: Always

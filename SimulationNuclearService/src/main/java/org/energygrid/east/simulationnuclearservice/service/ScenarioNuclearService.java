@@ -26,6 +26,11 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
     @Autowired
     private ScenarioNuclearRepository scenarioNuclearRepository;
 
+    public ScenarioNuclearService(SimulationNuclearRepository simulationNuclearRepository,ScenarioNuclearRepository scenarioNuclearRepository){
+        this.scenarioNuclearRepository= scenarioNuclearRepository;
+        this.simulationNuclearRepository = simulationNuclearRepository;
+    }
+
     @Override
     public ScenarioExpectationResult createScenario(ScenarioDTO scenarioDTO) {
         var scenarioExpectationResult = new ScenarioExpectationResult(UUID.randomUUID().toString(), scenarioDTO.getName(), scenarioDTO.getScenarioType(), LocalDateTime.now().toString(), new SimulationExpectationResult(), "Nuclear Scenario", new Point(20, 20));
@@ -88,6 +93,7 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
         var simulationResult = scenarioExpectationResult.getSimulationExpectationResult().getSimulationResults();
         simulationResult.add(new SimulationResult());
         scenarioExpectationResult.getSimulationExpectationResult().setSimulationResults(simulationResult);
+        scenarioExpectationResult.getSimulationExpectationResult().setKwTotalResult(0.0);
 
         int kw = 0;
 
@@ -124,6 +130,7 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
         var simulationResult = scenarioExpectationResult.getSimulationExpectationResult().getSimulationResults();
         simulationResult.add(new SimulationResult());
         scenarioExpectationResult.getSimulationExpectationResult().setSimulationResults(simulationResult);
+        scenarioExpectationResult.getSimulationExpectationResult().setKwTotalResult(0.0);
 
         var simulation = simulationNuclearRepository.getSimulationBySimulationId(scenarioDTO.getId());
         simulations.remove(simulation);

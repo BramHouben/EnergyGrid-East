@@ -3,14 +3,14 @@ package org.energygrid.east.simulationwindservice.model;
 public class Factor {
 
     private String name;
-    private double factor;
+    private double factorValue;
 
     public Factor() {
     }
 
     public Factor(String name, double factor) {
         this.name = name;
-        this.factor = factor;
+        this.factorValue = factor;
     }
 
     public String getName() {
@@ -21,11 +21,11 @@ public class Factor {
         this.name = name;
     }
 
-    public double getFactor() {
-        return factor;
+    public double getFactorValue() {
+        return factorValue;
     }
 
     public void setFactor(double factor) {
-        this.factor = factor;
+        this.factorValue = factor;
     }
 }

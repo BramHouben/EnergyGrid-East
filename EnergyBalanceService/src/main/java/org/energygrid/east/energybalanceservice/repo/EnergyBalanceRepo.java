@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface EnergyBalanceRepo extends MongoRepository<EnergyBalance, String> {
 
     EnergyBalance findFirstByOrderByTimeDesc();
+
+
 }

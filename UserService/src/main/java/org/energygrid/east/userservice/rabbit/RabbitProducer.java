@@ -1,6 +1,6 @@
 package org.energygrid.east.userservice.rabbit;
 
-import org.energygrid.east.userservice.rabbit.Producer.Producer;
+import org.energygrid.east.userservice.rabbit.producer.Producer;
 
 public class RabbitProducer extends ChannelHelper {
     public RabbitProducer() {

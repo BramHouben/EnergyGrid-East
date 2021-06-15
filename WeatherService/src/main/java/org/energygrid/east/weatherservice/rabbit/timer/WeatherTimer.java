@@ -22,14 +22,14 @@ public class WeatherTimer extends TimerTask {
     @Value("${APIKEY}")
     private String apiKey;
     private final Channel channel;
-    private final String exchange_name;
+    private final String exchangeName;
 
     private boolean started;
 
-    public WeatherTimer(Channel channel, String exchange_name) {
+    public WeatherTimer(Channel channel, String exchangeName) {
         started = false;
         this.channel = channel;
-        this.exchange_name = exchange_name;
+        this.exchangeName = exchangeName;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class WeatherTimer extends TimerTask {
         try {
             var jsonObject = getWeather();
 
-            channel.basicPublish(exchange_name, "", null, new Gson().toJson(jsonObject).getBytes());
+            channel.basicPublish(exchangeName, "", null, new Gson().toJson(jsonObject).getBytes());
             logger.log(Level.ALL, "weather published");
         } catch (IOException e) {
             logger.log(Level.ALL, e.getMessage());
@@ -47,10 +47,10 @@ public class WeatherTimer extends TimerTask {
 
     private JsonObject getWeather() {
         final String url = "https://api.openweathermap.org/data/2.5/onecall?lat=51.441642&lon=5.4697225&units=metric&exlude=current,minutely,daily,alerts&appid="+apiKey;
-        final RestTemplate restTemplate = new RestTemplate();
-        final HttpHeaders headers = new HttpHeaders();
+        final var restTemplate = new RestTemplate();
+        final var headers = new HttpHeaders();
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+        var builder = UriComponentsBuilder.fromHttpUrl(url);
         HttpEntity<?> httpEntity = new HttpEntity<>(headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, httpEntity, String.class);
 

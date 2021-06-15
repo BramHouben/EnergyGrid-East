@@ -3,8 +3,9 @@ package org.energygrid.east.userservice.controller;
 import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.enums.AccountRole;
-import org.energygrid.east.userservice.model.fromFrontend.Operator;
-import org.energygrid.east.userservice.model.fromFrontend.User;
+import org.energygrid.east.userservice.model.fromfrontend.Operator;
+import org.energygrid.east.userservice.model.fromfrontend.User;
+import org.energygrid.east.userservice.model.viewmodel.GridOperatorViewModel;
 import org.energygrid.east.userservice.model.viewmodel.UserViewModel;
 import org.energygrid.east.userservice.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public ResponseEntity addUser(@NotNull @RequestBody User user) {
+    public ResponseEntity<UserViewModel> addUser(@NotNull @RequestBody User user) {
         try {
             userService.addUser(user, AccountRole.LARGE_SCALE_CUSTOMER);
             return ResponseEntity.status(201).body(null);
@@ -73,7 +75,7 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity editUser(@NotNull @RequestBody User user) {
+    public ResponseEntity<UserViewModel> editUser(@NotNull @RequestBody User user) {
         try {
             String bearer = request.getHeader("Authorization");
             if(bearer == null || bearer.isEmpty()) {
@@ -94,7 +96,7 @@ public class UserController {
     }
 
     @DeleteMapping()
-    public ResponseEntity deleteUser() {
+    public ResponseEntity<UserViewModel> deleteUser() {
         try {
             String bearer = request.getHeader("Authorization");
             if(bearer == null || bearer.isEmpty()) {
@@ -113,7 +115,7 @@ public class UserController {
     }
 
     @GetMapping("/operator")
-    public ResponseEntity getGridOperators(){
+    public ResponseEntity<List<UserDTO>> getGridOperators(){
         try {
             String bearer = request.getHeader("Authorization");
             if(bearer == null || bearer.isEmpty()) {
@@ -131,7 +133,7 @@ public class UserController {
     }
 
     @PostMapping("/operator")
-    public ResponseEntity addGridOperator(@NotNull @RequestBody User user){
+    public ResponseEntity<GridOperatorViewModel> addGridOperator(@NotNull @RequestBody User user){
         try {
             String bearer = request.getHeader("Authorization");
             if(bearer == null || bearer.isEmpty()) {
@@ -149,7 +151,7 @@ public class UserController {
     }
 
     @DeleteMapping("/operator")
-    public ResponseEntity deleteGridOperator(@NotNull @RequestBody Operator operator){
+    public ResponseEntity<UserViewModel> deleteGridOperator(@NotNull @RequestBody Operator operator){
         try{
             String bearer = request.getHeader("Authorization");
             if(bearer == null || bearer.isEmpty()) {

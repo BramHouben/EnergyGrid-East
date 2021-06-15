@@ -180,7 +180,7 @@ services:
   mongoregion:
     hostname: mongoregion
     container_name: mongoregion
-    image: mongo
+    image: mongo:latest
     command: mongod --port 27080
     volumes:
       - ./database:/mongoregion
@@ -234,7 +234,7 @@ services:
   mongoenergyusageservice:
     hostname: mongoenergyusageservice
     container_name: mongoenergyusageservice
-    image: mongo
+    image: mongo:latest
     command: mongod --port 27050
     volumes:
       - ./database:/mongoenergyusageservice
@@ -329,7 +329,7 @@ services:
   mongosimulationnuclearservice:
     hostname: mongosimulationnuclearservice
     container_name: mongosimulationnuclearservice
-    image: mongo
+    image: mongo:latest
     command: mongod --port 27060
     volumes:
       - ./database:/mongosimulationnuclearservice

@@ -24,7 +24,7 @@ public class DefaultRabbitConsumer extends DefaultConsumer {
 
     @Override
     public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-        String message = new String(body, StandardCharsets.UTF_8);
+        var message = new String(body, StandardCharsets.UTF_8);
         if (!blockingQueue.offer(message)) {
             logger.log(Level.ALL, "unable to offer message to blockingqueue");
         }

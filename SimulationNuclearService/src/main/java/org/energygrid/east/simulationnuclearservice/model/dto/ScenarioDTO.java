@@ -8,18 +8,18 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class ScenarioDTO {
-    private final UUID id;
-    private final String name;
+    private UUID id;
+    private String name;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    private final LocalDateTime startTime;
+    private LocalDateTime startTime;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
-    private final LocalDateTime startTimeEvent;
+    private LocalDateTime startTimeEvent;
 
-    private final int hours;
-    private final ScenarioType scenarioType;
-    private final int power;
+    private int hours;
+    private ScenarioType scenarioType;
+    private int power;
 
     public ScenarioDTO(UUID id, String name, LocalDateTime startTime, LocalDateTime startTimeEvent, int hours, ScenarioType scenarioType, int power) {
         this.id = id;
@@ -29,6 +29,9 @@ public class ScenarioDTO {
         this.hours = hours;
         this.scenarioType = scenarioType;
         this.power = power;
+    }
+
+    public ScenarioDTO() {
     }
 
     public LocalDateTime getStartTimeEvent() {
