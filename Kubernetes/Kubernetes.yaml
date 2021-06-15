@@ -119,47 +119,7 @@ spec:
   selector:
     app: rabbitmq
   type: LoadBalancer
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: solarparkservice-deployment
-  namespace: default
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: solarparkservice
-  template:
-    metadata:
-      labels:
-        app: solarparkservice
-    spec:
-      containers:
-        - name: solarparkservice
-          image: energygrideast/solarparkservice
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 8090
-          env:
-            - name: RABBIT_HOST
-              value: rabbitmq
-            - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://mongo-solarparkservice:27017/solarpark
-      restartPolicy: Always
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: solarparkservice
-  namespace: default
-spec:
-  type: ClusterIP
-  selector:
-    app: solarparkservice
-  ports:
-    - port: 8090
-      targetPort: 8090
+
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -257,6 +217,12 @@ spec:
           env:
             - name: RABBIT_HOST
               value: rabbitmq
+            - name: SPRING_RABBITMQ_HOST
+              value: rabbitmq
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql-userservice:3306/userservice?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+            - name: MYSQL_ALLOW_EMPTY_PASSWORD
+              value: "1"
       restartPolicy: Always
 ---
 apiVersion: v1
@@ -295,6 +261,8 @@ spec:
             - containerPort: 80
           env:
             - name: RABBIT_HOST
+              value: rabbitmq
+            - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
       restartPolicy: Always
 ---
@@ -337,6 +305,8 @@ spec:
               value: rabbitmq
             - name: SPRING_DATASOURCE_URL
               value: jdbc:mysql://mysql-authservice:3306/authservice?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+            - name: MYSQL_ALLOW_EMPTY_PASSWORD
+              value: "1"
       restartPolicy: Always
 ---
 apiVersion: v1

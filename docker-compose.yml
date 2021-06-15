@@ -92,6 +92,7 @@ services:
     environment:
       RABBIT_HOST: rabbitmq
       MYSQL_DB_HOST: mysql_authservice
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_authservice:3306/authservice?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
     depends_on:
       - rabbitmq
       - mysql_authservice
