@@ -1,6 +1,5 @@
 package org.energygrid.east.userservice.service;
 
-import io.jsonwebtoken.Claims;
 import javassist.NotFoundException;
 import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
@@ -61,7 +60,7 @@ public class UserService {
     }
 
     public void editUser(@NotNull User user, @NotNull String jwt) throws IllegalAccessException {
-        Claims jwtClaims = jwtService.getClaims(jwt);
+        var jwtClaims = jwtService.getClaims(jwt);
         var userUuid = UUID.fromString(jwtClaims.get("uuid").toString());
         var dbUser = userRepo.getUserByUuidOrUsernameOrEmail(userUuid, null, null);
 
@@ -97,7 +96,7 @@ public class UserService {
     }
 
     public void deleteUser(@NotNull String jwt) throws NotFoundException, IllegalAccessException {
-        Claims claims = jwtService.getClaims(jwt);
+        var claims = jwtService.getClaims(jwt);
         var uuid = UUID.fromString(claims.get("uuid").toString());
         UserDTO userToDelete = userRepo.getByUuid(uuid);
         if (userToDelete == null) {

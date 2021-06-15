@@ -4,11 +4,9 @@ import com.enerygrid.east.energyusageservice.entity.EnergyUsage;
 import com.enerygrid.east.energyusageservice.repository.EnergyUsageRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.SecureRandom;

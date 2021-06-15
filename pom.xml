@@ -78,7 +78,6 @@
         </profile>
     </profiles>
     <modules>
-        <module>SolarParkService</module>
         <module>WeatherService</module>
         <module>AuthenticationService</module>
         <module>UserService</module>
