@@ -1,4 +1,4 @@
-package org.energygrid.east.authenticationservice.model.fromFrontend;
+package org.energygrid.east.authenticationservice.model.fromfrontend;
 
 import java.util.UUID;
 
