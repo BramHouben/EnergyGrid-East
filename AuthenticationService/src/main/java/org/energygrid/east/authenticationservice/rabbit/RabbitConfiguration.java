@@ -3,12 +3,14 @@ package org.energygrid.east.authenticationservice.rabbit;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Configuration
 public class RabbitConfiguration {
 
     private static final Logger logger = Logger.getLogger(RabbitConfiguration.class.getName());
@@ -17,7 +19,7 @@ public class RabbitConfiguration {
     private final ConnectionFactory connectionFactory;
     private Connection connection;
 
-    private RabbitConfiguration() {
+    public RabbitConfiguration() {
         connectionFactory = new ConnectionFactory();
         connectionFactory.setHost("rabbitmq");
         connection = createConnection();

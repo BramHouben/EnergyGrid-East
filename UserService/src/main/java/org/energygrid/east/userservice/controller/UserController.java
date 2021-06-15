@@ -11,9 +11,10 @@ import org.energygrid.east.userservice.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -25,23 +26,11 @@ import java.util.logging.Logger;
 @RequestMapping("user")
 public class UserController {
 
+    private static final Logger logger = Logger.getLogger(UserController.class.getName());
     @Autowired
     private UserService userService;
-
-//    @Autowired
-//    private ModelMapper modelMapper;
-
     @Value("${HEADER}")
     private String authorization;
-
-//    @Autowired
-//    private HttpServletRequest request;
-    private static final Logger logger = Logger.getLogger(UserController.class.getName());
-
-
-//    public UserController() {
-//        this.modelMapper = new ModelMapper();
-//    }
 
     @PostMapping()
     public ResponseEntity<UserViewModel> addUser(@NotNull @RequestBody User user) {
@@ -57,10 +46,10 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<UserViewModel> getUserByUuidOrUsernameOrEmail(@RequestParam(required = false) UUID uuid, @RequestParam(required = false) String username, @RequestParam(required = false) String email,HttpServletRequest request) {
+    public ResponseEntity<UserViewModel> getUserByUuidOrUsernameOrEmail(@RequestParam(required = false) UUID uuid, @RequestParam(required = false) String username, @RequestParam(required = false) String email, HttpServletRequest request) {
         try {
             String jwt = request.getHeader(authorization);
-            if(jwt == null || jwt.isEmpty()) {
+            if (jwt == null || jwt.isEmpty()) {
                 throw new IllegalAccessException();
             }
 
@@ -68,10 +57,10 @@ public class UserController {
             if (user == null) {
                 return ResponseEntity.status(404).body(null);
             }
-            ModelMapper modelMapper = new ModelMapper();
-            var userViewmodel = modelMapper.map(user, UserViewModel.class);
-            return ResponseEntity.ok(userViewmodel);
-        } catch (IllegalAccessException e){
+            var modelMapper = new ModelMapper();
+            var userViewModel = modelMapper.map(user, UserViewModel.class);
+            return ResponseEntity.ok(userViewModel);
+        } catch (IllegalAccessException e) {
             return ResponseEntity.status(401).body(null);
         } catch (NullPointerException e) {
             return ResponseEntity.status(404).body(null);
@@ -82,18 +71,18 @@ public class UserController {
     }
 
     @PutMapping()
-    public ResponseEntity<UserViewModel> editUser(@NotNull @RequestBody User user,HttpServletRequest request) {
+    public ResponseEntity<UserViewModel> editUser(@NotNull @RequestBody User user, HttpServletRequest request) {
         try {
             String bearer = request.getHeader(authorization);
-            if(bearer == null || bearer.isEmpty()) {
+            if (bearer == null || bearer.isEmpty()) {
                 throw new IllegalAccessException();
             }
 
             String jwt = bearer.replace("Bearer ", bearer);
             userService.editUser(user, jwt);
             return ResponseEntity.ok(null);
-        } catch (IllegalAccessException e){
-          return ResponseEntity.status(401).body(null);
+        } catch (IllegalAccessException e) {
+            return ResponseEntity.status(401).body(null);
         } catch (NullPointerException e) {
             return ResponseEntity.status(404).body(null);
         } catch (Exception e) {
@@ -106,7 +95,7 @@ public class UserController {
     public ResponseEntity<UserViewModel> deleteUser(HttpServletRequest request) {
         try {
             String bearer = request.getHeader(authorization);
-            if(bearer == null || bearer.isEmpty()) {
+            if (bearer == null || bearer.isEmpty()) {
                 throw new IllegalAccessException();
             }
 
@@ -122,10 +111,10 @@ public class UserController {
     }
 
     @GetMapping("/operator")
-    public ResponseEntity<List<UserDTO>> getGridOperators(HttpServletRequest request){
+    public ResponseEntity<List<UserDTO>> getGridOperators(HttpServletRequest request) {
         try {
             String bearer = request.getHeader(authorization);
-            if(bearer == null || bearer.isEmpty()) {
+            if (bearer == null || bearer.isEmpty()) {
                 throw new IllegalAccessException();
             }
 
@@ -140,10 +129,10 @@ public class UserController {
     }
 
     @PostMapping("/operator")
-    public ResponseEntity<GridOperatorViewModel> addGridOperator(@NotNull @RequestBody User user,HttpServletRequest request){
+    public ResponseEntity<GridOperatorViewModel> addGridOperator(@NotNull @RequestBody User user, HttpServletRequest request) {
         try {
             String bearer = request.getHeader(authorization);
-            if(bearer == null || bearer.isEmpty()) {
+            if (bearer == null || bearer.isEmpty()) {
                 throw new IllegalAccessException();
             }
 
@@ -158,10 +147,10 @@ public class UserController {
     }
 
     @DeleteMapping("/operator")
-    public ResponseEntity<UserViewModel> deleteGridOperator(@NotNull @RequestBody Operator operator,HttpServletRequest request){
-        try{
+    public ResponseEntity<UserViewModel> deleteGridOperator(@NotNull @RequestBody Operator operator, HttpServletRequest request) {
+        try {
             String bearer = request.getHeader(authorization);
-            if(bearer == null || bearer.isEmpty()) {
+            if (bearer == null || bearer.isEmpty()) {
                 throw new IllegalAccessException();
             }
 
