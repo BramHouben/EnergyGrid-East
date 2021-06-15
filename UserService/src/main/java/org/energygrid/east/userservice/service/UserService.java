@@ -1,6 +1,5 @@
 package org.energygrid.east.userservice.service;
 
-import io.jsonwebtoken.Claims;
 import javassist.NotFoundException;
 import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
