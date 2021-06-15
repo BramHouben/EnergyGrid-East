@@ -92,6 +92,8 @@ spec:
           ports:
             - containerPort: 15672
               name: http-port
+            - containerPort: 5672
+              name: service
           volumeMounts:
             - mountPath: /var/rabbitmqapp_home
               name: rabbitmqapp-home
@@ -118,47 +120,46 @@ spec:
     app: rabbitmq
   type: LoadBalancer
 ---
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: solarparkservice-deployment
-#  namespace: default
-#spec:
-#  replicas: 1
-#  selector:
-#    matchLabels:
-#      app: solarparkservice
-#  template:
-#    metadata:
-#      labels:
-#        app: solarparkservice
-#    spec:
-#      containers:
-#        - name: solarparkservice
-#          image: energygrideast/solarparkservice
-#          imagePullPolicy: Always
-#          ports:
-#            - containerPort: 8090
-#          env:
-#            - name: RABBIT_HOST
-#              value: rabbitmq
-#            - name: SPRING_DATA_MONGODB_URI
-#              value: mongodb://mongo-solarparkservice:27017/solarpark
-#      restartPolicy: Always
-#      env:
-#---
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: solarparkservice
-#  namespace: default
-#spec:
-#  type: ClusterIP
-#  selector:
-#    app: solarparkservice
-#  ports:
-#    - port: 8090
-#      targetPort: 8090
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solarparkservice-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: solarparkservice
+  template:
+    metadata:
+      labels:
+        app: solarparkservice
+    spec:
+      containers:
+        - name: solarparkservice
+          image: energygrideast/solarparkservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8090
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq
+            - name: SPRING_DATA_MONGODB_URI
+              value: mongodb://mongo-solarparkservice:27017/solarpark
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: solarparkservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: solarparkservice
+  ports:
+    - port: 8090
+      targetPort: 8090
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -332,8 +333,10 @@ spec:
           ports:
             - containerPort: 8100
           env:
-            - name: RABBIT_HOST
+            - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql-authservice:3306/authservice?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
       restartPolicy: Always
 ---
 apiVersion: v1
@@ -793,4 +796,42 @@ spec:
           env:
             - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: website
+  namespace: default
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 80
+  selector:
+    app: website
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: website-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: website
+  template:
+    metadata:
+      labels:
+        app: website
+    spec:
+      containers:
+        - name: website
+          image: energygrideast/website
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
       restartPolicy: Always
