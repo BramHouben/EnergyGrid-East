@@ -50,7 +50,7 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<UserViewModel> getUserByUuidOrUsernameOrEmail(@RequestParam(required = false) UUID uuid, @RequestParam(required = false) String username, @RequestParam(required = false) String email) {
         try {
-            String jwt = request.getHeader("jwt");
+            String jwt = request.getHeader("Authorization");
             if(jwt == null || jwt.isEmpty()) {
                 throw new IllegalAccessException();
             }
