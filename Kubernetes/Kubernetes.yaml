@@ -274,6 +274,45 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: energymarket-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: energymarket
+  template:
+    metadata:
+      labels:
+        app: energymarket
+    spec:
+      containers:
+        - name: energymarket
+          image: vincentdarwinkel/energymarketapi
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: energymarketservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: energymarket
+  ports:
+    - port: 8195
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   name: authenticationservice-deployment
   namespace: default
 spec:
