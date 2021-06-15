@@ -10,6 +10,7 @@ import org.energygrid.east.userservice.model.viewmodel.UserViewModel;
 import org.energygrid.east.userservice.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,9 @@ public class UserController {
     private UserService userService;
 
     private final ModelMapper modelMapper;
+
+    @Value("${HEADER}")
+    private String authorization;
 
     @Autowired
     private HttpServletRequest request;
@@ -52,7 +56,7 @@ public class UserController {
     @GetMapping()
     public ResponseEntity<UserViewModel> getUserByUuidOrUsernameOrEmail(@RequestParam(required = false) UUID uuid, @RequestParam(required = false) String username, @RequestParam(required = false) String email) {
         try {
-            String jwt = request.getHeader("Authorization");
+            String jwt = request.getHeader(authorization);
             if(jwt == null || jwt.isEmpty()) {
                 throw new IllegalAccessException();
             }
@@ -77,7 +81,7 @@ public class UserController {
     @PutMapping()
     public ResponseEntity<UserViewModel> editUser(@NotNull @RequestBody User user) {
         try {
-            String bearer = request.getHeader("Authorization");
+            String bearer = request.getHeader(authorization);
             if(bearer == null || bearer.isEmpty()) {
                 throw new IllegalAccessException();
             }
@@ -98,7 +102,7 @@ public class UserController {
     @DeleteMapping()
     public ResponseEntity<UserViewModel> deleteUser() {
         try {
-            String bearer = request.getHeader("Authorization");
+            String bearer = request.getHeader(authorization);
             if(bearer == null || bearer.isEmpty()) {
                 throw new IllegalAccessException();
             }
@@ -117,7 +121,7 @@ public class UserController {
     @GetMapping("/operator")
     public ResponseEntity<List<UserDTO>> getGridOperators(){
         try {
-            String bearer = request.getHeader("Authorization");
+            String bearer = request.getHeader(authorization);
             if(bearer == null || bearer.isEmpty()) {
                 throw new IllegalAccessException();
             }
@@ -135,7 +139,7 @@ public class UserController {
     @PostMapping("/operator")
     public ResponseEntity<GridOperatorViewModel> addGridOperator(@NotNull @RequestBody User user){
         try {
-            String bearer = request.getHeader("Authorization");
+            String bearer = request.getHeader(authorization);
             if(bearer == null || bearer.isEmpty()) {
                 throw new IllegalAccessException();
             }
@@ -153,7 +157,7 @@ public class UserController {
     @DeleteMapping("/operator")
     public ResponseEntity<UserViewModel> deleteGridOperator(@NotNull @RequestBody Operator operator){
         try{
-            String bearer = request.getHeader("Authorization");
+            String bearer = request.getHeader(authorization);
             if(bearer == null || bearer.isEmpty()) {
                 throw new IllegalAccessException();
             }
