@@ -670,7 +670,6 @@ spec:
             - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
       restartPolicy: Always
-      env:
 ---
 apiVersion: v1
 kind: Service
@@ -716,3 +715,43 @@ spec:
   ports:
     - port: 27017
       targetPort: 27017
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: websocketservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: websocketservice
+  ports:
+    - port: 8443
+      targetPort: 8443
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocketservice-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: websocketservice
+  template:
+    metadata:
+      labels:
+        app: websocketservice
+    spec:
+      containers:
+        - name: websocketservice
+          image: energygrideast/websockets-service
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8443
+          env:
+            - name: SPRING_RABBITMQ_HOST
+              value: rabbitmq
+      restartPolicy: Always
