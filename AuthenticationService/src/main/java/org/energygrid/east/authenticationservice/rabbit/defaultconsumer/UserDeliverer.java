@@ -6,8 +6,11 @@ import com.rabbitmq.client.Delivery;
 import org.energygrid.east.authenticationservice.model.rabbitmq.UserRabbitMq;
 import org.energygrid.east.authenticationservice.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.nio.charset.StandardCharsets;
 
+@Component
 public class UserDeliverer implements DeliverCallback {
 
     @Autowired
