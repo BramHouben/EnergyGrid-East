@@ -30,6 +30,7 @@ public class AddUserDeliverer implements DeliverCallback {
     public void handle(String s, Delivery delivery) {
         try {
             var json = new String(delivery.getBody(), StandardCharsets.UTF_8);
+            logger.log(Level.INFO,json+"    userGetsADDED!!!!-------------------------------------------------------------------------------------------");
             var user = gson.fromJson(json, UserRabbitMq.class);
             userService.addUser(user);
         } catch (Exception e) {
