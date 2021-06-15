@@ -35,36 +35,6 @@ class SolarParkTests {
     }
 
     @Test
-    void createSolarPark() {
-        AddSolarParkDTO solarParkdto = new AddSolarParkDTO("test", 10, new Point(1, 1), "test", "5961AM", "Limburg", 12, 1, 2015);
-        solarPowerService.addSolarPark(solarParkdto);
-
-        SolarPark solarPark = new SolarPark();
-        solarPark.setSolarParkName("test");
-        when(iSolarParkRepo.getSolarParkBySolarParkName("test")).thenReturn(solarPark);
-
-        SolarPark solarPark1 = iSolarParkRepo.getSolarParkBySolarParkName("test");
-        assertEquals(solarPark.getSolarParkName(), solarPark1.getSolarParkName());
-
-    }
-
-    @Test
-    void createSolarParkThrowError() {
-        AddSolarParkDTO solarParkDTO = new AddSolarParkDTO(null, 0, new Point(1, 1), "test", "5961AM", "Limburg", 12, 1, 2015);
-
-        assertThrows(CantAddSolarParkException.class, () -> solarPowerService.addSolarPark(solarParkDTO));
-
-    }
-
-    @Test
-    void createSolarParkThrowError2() {
-        AddSolarParkDTO solarParkDTO = new AddSolarParkDTO("test", 1000, null, "test", "5961AM", "Limburg", 12, 1, 2015);
-
-        assertThrows(CantAddSolarParkException.class, () -> solarPowerService.addSolarPark(solarParkDTO));
-
-    }
-
-    @Test
     void getSolarParkTest() {
         SolarPark solarPark = new SolarPark();
         solarPark.setSolarParkName("test");

@@ -1,6 +1,5 @@
 package org.energygrid.east.simulationnuclearservice.controller;
 
-import org.energygrid.east.simulationnuclearservice.model.Scenario;
 import org.energygrid.east.simulationnuclearservice.model.dto.ScenarioDTO;
 import org.energygrid.east.simulationnuclearservice.model.results.ScenarioExpectationResult;
 import org.energygrid.east.simulationnuclearservice.service.IScenarioNuclearService;
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

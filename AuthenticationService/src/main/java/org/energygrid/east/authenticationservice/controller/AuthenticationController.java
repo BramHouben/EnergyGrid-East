@@ -1,6 +1,6 @@
 package org.energygrid.east.authenticationservice.controller;
 
-import org.energygrid.east.authenticationservice.model.fromFrontend.User;
+import org.energygrid.east.authenticationservice.model.fromfrontend.User;
 import org.energygrid.east.authenticationservice.service.IAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,5 @@
 package org.energygrid.east.simulationnuclearservice.service;
 
-import org.energygrid.east.simulationnuclearservice.model.Kwh;
 import org.energygrid.east.simulationnuclearservice.model.ProductionExpectation;
 import org.energygrid.east.simulationnuclearservice.model.Simulation;
 import org.energygrid.east.simulationnuclearservice.model.dto.ScenarioDTO;
@@ -67,9 +66,9 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
 
         var time = scenarioDTO.getStartTime();
 
-        for (int i = 0; i < 48; i++) {
+        for (var i = 0; i < 48; i++) {
             if (time.isEqual(scenarioDTO.getStartTimeEvent())) {
-                for (int j = 0; j < scenarioDTO.getHours(); j++) {
+                for (var j = 0; j < scenarioDTO.getHours(); j++) {
                     var simulationResults = scenarioExpectationResult.getSimulationExpectationResult().getSimulationResults();
                     simulationResults.get(0).addProductionExpectation(new ProductionExpectation(0, time));
                     time = time.plusHours(1);
@@ -88,26 +87,17 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
     }
 
     private ScenarioExpectationResult createScenarioAddReactor(ScenarioDTO scenarioDTO, ScenarioExpectationResult scenarioExpectationResult) {
-        List<Simulation> simulations = simulationNuclearRepository.findAll();
 
         var simulationResult = scenarioExpectationResult.getSimulationExpectationResult().getSimulationResults();
         simulationResult.add(new SimulationResult());
         scenarioExpectationResult.getSimulationExpectationResult().setSimulationResults(simulationResult);
         scenarioExpectationResult.getSimulationExpectationResult().setKwTotalResult(0.0);
 
-        int kw = 0;
-
-        for (Simulation simulation : simulations) {
-            kw += simulation.getMaxPower();
-        }
-
         LocalDateTime time = scenarioDTO.getStartTime();
 
-        for (int i = 0; i < 48; i++) {
-            int correctedKw = kw;
+        for (var i = 0; i < 48; i++) {
 
             if (time.isEqual(scenarioDTO.getStartTimeEvent()) || time.isAfter(scenarioDTO.getStartTimeEvent())) {
-                correctedKw += scenarioDTO.getPower();
 
                 var simulationResults = scenarioExpectationResult.getSimulationExpectationResult().getSimulationResults();
                 simulationResults.get(0).addProductionExpectation(new ProductionExpectation(scenarioDTO.getPower(), time));
@@ -135,15 +125,9 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
         var simulation = simulationNuclearRepository.getSimulationBySimulationId(scenarioDTO.getId());
         simulations.remove(simulation);
 
-        int kw = 0;
-
-        for (Simulation simulationFromList : simulations) {
-            kw += simulationFromList.getMaxPower();
-        }
-
         LocalDateTime time = scenarioDTO.getStartTime();
 
-        for (int i = 0; i < 48; i++) {
+        for (var i = 0; i < 48; i++) {
 
             if (time.isEqual(scenarioDTO.getStartTimeEvent()) || time.isAfter(scenarioDTO.getStartTimeEvent())) {
                 var simulationResults = scenarioExpectationResult.getSimulationExpectationResult().getSimulationResults();
@@ -159,20 +143,6 @@ public class ScenarioNuclearService implements IScenarioNuclearService {
             scenarioExpectationResult.getSimulationExpectationResult().setKwTotalResult(totalPower += scenarioDTO.getPower());
         }
         return scenarioExpectationResult;
-    }
-
-    private Kwh calculateTotalKwh(Simulation simulation, int kilowatt, LocalDateTime time) {
-        List<Simulation> simulationList = simulationNuclearRepository.findAll();
-        simulationList.remove(simulation);
-
-        int kw = 0;
-
-        for (Simulation simulationFromList : simulationList) {
-            kw += simulationFromList.getMaxPower();
-        }
-
-        kw += kilowatt;
-        return new Kwh(kw, time);
     }
 
     @Override

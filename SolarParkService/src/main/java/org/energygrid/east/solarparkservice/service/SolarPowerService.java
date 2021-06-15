@@ -25,7 +25,7 @@ public class SolarPowerService implements ISolarParkPower {
 
     @Override
     public SolarPark getSolarParkByName(String name) {
-        SolarPark solarPark = solarParkRepo.getSolarParkBySolarParkName(name);
+        var solarPark = solarParkRepo.getSolarParkBySolarParkName(name);
         if (solarPark == null) {
             throw new SolarParkNotFoundException();
         }
@@ -55,7 +55,7 @@ public class SolarPowerService implements ISolarParkPower {
             throw new CantAddSolarParkException();
         }
 
-        SolarPark solarPark = setDtoToObject(solarParkDto);
+        var solarPark = setDtoToObject(solarParkDto);
 
         solarParkRepo.insert(solarPark);
     }
@@ -77,12 +77,12 @@ public class SolarPowerService implements ISolarParkPower {
     }
 
     private List<SolarParkUnit> makeSolarParkUnits(double count) {
-        double TotalSonarUnits = count / 20;
+        double totalSonarUnits = count / 20;
 
         List<SolarParkUnit> solarParkUnits = new ArrayList<>();
-        for (int i = 0; i <= TotalSonarUnits; i++) {
+        for (var i = 0; i <= totalSonarUnits; i++) {
 
-            SolarParkUnit solarParkUnit = new SolarParkUnit(UUID.randomUUID(), false);
+            var solarParkUnit = new SolarParkUnit(UUID.randomUUID(), false);
             solarParkUnits.add(solarParkUnit);
         }
         return solarParkUnits;

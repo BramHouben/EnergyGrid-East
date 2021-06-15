@@ -30,7 +30,7 @@ public class SolarParkController {
             return ResponseEntity.badRequest().build();
         }
 
-        SolarPark solarPark = solarParkPowerService.getSolarParkByName(name);
+        var solarPark = solarParkPowerService.getSolarParkByName(name);
 
         return ResponseEntity.ok().body(solarPark);
     }
@@ -40,8 +40,8 @@ public class SolarParkController {
 
         solarParkPowerService.addSolarPark(solarPark);
 
-        RabbitProducer rabbitProducer = new RabbitProducer();
-        SolarParkProducer solarParkProducer = new SolarParkProducer();
+        var rabbitProducer = new RabbitProducer();
+        var solarParkProducer = new SolarParkProducer();
         rabbitProducer.produce(solarParkProducer);
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Solar park successfully made");

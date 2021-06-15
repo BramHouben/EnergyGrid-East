@@ -37,21 +37,7 @@ public class    SolarPark {
     private List<SolarParkUnit> units;
 
     public SolarPark() {
-    }
-
-
-    public SolarPark(UUID solarParkId, String solarParkName, int countSonarPanels, Point coordinates, List<SolarParkUnit> units, String applicant, String zipCode, String province, double power, int max, int yearOfRealised, double longCord, double langCord) {
-        this.solarParkId = solarParkId;
-        this.coordinates = coordinates;
-        this.units = units;
-        this.countSonarPanels = countSonarPanels;
-        this.applicant = applicant;
-        this.zipCode = zipCode;
-        this.province = province;
-        this.power = power;
-        this.max = max;
-        this.solarParkName = solarParkName;
-        this.yearOfRealised = yearOfRealised;
+        //Should be empty
     }
 
     public String getSolarParkName() {

@@ -5,28 +5,18 @@ import org.springframework.data.geo.Point;
 
 public class AddSolarParkDTO {
 
-    private final String solarParkName;
-    private final int countSonarPanels;
-    private final Point coordinates;
-    private final String applicant;
-    private final String zipCode;
-    private final String province;
-    private final double power;
-    private final int max;
-    private final int yearOfRealised;
+    private String solarParkName;
+    private int countSonarPanels;
+    private Point coordinates;
+    private String applicant;
+    private String zipCode;
+    private String province;
+    private double power;
+    private int max;
+    private int yearOfRealised;
 
-    public AddSolarParkDTO(String solarParkName, int countSonarPanels, Point coordinates, String applicant, String zipCode, String province, double power, int max, int yearOfRealised) {
-
-        this.solarParkName = solarParkName;
-        this.countSonarPanels = countSonarPanels;
-        this.coordinates = coordinates;
-        this.applicant = applicant;
-        this.zipCode = zipCode;
-        this.province = province;
-        this.power = power;
-        this.max = max;
-        this.yearOfRealised = yearOfRealised;
-
+    public AddSolarParkDTO() {
+        //Should be empty
     }
 
     public String getSolarParkName() {

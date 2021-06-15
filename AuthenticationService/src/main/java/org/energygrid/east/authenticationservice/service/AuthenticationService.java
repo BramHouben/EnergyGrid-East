@@ -1,7 +1,7 @@
 package org.energygrid.east.authenticationservice.service;
 
 import org.energygrid.east.authenticationservice.model.dto.UserDto;
-import org.energygrid.east.authenticationservice.model.fromFrontend.User;
+import org.energygrid.east.authenticationservice.model.fromfrontend.User;
 import org.energygrid.east.authenticationservice.repository.AuthenticationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

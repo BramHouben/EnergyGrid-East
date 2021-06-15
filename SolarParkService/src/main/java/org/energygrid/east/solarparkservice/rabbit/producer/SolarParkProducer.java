@@ -17,25 +17,24 @@ public class SolarParkProducer implements Producer {
 
     private static final Logger logger = Logger.getLogger(SolarParkProducer.class.getName());
 
-    private final String exchange_name;
-    private final ApplicationContext applicationContext;
+    private final String exchangeName;
     private final ISolarParkPower solarParkPower;
 
     public SolarParkProducer() {
-        exchange_name = "solarpark_exchange";
-        applicationContext = ApplicationContextUtils.getCtx();
+        exchangeName = "solarpark_exchange";
+        ApplicationContext applicationContext = ApplicationContextUtils.getCtx();
         solarParkPower = applicationContext.getBean(ISolarParkPower.class);
     }
 
     @Override
     public void produce(Channel channel) {
         try {
-            channel.exchangeDeclare(exchange_name, "direct", true);
+            channel.exchangeDeclare(exchangeName, "direct", true);
 
             Gson gson = new Gson();
             List<SolarPark> solarParks = solarParkPower.getAll();
 
-            channel.basicPublish(exchange_name, "", null, gson.toJson(solarParks).getBytes());
+            channel.basicPublish(exchangeName, "", null, gson.toJson(solarParks).getBytes());
             logger.log(Level.ALL, "solarparks published");
         } catch (IOException e) {
             logger.log(Level.ALL, e.getMessage());
