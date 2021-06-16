@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@CrossOrigin(value = "http://20.84.201.30")
+@CrossOrigin(value = "http://20.84.168.218")
 @RestController
 @RequestMapping("api/ws")
 public class WebSocketController {
