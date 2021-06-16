@@ -1,7 +1,6 @@
 package org.energygrid.east.authenticationservice;
 
 import org.energygrid.east.authenticationservice.threads.RabbitMqAddUserThread;
-import org.energygrid.east.authenticationservice.threads.RabbitMqDeleteUserThread;
 import org.energygrid.east.authenticationservice.threads.RabbitMqUpdateUserThread;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -25,8 +24,8 @@ public class Startup implements ApplicationRunner {
         var updateUserThread = new RabbitMqUpdateUserThread();
         executor.execute(updateUserThread);
 
-        var deleteUserThread = new RabbitMqDeleteUserThread();
-        executor.execute(deleteUserThread);
+//        var deleteUserThread = new RabbitMqDeleteUserThread();
+//        executor.execute(deleteUserThread);
 
     }
 }
