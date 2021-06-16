@@ -154,6 +154,6 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
     }
 
     private String getUrl(double x, double y) {
-        return "https://api.openweathermap.org/data/2.5/onecall?lat="+x+"&lon="+y+"&exclude=current,minutely,daily,alerts&appid=267362b18d000197f961951000612dab";
+        return "https://api.openweathermap.org/data/2.5/onecall?lat="+x+"&lon="+y+"&exclude=current,minutely,daily,alerts&appid=ae617aa80077d3494ca505fe128d532d";
     }
 }
