@@ -776,43 +776,6 @@ spec:
               value: rabbitmq
       restartPolicy: Always
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: website
-  namespace: default
-spec:
-  ports:
-    - name: "80"
-      port: 80
-      targetPort: 80
-  selector:
-    app: website
-  type: LoadBalancer
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: website-deployment
-  namespace: default
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: website
-  template:
-    metadata:
-      labels:
-        app: website
-    spec:
-      containers:
-        - name: website
-          image: energygrideast/website
-          imagePullPolicy: Always
-          ports:
-            - containerPort: 80
-      restartPolicy: Always
 
 apiVersion: v1
 kind: Service
@@ -886,3 +849,4 @@ spec:
   ports:
     - port: 27017
       targetPort: 27017
+
