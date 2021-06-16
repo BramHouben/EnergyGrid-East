@@ -6,16 +6,19 @@ import com.rabbitmq.client.Delivery;
 import org.energygrid.east.authenticationservice.model.rabbitmq.UserRabbitMq;
 import org.energygrid.east.authenticationservice.rabbit.ApplicationContextUtils;
 import org.energygrid.east.authenticationservice.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
 
 @Component
 public class UserDeliverer implements DeliverCallback {
 
-
-    private final IUserService userService;
     private final Gson gson = new Gson();
+
+    @Autowired
+    private final IUserService userService;
 
     public UserDeliverer() {
         var applicationContext = ApplicationContextUtils.getCtx();
