@@ -3,7 +3,6 @@ package org.energygrid.east.authenticationservice.rabbit.defaultconsumer;
 import com.rabbitmq.client.DeliverCallback;
 import com.rabbitmq.client.Delivery;
 import org.energygrid.east.authenticationservice.rabbit.executor.AddUserExecutor;
-import org.energygrid.east.authenticationservice.rabbit.executor.DeleteUserExecutor;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -21,7 +20,7 @@ public class AddUserDeliverer implements DeliverCallback {
     @Override
     public void handle(String s, Delivery delivery) {
         try {
-            logger.log(Level.INFO, "---------------NEW IMPLEMENTATION----------------");
+            logger.log(Level.INFO, "---------------NEW IMPLEMENTATION ADD USER----------------");
             var json = new String(delivery.getBody(), StandardCharsets.UTF_8);
             executorService.execute(new AddUserExecutor(json));
         } catch (Exception e) {

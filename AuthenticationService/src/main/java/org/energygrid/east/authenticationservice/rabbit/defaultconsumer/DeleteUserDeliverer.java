@@ -2,7 +2,6 @@ package org.energygrid.east.authenticationservice.rabbit.defaultconsumer;
 
 import com.rabbitmq.client.DeliverCallback;
 import com.rabbitmq.client.Delivery;
-import jdk.jfr.Category;
 import org.energygrid.east.authenticationservice.rabbit.executor.DeleteUserExecutor;
 import org.springframework.stereotype.Component;
 
@@ -21,11 +20,9 @@ public class DeleteUserDeliverer implements DeliverCallback {
     @Override
     public void handle(String s, Delivery delivery) {
         try {
-            logger.log(Level.INFO, "---------------NEW IMPLEMENTATION----------------");
-            logger.log(Level.INFO, "string : " + s + ", body : " + delivery.getBody());
+            logger.log(Level.INFO, "---------------NEW IMPLEMENTATION DELETE USER----------------");
             var json = new String(delivery.getBody(), StandardCharsets.UTF_8);
             executorService.execute(new DeleteUserExecutor(json));
-
         } catch (Exception e) {
             logger.log(Level.ALL, e.getMessage());
         }
