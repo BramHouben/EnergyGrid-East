@@ -849,7 +849,7 @@ spec:
             - containerPort: 8180
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://mongosimulationnuclearservice:27017/simulation_nuclear
+              value: mongodb://mongo-simulationnuclearservice:27017/simulation_nuclear
             - name: SPRING_RABBITMQ_HOST
               value: rabbitmq
       restartPolicy: Always
