@@ -19,7 +19,6 @@ public class UpdateUserDeliverer implements DeliverCallback {
     private static final Logger logger = Logger.getLogger(UpdateUserDeliverer.class.getName());
     private final Gson gson = new Gson();
 
-    @Autowired
     private final IUserService userService;
 
     public UpdateUserDeliverer() {

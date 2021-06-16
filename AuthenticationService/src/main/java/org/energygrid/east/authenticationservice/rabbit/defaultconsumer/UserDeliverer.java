@@ -16,8 +16,6 @@
 //public class UserDeliverer implements DeliverCallback {
 //
 //    private final Gson gson = new Gson();
-//
-//    @Autowired
 //    private final IUserService userService;
 //
 //    public UserDeliverer() {
