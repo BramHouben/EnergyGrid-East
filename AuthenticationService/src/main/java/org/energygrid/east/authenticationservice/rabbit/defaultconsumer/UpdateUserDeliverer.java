@@ -13,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Component
 public class UpdateUserDeliverer implements DeliverCallback {
 
     private static final Logger logger = Logger.getLogger(UpdateUserDeliverer.class.getName());

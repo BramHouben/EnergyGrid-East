@@ -21,7 +21,7 @@ public class RabbitConfiguration {
 
     public RabbitConfiguration() {
         connectionFactory = new ConnectionFactory();
-        connectionFactory.setHost("rabbitmq");
+        connectionFactory.setHost("localhost");
         connection = createConnection();
     }
 
