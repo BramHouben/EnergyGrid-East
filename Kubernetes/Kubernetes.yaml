@@ -813,3 +813,76 @@ spec:
           ports:
             - containerPort: 80
       restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simulationnuclearservice
+spec:
+  type: ClusterIP
+  selector:
+    app: simulationnuclearservice
+  ports:
+    - port: 8180
+      targetPort: 8180
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulationnuclearservice-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simulationnuclearservice
+  template:
+    metadata:
+      labels:
+        app: simulationnuclearservice
+    spec:
+      containers:
+        - name: simulationnuclearservice
+          image: energygrideast/simulationnuclearservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8180
+          env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: mongodb://mongo-simulationnuclearservice:27017/simulation_nuclear
+            - name: SPRING_RABBITMQ_HOST
+              value: rabbitmq
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-simulationnuclearservice
+spec:
+  serviceName: mongo-simulationnuclearservice
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-simulationnuclearservice
+  template:
+    metadata:
+      labels:
+        app: mongo-simulationnuclearservice
+        selector: mongo-simulationnuclearservice
+    spec:
+      containers:
+        - name: mongo-simulationnuclearservice
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-simulationnuclearservice
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: mongo-simulationnuclearservice
+  ports:
+    - port: 27017
+      targetPort: 27017
