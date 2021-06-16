@@ -6,11 +6,13 @@ import org.energygrid.east.websocketsservice.models.SolarParkProductionViewModel
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@CrossOrigin(value = "http://20.84.201.30")
 @RestController
 @RequestMapping("api/ws")
 public class WebSocketController {
