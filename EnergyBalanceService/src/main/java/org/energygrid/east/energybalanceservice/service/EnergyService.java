@@ -2,10 +2,7 @@ package org.energygrid.east.energybalanceservice.service;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.energygrid.east.energybalanceservice.model.BalanceType;
-import org.energygrid.east.energybalanceservice.model.EnergyBalance;
-import org.energygrid.east.energybalanceservice.model.EnergyBalanceDTO;
-import org.energygrid.east.energybalanceservice.model.Type;
+import org.energygrid.east.energybalanceservice.model.*;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceRepo;
 import org.energygrid.east.energybalanceservice.repo.EnergyBalanceStoreRepo;
 import org.energygrid.east.energybalanceservice.repo.EnergyUsageRepo;
@@ -87,8 +84,9 @@ public class EnergyService implements IEnergyService {
 
             if (balance <= 99) {
                 double balanceShortage = 100 - balance;
-                double kwhNeeded = (usagePerMinute / 100) * balanceShortage;
-                rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.buy", kwhNeeded);
+                double kwhNeeded =  ((usagePerMinute / 100) * balanceShortage);
+                var energyRabbitMq = new EnergyRabbitMq((long)kwhNeeded);
+                rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.buy", energyRabbitMq.toString());
                 energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SHORTAGE, LocalDateTime.now(ZoneOffset.UTC));
                 energyBalanceRepo.save(energyBalance);
             }
@@ -96,7 +94,8 @@ public class EnergyService implements IEnergyService {
             if (balance > 100) {
                 double balanceSurplus = balance - 100;
                 double kwhSell = (usagePerMinute / 100) * balanceSurplus;
-                rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.sell", kwhSell);
+                var energyRabbitMq = new EnergyRabbitMq((long)kwhSell);
+                rabbitTemplate.convertAndSend("energymarket", "energymarket.balance.sell", energyRabbitMq.toString());
                 energyBalance = new EnergyBalance(UUID.randomUUID(), (long) usagePerMinute, total, balance, BalanceType.SURPLUS, LocalDateTime.now(ZoneOffset.UTC));
                 energyBalanceRepo.save(energyBalance);
             }

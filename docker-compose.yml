@@ -318,3 +318,23 @@ services:
       -  27060:27060
     depends_on:
       - rabbitmq
+
+  energymarket:
+    image: vincentdarwinkel/energymarketapi
+    hostname: energymarket
+    container_name: energymarket
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    restart: always
+    ports:
+      - 8195:8195
+    environment:
+      RABBITMQ_HOSTNAME: rabbitmq
+      RABBITMQ_USERNAME: guest
+      RABBITMQ_PASSWORD: guest
+      ENERGYMARKET_APIURL: http://shielded-bastion-42632.herokuapp.com/api/
+      ENERGYMARKET_USERNAME: NLOost
+      ENERGYMARKET_PASSWORD: "#NLOost2"
+      SPRING_RABBITMQ_HOST: rabbitmq
