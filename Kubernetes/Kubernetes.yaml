@@ -260,10 +260,18 @@ spec:
           ports:
             - containerPort: 80
           env:
-            - name: RABBIT_HOST
+            - name: RABBITMQ_HOSTNAME
               value: rabbitmq
-            - name: SPRING_RABBITMQ_HOST
-              value: rabbitmq
+            - name: RABBITMQ_USERNAME
+              value: guest
+            - name: RABBITMQ_PASSWORD
+              value: guest
+            - name: ENERGYMARKET_APIURL
+              value: http://shielded-bastion-42632.herokuapp.com/api/
+            - name: ENERGYMARKET_USERNAME
+              value: NLOost
+            - name: ENERGYMARKET_PASSWORD
+              value: "#NLOost2"
       restartPolicy: Always
 ---
 apiVersion: v1
