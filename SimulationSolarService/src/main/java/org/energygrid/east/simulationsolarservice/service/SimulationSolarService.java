@@ -39,7 +39,6 @@ public class SimulationSolarService implements ISimulationSolarService {
     @Value("${URL}")
     private String url ;
 
-
     private final RestTemplate template;
     private final HttpHeaders headers;
 
@@ -148,11 +147,11 @@ public class SimulationSolarService implements ISimulationSolarService {
     }
 
     private String getUrl(double x, double y) {
-        return "https://api.openweathermap.org/data/2.5/onecall?lat="+x+"&lon="+y+"&exclude=current,minutely,daily,alerts&appid=9fee09000e1d07f76527e64edb926395";
+        return "https://api.openweathermap.org/data/2.5/onecall?lat="+x+"&lon="+y+"&exclude=current,minutely,daily,alerts&appid=68c0e48d723f65a325999af1d0a860e6";
     }
 
     private String currentWeatherStringBuilder(Point coordinates) {
-        return url + "weather?lat=" + coordinates.getX() + "&lon=" + coordinates.getY() + "&appid=9fee09000e1d07f76527e64edb926395";
+        return url + "weather?lat=" + coordinates.getX() + "&lon=" + coordinates.getY() + "&appid=68c0e48d723f65a325999af1d0a860e6";
     }
 
     public JsonObject getCurrentWeather(Point coordinates) {

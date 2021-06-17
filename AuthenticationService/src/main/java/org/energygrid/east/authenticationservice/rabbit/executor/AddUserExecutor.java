@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import org.energygrid.east.authenticationservice.model.rabbitmq.UserRabbitMq;
 import org.energygrid.east.authenticationservice.rabbit.ApplicationContextUtils;
 import org.energygrid.east.authenticationservice.service.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

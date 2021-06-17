@@ -92,9 +92,8 @@ public class SimulationLogic implements ISimulationLogic {
         var temp = kelvinToCelsius(temperature);
 
         if (temp > 25) {
-            result = result * (1 - ((temperature - 25) * coefficient) / 100);
+            result = result * coefficient;
         }
-
         return result;
     }
 
