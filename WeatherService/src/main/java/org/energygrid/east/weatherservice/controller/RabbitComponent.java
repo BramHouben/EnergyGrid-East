@@ -11,15 +11,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class RabbitComponent implements ApplicationRunner {
 
-    public RabbitComponent() {
-
-    }
-
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        RabbitProducer rabbitProducer = new RabbitProducer();
-        WeatherProducer weatherProducer = new WeatherProducer();
+        var rabbitProducer = new RabbitProducer();
+        var weatherProducer = new WeatherProducer();
 
         rabbitProducer.produce(weatherProducer);
 

@@ -7,22 +7,21 @@ public class Monitor {
 
     private static final Logger logger = Logger.getLogger(Monitor.class.getName());
 
-    private final Object monitor;
+    private final Object monitorObject;
 
     public Monitor() {
-        monitor = new Object();
+        monitorObject = new Object();
     }
 
     public void start() {
-        while(true) {
-            synchronized (monitor) {
+        while (true) {
+            synchronized (monitorObject) {
                 try {
-                    monitor.wait();
+                    monitorObject.wait();
                     break;
                 } catch (InterruptedException e) {
                     logger.log(Level.ALL, e.getMessage());
                     Thread.currentThread().interrupt();
-                    break;
                 }
             }
         }

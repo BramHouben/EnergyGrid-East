@@ -25,11 +25,11 @@ public class SimulationLogic implements ISimulationLogic {
 
     @Override
     public ProductionExpectation createSimulationForWindTurbine(double type, JsonElement weather) {
-        double value = weather.getAsJsonObject().get("wind_speed").getAsDouble();
+        var value = weather.getAsJsonObject().get("wind_speed").getAsDouble();
         var factor = calculateFactor("Wind Speed", value);
         var dateTime = LocalDateTime.ofInstant(Instant.ofEpochSecond(weather.getAsJsonObject().get("dt").getAsInt()), TimeZone.getDefault().toZoneId());
 
-        return getProductionExpectationInKw(factor.getFactor(), type, dateTime);
+        return getProductionExpectationInKw(factor.getFactorValue(), type, dateTime);
     }
 
     @Override
@@ -51,11 +51,11 @@ public class SimulationLogic implements ISimulationLogic {
     private double getWindSpeedFactor(double windSpeed) {
         double factor = 0;
 
-        if (windSpeed >= 10 || windSpeed < 25) {
+        if (windSpeed >= 10 && windSpeed < 25) {
             factor = 1;
         }
 
-        if (windSpeed >= 3 || windSpeed < 10) {
+        if (windSpeed >= 3 && windSpeed < 10) {
             factor = 1 * (windSpeed / 10);
         }
 

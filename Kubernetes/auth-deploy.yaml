@@ -1,0 +1,263 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-userservice
+spec:
+  selector:
+    matchLabels:
+      app: mysql-userservice
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql-userservice
+    spec:
+      containers:
+        - image: mysql
+          name: mysql-userservice
+          env:
+            - name: MYSQL_ALLOW_EMPTY_PASSWORD
+              value: "yes"
+          ports:
+            - containerPort: 3306
+              name: user-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-userservice
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql-userservice
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-authservice
+spec:
+  selector:
+    matchLabels:
+      app: mysql-authservice
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql-authservice
+    spec:
+      containers:
+        - image: mysql
+          name: mysql-authservice
+          env:
+            - name: MYSQL_ALLOW_EMPTY_PASSWORD
+              value: "yes"
+          ports:
+            - containerPort: 3306
+              name: auth-db
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-authservice
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql-authservice
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - image: "docker.io/rabbitmq:management"
+          imagePullPolicy: Always
+          name: rabbitmq
+          ports:
+            - containerPort: 15672
+              name: http-port
+            - containerPort: 5672
+              name: service
+          volumeMounts:
+            - mountPath: /var/rabbitmqapp_home
+              name: rabbitmqapp-home
+      volumes:
+        - emptyDir: {}
+          name: rabbitmqapp-home
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  namespace: default
+spec:
+  ports:
+    - name: ui
+      protocol: TCP
+      port: 15672
+      targetPort: 15672
+    - name: service
+      port: 5672
+      targetPort: 5672
+      protocol: TCP
+  selector:
+    app: rabbitmq
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userservice-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userservice
+  template:
+    metadata:
+      labels:
+        app: userservice
+    spec:
+      containers:
+        - name: userservice
+          image: energygrideast/userservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8130
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq
+            - name: SPRING_RABBITMQ_HOST
+              value: rabbitmq
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql-userservice:3306/userservice?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+            - name: MYSQL_ALLOW_EMPTY_PASSWORD
+              value: "1"
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authenticationservice-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authenticationservice
+  template:
+    metadata:
+      labels:
+        app: authenticationservice
+    spec:
+      containers:
+        - name: authenticationservice
+          image: energygrideast/authenticationservice
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8100
+          env:
+            - name: SPRING_RABBITMQ_HOST
+              value: rabbitmq
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql-authservice:3306/authservice?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+            - name: MYSQL_ALLOW_EMPTY_PASSWORD
+              value: "1"
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: website
+  namespace: default
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 80
+  selector:
+    app: website
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: website-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: website
+  template:
+    metadata:
+      labels:
+        app: website
+    spec:
+      containers:
+        - name: website
+          image: energygrideast/website
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+      restartPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deployment
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - name: gateway
+          image: vincentdarwinkel/gateway
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: RABBIT_HOST
+              value: rabbitmq
+            - name: JWTSECRET
+              value: dLTIsQs09U6hWgLWNpuumlyxo1LMLIb4
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+spec:
+  type: LoadBalancer
+  selector:
+    app: gateway
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 80

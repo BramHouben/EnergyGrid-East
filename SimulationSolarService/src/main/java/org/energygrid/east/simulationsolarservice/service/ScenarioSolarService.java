@@ -1,6 +1,5 @@
 package org.energygrid.east.simulationsolarservice.service;
 
-import org.apache.tomcat.jni.Local;
 import org.energygrid.east.simulationsolarservice.factory.FactoryURL;
 import org.energygrid.east.simulationsolarservice.logic.ISimulationLogic;
 import org.energygrid.east.simulationsolarservice.logic.SimulationLogic;
@@ -46,7 +45,7 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
 
     @Override
     public ScenarioExpectationResult createScenario(Scenario scenario) {
-        ScenarioExpectationResult scenarioExpectationResult = new ScenarioExpectationResult();
+        var scenarioExpectationResult = new ScenarioExpectationResult();
         scenarioExpectationResult.setName(scenario.getName());
         scenarioExpectationResult.setScenarioType(scenario.getScenarioType());
         scenarioExpectationResult.setCreatedAt(DateTimeFormatter.ISO_INSTANT.format(Instant.now()));
@@ -62,7 +61,6 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
                 break;
             case TURN_OFF_SOLAR_PARK:
                 scenarioExpectationResult.setSimulationExpectationResult(scenarioTurnOffSolarPark(scenario.getAmount(), scenario.getSolarUnit(), scenario.getTurnOffTimes(), scenarioExpectationResult.getCreatedAt()));
-            case TURN_OFF_UNIT:
                 break;
             default:
                 return null;
@@ -103,7 +101,7 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
             //Amount is to big, so we do at the end by the calculation 1 unit * amount
             for (var i = 0; i < 1; i++) {
                 var simulationResult = new SimulationResult();
-                simulationResult.setName(isAdded ? "Production" : "Missed Production");
+                simulationResult.setName(isAdded != null && isAdded ? "Production" : "Missed Production");
                 var data = new FactoryURL().getWeatherData(headers, template, getUrl(coordinates.getX(), coordinates.getY()));
 
                 for (var weather : data) {
@@ -118,16 +116,16 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
     }
 
     private SimulationExpectationResult scenarioTurnOffSolarPark(int amount, SolarUnit solarUnit, String dateString, String createdAt) {
-        SimulationExpectationResult simulationExpectationResult = new SimulationExpectationResult();
+        var simulationExpectationResult = new SimulationExpectationResult();
         simulationExpectationResult.setCreatedAt(createdAt);
         List<SimulationResult> results = new ArrayList<>();
         List<String> dates = Arrays.asList(dateString.split(","));
 
         if (solarUnit != null) {
-            SimulationResult simulationResult = new SimulationResult();
+            var simulationResult = new SimulationResult();
             simulationResult.setName("Production");
 
-            SimulationResult simulationResultMissed = new SimulationResult();
+            var simulationResultMissed = new SimulationResult();
             simulationResultMissed.setName("Missed Production");
 
             var data = new FactoryURL().getWeatherData(headers, template, getUrl(solarUnit.getCoordinates().getX(), solarUnit.getCoordinates().getY()));
@@ -156,6 +154,6 @@ public class ScenarioSolarService implements IScenarioSolarScenario {
     }
 
     private String getUrl(double x, double y) {
-        return "https://api.openweathermap.org/data/2.5/onecall?lat="+x+"&lon="+y+"&exclude=current,minutely,daily,alerts&appid=da713c7b97d2a6f912d9266ec49a30d8";
+        return "https://api.openweathermap.org/data/2.5/onecall?lat="+x+"&lon="+y+"&exclude=current,minutely,daily,alerts&appid=3f4252fa27be7bb18a574af3bacf1795";
     }
 }

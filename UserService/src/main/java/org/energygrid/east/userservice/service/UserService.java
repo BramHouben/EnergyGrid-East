@@ -1,15 +1,15 @@
 package org.energygrid.east.userservice.service;
 
-import io.jsonwebtoken.Claims;
 import javassist.NotFoundException;
 import org.energygrid.east.userservice.errormessages.DuplicatedNameException;
 import org.energygrid.east.userservice.model.dto.UserDTO;
 import org.energygrid.east.userservice.model.enums.AccountRole;
-import org.energygrid.east.userservice.model.fromFrontend.User;
-import org.energygrid.east.userservice.model.rabbitMq.UserRabbitMq;
-import org.energygrid.east.userservice.rabbit.Producer.AddUserProducer;
-import org.energygrid.east.userservice.rabbit.Producer.DeleteUserProducer;
-import org.energygrid.east.userservice.rabbit.Producer.UpdateUserProducer;
+import org.energygrid.east.userservice.model.fromfrontend.Operator;
+import org.energygrid.east.userservice.model.fromfrontend.User;
+import org.energygrid.east.userservice.model.rabbitmq.UserRabbitMq;
+import org.energygrid.east.userservice.rabbit.producer.AddUserProducer;
+import org.energygrid.east.userservice.rabbit.producer.DeleteUserProducer;
+import org.energygrid.east.userservice.rabbit.producer.UpdateUserProducer;
 import org.energygrid.east.userservice.rabbit.RabbitProducer;
 import org.energygrid.east.userservice.repo.IUserRepo;
 import org.modelmapper.ModelMapper;
@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,19 +28,20 @@ public class UserService {
     @Autowired
     private IJwtService jwtService;
 
-    public void addUser(@NotNull User user) {
+    public void addUser(@NotNull User user, AccountRole role) {
         UserDTO dbUser = userRepo.getUserByUuidOrUsernameOrEmail(null, user.getUsername(), user.getEmail());
         if (dbUser != null) {
             throw new DuplicatedNameException("Username or email already in use");
         }
 
         UserDTO userToStore = mapper.map(user, UserDTO.class);
+        userToStore.setAccountRole(role);
         userToStore.setUuid(UUID.randomUUID());
 
         userRepo.save(userToStore);
         var rabbitMqUser = mapper.map(user, UserRabbitMq.class);
         rabbitMqUser.setUuid(userToStore.getUuid());
-        rabbitMqUser.setAccountRole(AccountRole.LARGE_SCALE_CUSTOMER);
+        rabbitMqUser.setAccountRole(role);
         storeUserInAuthenticationService(rabbitMqUser);
     }
 
@@ -58,7 +60,7 @@ public class UserService {
     }
 
     public void editUser(@NotNull User user, @NotNull String jwt) throws IllegalAccessException {
-        Claims jwtClaims = jwtService.getClaims(jwt);
+        var jwtClaims = jwtService.getClaims(jwt);
         var userUuid = UUID.fromString(jwtClaims.get("uuid").toString());
         var dbUser = userRepo.getUserByUuidOrUsernameOrEmail(userUuid, null, null);
 
@@ -94,7 +96,7 @@ public class UserService {
     }
 
     public void deleteUser(@NotNull String jwt) throws NotFoundException, IllegalAccessException {
-        Claims claims = jwtService.getClaims(jwt);
+        var claims = jwtService.getClaims(jwt);
         var uuid = UUID.fromString(claims.get("uuid").toString());
         UserDTO userToDelete = userRepo.getByUuid(uuid);
         if (userToDelete == null) {
@@ -113,5 +115,15 @@ public class UserService {
         var rabbitProducer = new RabbitProducer();
         var userProducer = new DeleteUserProducer(user);
         rabbitProducer.produce(userProducer);
+    }
+
+    public List<UserDTO> getGridOperators(){
+        return userRepo.findAllByAccountRole(AccountRole.GRID_OPERATOR);
+    }
+
+    public void deleteOperator(Operator operator){
+        UserDTO operatorToDelete = userRepo.getByUuid(operator.getUuid());
+
+        userRepo.delete(operatorToDelete);
     }
 }

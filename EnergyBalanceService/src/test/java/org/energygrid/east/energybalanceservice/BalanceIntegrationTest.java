@@ -1,6 +1,7 @@
 package org.energygrid.east.energybalanceservice;
 
 import org.energygrid.east.energybalanceservice.controller.EnergyBalanceController;
+import org.energygrid.east.energybalanceservice.model.BalanceType;
 import org.energygrid.east.energybalanceservice.model.EnergyBalance;
 import org.energygrid.east.energybalanceservice.service.IEnergyService;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -38,18 +40,25 @@ class BalanceIntegrationTest {
 
     @BeforeEach
     void setup() {
-        initMocks(this);
+        MockitoAnnotations.openMocks(this);
         this.mockMvc = MockMvcBuilders.standaloneSetup(energyBalanceController).build();
     }
 
     @Test
     void returnOkGetLatestBalance() throws Exception {
 
-
-        when(energyService.getLatestBalance()).thenReturn(new EnergyBalance(UUID.randomUUID(), 100, 100, 100, LocalDateTime.now()));
+        when(energyService.getLatestBalance()).thenReturn(new EnergyBalance(UUID.randomUUID(), 100, 100, 100, BalanceType.NORMAL, LocalDateTime.now()));
 
         mockMvc.perform(get("/energybalance/currentbalance"))
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void returnBadGetLatestBalance() throws Exception {
+
+        when(energyService.getLatestBalance()).thenReturn(null);
+
+        mockMvc.perform(get("/energybalance/currentbalance"))
+                .andExpect(status().isBadRequest());
+    }
 }

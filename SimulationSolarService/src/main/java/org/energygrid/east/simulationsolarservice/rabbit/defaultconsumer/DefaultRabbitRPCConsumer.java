@@ -27,8 +27,8 @@ public class DefaultRabbitRPCConsumer extends DefaultConsumer {
     @Override
     public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
         if (properties.getCorrelationId().equals(corrId)) {
-            String message = new String(body, StandardCharsets.UTF_8);
-            logger.log( Level.INFO,"Message received" + message);
+            var message = new String(body, StandardCharsets.UTF_8);
+            logger.log( Level.INFO, () -> "Message received " + message);
             if (!blockingQueue.offer(message)) {
                 logger.log(Level.ALL, "Failed to offer message to queue");
             }

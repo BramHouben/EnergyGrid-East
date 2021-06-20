@@ -1,0 +1,9 @@
+kubectl delete --all deployments
+kubectl delete --all services
+kubectl delete --all pods
+
+kubectl delete pvc --all
+kubectl delete pv --all
+
+kubectl apply -f Volumes.yaml
+kubectl apply -f Kubernetes.yaml

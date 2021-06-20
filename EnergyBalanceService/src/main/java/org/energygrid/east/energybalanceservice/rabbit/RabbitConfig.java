@@ -9,9 +9,10 @@ import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-
+@Profile("!test")
 @Component
 public class RabbitConfig {
 
@@ -19,24 +20,31 @@ public class RabbitConfig {
     static final String QUEUE_NAME_WIND = "energy-balance-wind";
     static final String QUEUE_NAME_SOLAR = "energy-balance-solar";
     static final String QUEUE_NAME_NUCLEAR = "energy-balance-nuclear";
+    static final String QUEUE_NAME_USAGE = "energy-balance-usage";
 
 
     @Bean
     @Qualifier("queueNameWind")
     Queue queueWind() {
-        return new Queue(QUEUE_NAME_WIND, false);
+        return new Queue(QUEUE_NAME_WIND, true);
     }
 
     @Bean
     @Qualifier("queueNameSolar")
     Queue queueSolar() {
-        return new Queue(QUEUE_NAME_SOLAR, false);
+        return new Queue(QUEUE_NAME_SOLAR, true);
     }
 
     @Bean
     @Qualifier("queueNameNuclear")
     Queue queueNuclear() {
-        return new Queue(QUEUE_NAME_NUCLEAR, false);
+        return new Queue(QUEUE_NAME_NUCLEAR, true);
+    }
+
+    @Bean
+    @Qualifier("queueNameUsage")
+    Queue queueHouse() {
+        return new Queue(QUEUE_NAME_USAGE, true);
     }
 
     @Bean
@@ -57,6 +65,11 @@ public class RabbitConfig {
     @Bean
     Binding bindingWind(@Qualifier("queueNameWind") Queue queueNameWind, TopicExchange exchange) {
         return BindingBuilder.bind(queueNameWind).to(exchange).with("balance.create.wind");
+    }
+
+    @Bean
+    Binding bindingHouse(@Qualifier("queueNameUsage") Queue queueNameUsage, TopicExchange exchange) {
+        return BindingBuilder.bind(queueNameUsage).to(exchange).with("balance.create.usage");
     }
 
     @Bean
@@ -90,6 +103,16 @@ public class RabbitConfig {
     }
 
     @Bean
+    SimpleMessageListenerContainer containerUsage(ConnectionFactory connectionFactory,
+                                                  @Qualifier("listenerAdapterUsage") MessageListenerAdapter listenerAdapterNuclear) {
+        var container = new SimpleMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.setQueueNames(QUEUE_NAME_USAGE);
+        container.setMessageListener(listenerAdapterNuclear);
+        return container;
+    }
+
+    @Bean
     @Qualifier("listenerAdapterWind")
     MessageListenerAdapter listenerAdapter(Receiver receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessageWind");
@@ -105,5 +128,11 @@ public class RabbitConfig {
     @Qualifier("listenerAdapterNuclear")
     MessageListenerAdapter listenerAdapterNuclear(Receiver receiver) {
         return new MessageListenerAdapter(receiver, "receiveMessageNuclear");
+    }
+
+    @Bean
+    @Qualifier("listenerAdapterUsage")
+    MessageListenerAdapter listenerAdapterUsage(Receiver receiver) {
+        return new MessageListenerAdapter(receiver, "receiveMessageUsage");
     }
 }
